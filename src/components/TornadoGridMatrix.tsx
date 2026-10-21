@@ -220,9 +220,14 @@ function MatrixCell({ item, audioCtxRef }: MatrixCellProps) {
     function generateFallbackIcon(ctx: CanvasRenderingContext2D) {
       ctx.clearRect(0, 0, grid, grid)
       ctx.fillStyle = '#E2652B'
-      ctx.fillRect(5, 5, grid - 10, grid - 10)
+      // Draw technical geometric glyph representing the tool
+      ctx.beginPath()
+      ctx.arc(grid / 2, grid / 2, 8, 0, Math.PI * 2)
+      ctx.fill()
       ctx.fillStyle = '#D71921'
-      ctx.fillRect(8, 8, grid - 16, grid - 16)
+      ctx.fillRect(10, 10, 8, 8)
+      ctx.fillStyle = '#FFFFFF'
+      ctx.fillRect(12, 12, 4, 4)
     }
 
     function initParticles() {
