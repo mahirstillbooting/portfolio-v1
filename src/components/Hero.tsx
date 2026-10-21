@@ -1,88 +1,58 @@
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowDown, ArrowUpRight } from 'lucide-react'
 import PortraitCanvas from './PortraitCanvas'
 import mahirImg from '../assets/mahir.png'
 
-function LiveClock() {
-  const clockRef = useRef<HTMLSpanElement>(null)
-  useEffect(() => {
-    const update = () => {
-      if (clockRef.current) {
-        const now = new Date()
-        clockRef.current.textContent = now.toLocaleTimeString('en-US', {
-          timeZone: 'Asia/Dhaka',
-          hour12: false,
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-        })
-      }
-    }
-    update()
-    const timer = setInterval(update, 1000)
-    return () => clearInterval(timer)
-  }, [])
-  return <span ref={clockRef} className="font-mono text-white/90" />
-}
-
 export default function Hero() {
+  const containerRef = useRef<HTMLElement>(null)
+
   return (
     <section
+      ref={containerRef}
       id="hero"
-      className="relative min-h-[95vh] w-full flex flex-col items-center justify-between pt-24 pb-12 overflow-hidden select-none"
+      className="relative min-h-screen w-full flex flex-col items-center justify-center pt-28 pb-20 px-6 sm:px-8 max-w-[1200px] mx-auto overflow-visible select-none"
     >
       {/* Background ambient radial glow */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[500px] bg-gradient-to-b from-[#E2652B]/10 via-transparent to-transparent blur-[160px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[850px] h-[520px] bg-gradient-to-b from-[#E2652B]/10 via-transparent to-transparent blur-[160px] pointer-events-none" />
 
-      {/* TOP SUBTLE HUD META */}
-      <div className="w-full max-w-[1240px] px-6 sm:px-8 flex items-center justify-between text-[11px] font-mono text-[#6B7280] tracking-widest uppercase pb-6 border-b border-white/6 mb-2 z-10">
-        <div className="flex items-center gap-2">
-          <span className="live-dot" />
-          <span className="text-[#9CA3AF]">MAHIRUDDIN CHOWDHURY</span>
-          <span className="text-white/20 hidden sm:inline">•</span>
-          <span className="hidden sm:inline text-[#6B7280]">CSE 4TH YEAR // EWU</span>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <span className="hidden md:inline text-white/40">LOC: DHAKA, BD</span>
-          <div className="flex items-center gap-1.5 text-white/90">
-            <span className="text-[#E2652B]">GMT+6</span>
-            <LiveClock />
-          </div>
-        </div>
-      </div>
-
-      {/* MAIN HERO STAGE (FULL-WIDTH SCATTERED PARTICLES + EDITORIAL COMPOSITION) */}
-      <div className="relative w-full flex-1 flex flex-col items-center justify-center my-auto py-2">
+      {/* MAIN HERO STAGE (SARTHAK SHARMA EDITORIAL COMPOSITION) */}
+      <div className="relative w-full flex flex-col items-center justify-center my-auto">
         
-        {/* Full-width interactive portrait + ambient scattered particle canvas */}
-        <div className="relative w-full h-[580px] sm:h-[660px] md:h-[720px] lg:h-[760px] flex items-center justify-center z-0">
+        {/* 1. Borderless Dot-Matrix Portrait Canvas (Masked seamlessly into #080808 with zero box boundaries) */}
+        <div className="relative w-full max-w-[700px] h-[520px] sm:h-[600px] md:h-[660px] flex items-center justify-center z-0">
           <PortraitCanvas imageSrc={mahirImg} />
         </div>
 
-        {/* Overlapping Editorial Headline in Instrument Serif (Positioned across lower chest with legibility gradient) */}
-        <div className="relative z-10 -mt-28 sm:-mt-36 md:-mt-40 lg:-mt-44 w-full max-w-4xl flex flex-col items-center text-center px-4 pointer-events-none">
+        {/* 2. Overlapping Editorial Headline in Instrument Serif (Positioned across lower chest with legibility gradient) */}
+        <div className="relative z-10 -mt-28 sm:-mt-36 md:-mt-40 lg:-mt-44 w-full flex flex-col items-center text-center px-4 pointer-events-none">
           
           {/* Subtle dark backdrop gradient directly behind title for 100% legibility */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-[#080808]/90 to-transparent blur-xl -z-10 pointer-events-none scale-110" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-[#080808]/90 to-transparent blur-2xl -z-10 pointer-events-none scale-110" />
 
-          {/* EDITORIAL HEADLINE */}
+          {/* EDITORIAL HEADLINE IN INSTRUMENT SERIF */}
           <motion.h1
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 28 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="font-serif italic text-white tracking-[-0.03em] leading-[0.92] select-none text-[clamp(3.5rem,7vw,6.5rem)] drop-shadow-[0_12px_40px_rgba(0,0,0,0.95)]"
+            transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
+            style={{
+              fontFamily: "'Instrument Serif', Georgia, serif",
+              fontSize: 'clamp(3.8rem, 7.5vw, 6.8rem)',
+              fontWeight: 400,
+              letterSpacing: '-0.03em',
+              lineHeight: 0.92,
+            }}
+            className="italic text-white select-none drop-shadow-[0_16px_48px_rgba(0,0,0,0.95)]"
           >
             Mahiruddin Chowdhury
           </motion.h1>
 
-          {/* Subheadline & description */}
+          {/* Subheadline in Geist Sans */}
           <motion.p
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="mt-4 text-base sm:text-lg md:text-xl font-sans text-[#E5E7EB] font-normal max-w-xl mx-auto leading-relaxed"
+            className="mt-5 text-base sm:text-lg md:text-xl font-sans text-[#E5E7EB] font-normal max-w-xl mx-auto leading-relaxed"
           >
             Building full-shift web systems &amp; IoT hardware
           </motion.p>
@@ -123,18 +93,6 @@ export default function Hero() {
 
         </div>
 
-      </div>
-
-      {/* BOTTOM FOOTER TELEMETRY DETAILS */}
-      <div className="w-full max-w-[1240px] px-6 sm:px-8 flex items-center justify-between text-[11px] font-mono text-[#6B7280] tracking-widest pt-6 border-t border-white/6 mt-6 z-10">
-        <div className="flex items-center gap-2">
-          <span className="text-[#E2652B]">01 / PRESENCE</span>
-          <span className="text-white/20">•</span>
-          <span>EAST WEST UNIVERSITY // DHAKA</span>
-        </div>
-        <div className="hidden sm:block">
-          SYS.STATUS: <span className="text-white">ONLINE</span>
-        </div>
       </div>
     </section>
   )

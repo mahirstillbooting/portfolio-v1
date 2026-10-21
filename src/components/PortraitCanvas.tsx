@@ -534,6 +534,10 @@ export default function PortraitCanvas({ imageSrc }: PortraitCanvasProps) {
       onClick={triggerVortex}
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
+      style={{
+        maskImage: 'radial-gradient(circle at center, black 45%, transparent 72%)',
+        WebkitMaskImage: 'radial-gradient(circle at center, black 45%, transparent 72%)',
+      }}
       className="relative w-full h-full flex flex-col items-center justify-center will-change-transform select-none cursor-pointer overflow-visible"
     >
       <canvas
