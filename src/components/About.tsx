@@ -34,7 +34,7 @@ export default function About() {
       {/* Section Heading */}
       <div className="mb-14 space-y-2">
         <div className="flex items-center gap-2 text-[11px] tracking-widest text-[#E2652B] font-mono uppercase">
-          <span className="live-dot" />
+          <Compass className="w-3.5 h-3.5 text-[#E2652B]" />
           <span>03 // ABOUT &amp; MINDSET</span>
         </div>
         <h2 className="text-3xl sm:text-5xl font-sans font-bold text-white tracking-tight">

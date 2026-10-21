@@ -64,7 +64,7 @@ export default function Skills() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-14">
         <div>
           <div className="flex items-center gap-2 text-[11px] tracking-widest text-[#E2652B] font-mono mb-2 uppercase">
-            <span className="live-dot" />
+            <BarChart3 className="w-3.5 h-3.5 text-[#E2652B]" />
             <span>04 // TELEMETRY &amp; CAPABILITIES</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-sans font-bold text-white tracking-tight">

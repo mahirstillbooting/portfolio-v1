@@ -1,17 +1,15 @@
+import { Terminal } from 'lucide-react'
+
 export default function Footer() {
   return (
-    <footer className="w-full border-t border-white/6 bg-[#060608] py-10 px-6 sm:px-8 font-mono text-xs text-[#6B7280] flex justify-center">
+    <footer className="w-full border-t border-white/6 bg-[#060608] py-10 px-6 sm:px-8 font-mono text-xs text-[#6B7280] flex justify-center select-none">
       <div className="w-full max-w-[1200px] flex flex-col sm:flex-row items-center justify-between gap-4">
         
         {/* TUI Vim-Style Keybind Hints */}
         <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-5 gap-y-1 text-[11px]">
           <div>
-            <span className="kbd-tag mr-1.5">arrows/hjkl</span>
-            <span>Nav</span>
-          </div>
-          <div>
-            <span className="kbd-tag mr-1.5">c</span>
-            <span>Braille</span>
+            <span className="kbd-tag mr-1.5">arrows/wasd</span>
+            <span>Rover &amp; Nav</span>
           </div>
           <div>
             <span className="kbd-tag mr-1.5">g</span>
@@ -29,11 +27,11 @@ export default function Footer() {
         {/* Center / Right: System Status & Brand */}
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1.5 text-[#E5E7EB]">
-            <span className="live-dot" />
+            <Terminal className="w-3.5 h-3.5 text-[#E2652B]" />
             <span>STATUS: <strong className="text-[#E2652B] font-normal">ONLINE</strong></span>
           </div>
           <span className="text-white/20">|</span>
-          <span>ARGON // MAHIRUDDIN CHOWDHURY</span>
+          <span>MAHIRUDDIN CHOWDHURY // PORTFOLIO V1</span>
         </div>
 
       </div>

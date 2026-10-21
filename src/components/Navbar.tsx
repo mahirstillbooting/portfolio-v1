@@ -27,43 +27,62 @@ export default function Navbar() {
         initial={{ y: -30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className={`pointer-events-auto flex items-center justify-between w-full max-w-[820px] h-[56px] px-7 rounded-full transition-all duration-300 border ${
+        className={`pointer-events-auto flex items-center justify-between w-full max-w-[940px] h-[56px] px-7 rounded-full transition-all duration-300 border ${
           scrolled
-            ? 'bg-[#101012]/80 border-white/12 shadow-[0_16px_40px_rgba(0,0,0,0.85)]'
-            : 'bg-[#121214]/65 border-white/8 shadow-[0_12px_30px_rgba(0,0,0,0.6)]'
+            ? 'bg-[#101012]/85 border-white/12 shadow-[0_16px_40px_rgba(0,0,0,0.85)]'
+            : 'bg-[#121214]/75 border-white/8 shadow-[0_12px_30px_rgba(0,0,0,0.6)]'
         } backdrop-blur-[20px]`}
       >
-        {/* Left: Brand Identity */}
+        {/* Left: Name only in Instrument Serif (24px, #ffffff, pl-3, NO blinking dot, NO // 01) */}
         <a
           href="#hero"
-          className="flex items-center gap-2.5 text-xs tracking-wider text-[#F3F4F6] hover:text-[#E2652B] transition-colors font-mono font-medium no-underline"
+          style={{
+            fontFamily: "'Instrument Serif', Georgia, serif",
+            fontSize: '24px',
+            color: '#ffffff',
+            paddingLeft: '12px',
+          }}
+          className="tracking-tight select-none hover:text-[#E2652B] transition-colors no-underline font-normal"
         >
-          <span className="live-dot" />
-          <span className="tracking-tight font-semibold text-sm">MAHIRUDDIN</span>
-          <span className="text-[10px] text-[#6B7280] hidden sm:inline">// 01</span>
+          Mahiruddin Chowdhury
         </a>
 
-        {/* Center: Clean Navigation Links */}
-        <div className="hidden md:flex items-center gap-1">
+        {/* Center: Clean Navigation Links with exact gap: 36px */}
+        <div
+          style={{ display: 'flex', alignItems: 'center', gap: '36px' }}
+          className="hidden md:flex"
+        >
           {navLinks.map((item) => (
             <a
               key={item.name}
               href={item.href}
-              className="px-4 py-1.5 text-xs text-[#9CA3AF] hover:text-[#F3F4F6] hover:bg-white/[0.04] rounded-full transition-all duration-150 font-sans font-medium"
+              className="text-[13px] text-[#A1A1AA] hover:text-[#FFFFFF] transition-colors font-sans font-medium no-underline"
             >
               {item.name}
             </a>
           ))}
         </div>
 
-        {/* Right: CTA Button */}
+        {/* Right: Spacious Modern CTA Button */}
         <div className="flex items-center gap-2">
           <a
             href="mailto:stellaroasis116@gmail.com"
-            className="group relative inline-flex items-center gap-1.5 px-4 py-1.5 text-xs text-[#F3F4F6] bg-white/[0.06] hover:bg-[#E2652B] hover:text-black border border-white/10 hover:border-[#E2652B] rounded-full font-mono transition-all duration-200 active:scale-95 no-underline font-medium"
+            style={{
+              padding: '10px 22px',
+              borderRadius: '12px',
+              background: 'rgba(255, 255, 255, 0.07)',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
+              fontSize: '14px',
+              fontWeight: 500,
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '10px',
+              color: '#FFFFFF',
+            }}
+            className="hover:bg-[#E2652B] hover:border-[#E2652B] hover:text-black font-sans transition-all duration-200 active:scale-95 no-underline"
           >
             <span>Let's talk</span>
-            <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+            <ArrowUpRight className="w-4 h-4" strokeWidth={1.75} />
           </a>
 
           {/* Mobile hamburger */}
@@ -85,14 +104,14 @@ export default function Navbar() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="pointer-events-auto absolute top-20 left-4 right-4 bg-[#121214]/95 border border-white/10 rounded-2xl p-5 shadow-2xl backdrop-blur-2xl flex flex-col gap-2 font-sans text-sm md:hidden"
+            className="pointer-events-auto absolute top-20 left-4 right-4 bg-[#121214]/95 border border-white/10 rounded-2xl p-6 shadow-2xl backdrop-blur-2xl flex flex-col gap-3 font-sans text-sm md:hidden"
           >
             {navLinks.map((item) => (
               <a
                 key={item.name}
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
-                className="px-4 py-2.5 rounded-xl text-[#9CA3AF] hover:text-white hover:bg-white/5 transition-colors font-medium"
+                className="px-4 py-2.5 rounded-xl text-[#9CA3AF] hover:text-white hover:bg-white/5 transition-colors font-medium no-underline"
               >
                 {item.name}
               </a>

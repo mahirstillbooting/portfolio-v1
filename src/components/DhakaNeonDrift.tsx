@@ -565,7 +565,7 @@ export default function DhakaNeonDrift() {
 
         {/* Minimal HUD telemetry status overlay */}
         <div className="absolute top-4 left-6 flex items-center gap-3 text-[11px] font-mono tracking-widest text-[#9CA3AF] pointer-events-none uppercase bg-black/40 px-3.5 py-1.5 rounded-full border border-white/6 backdrop-blur-md">
-          <span className="live-dot" />
+          <Sparkles className="w-3.5 h-3.5 text-[#E2652B]" />
           <span className="text-[#E2652B] font-semibold">DHAKA NEON DRIFT // 3D</span>
           <span className="text-white/20">•</span>
           <span className="hidden sm:inline text-white/70">
@@ -575,7 +575,7 @@ export default function DhakaNeonDrift() {
 
         {/* Floating Glassmorphism Project Drawer Overlay */}
         {activeProject && (
-          <div className="absolute top-6 right-6 bottom-6 w-full max-w-[360px] bg-[#111214]/92 border border-white/12 rounded-2xl p-6 shadow-2xl backdrop-blur-2xl flex flex-col justify-between z-20 transition-all duration-300">
+          <div className="absolute top-6 right-6 bottom-6 w-full max-w-[380px] bg-[#111214]/94 border border-white/12 rounded-2xl p-7 shadow-2xl backdrop-blur-2xl flex flex-col justify-between z-20 transition-all duration-300">
             <div>
               <div className="flex items-center justify-between pb-3 border-b border-white/8">
                 <span className="text-[10px] font-mono text-[#E2652B] tracking-widest uppercase font-semibold">
@@ -583,10 +583,16 @@ export default function DhakaNeonDrift() {
                 </span>
                 <button
                   onClick={resetCamera}
-                  className="p-1 text-[#9CA3AF] hover:text-white rounded-lg hover:bg-white/5 transition-colors cursor-pointer"
+                  style={{
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '50%',
+                    background: 'rgba(255, 255, 255, 0.06)',
+                  }}
+                  className="flex items-center justify-center text-[#9CA3AF] hover:text-white hover:bg-white/10 transition-colors cursor-pointer border border-white/8"
                   aria-label="Close project preview"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-4 h-4" strokeWidth={1.75} />
                 </button>
               </div>
 
@@ -616,12 +622,13 @@ export default function DhakaNeonDrift() {
                 </div>
               )}
 
-              {/* Stack Pills */}
-              <div className="mt-4 flex flex-wrap gap-1.5">
+              {/* Stack Pills with exact padding: 6px 12px, gap: 8px */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '16px' }}>
                 {activeProject.stack.slice(0, 4).map((tech) => (
                   <span
                     key={tech}
-                    className="px-2.5 py-1 text-[10px] font-mono text-[#9CA3AF] bg-white/[0.04] border border-white/8 rounded-md"
+                    style={{ padding: '6px 12px' }}
+                    className="text-[11px] font-mono text-[#9CA3AF] bg-white/[0.04] border border-white/8 rounded-lg"
                   >
                     {tech}
                   </span>
@@ -635,10 +642,10 @@ export default function DhakaNeonDrift() {
               </span>
               <a
                 href="#projects-grid"
-                className="inline-flex items-center gap-1.5 text-xs font-mono text-[#E2652B] hover:text-white transition-colors"
+                className="inline-flex items-center gap-1.5 text-xs font-mono text-[#E2652B] hover:text-white transition-colors no-underline font-medium"
               >
                 <span>Read details</span>
-                <ArrowUpRight className="w-3.5 h-3.5" />
+                <ArrowUpRight className="w-3.5 h-3.5" strokeWidth={1.75} />
               </a>
             </div>
           </div>

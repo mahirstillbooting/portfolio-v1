@@ -52,7 +52,7 @@ export default function Contact() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-36 bg-[#E2652B]/12 blur-3xl pointer-events-none" />
 
         <div className="inline-flex items-center gap-2 text-xs tracking-widest text-[#E2652B] font-mono mb-4 uppercase">
-          <span className="live-dot" />
+          <Mail className="w-3.5 h-3.5 text-[#E2652B]" />
           <span>05 // TRANSMISSION CHANNEL</span>
         </div>
 

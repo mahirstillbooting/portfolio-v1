@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowUpRight, X } from 'lucide-react'
+import { ArrowUpRight, X, Cpu, GitBranch } from 'lucide-react'
 import { GithubIcon } from './Icons'
 import DhakaNeonDrift from './DhakaNeonDrift'
 
@@ -79,13 +79,13 @@ export default function Projects() {
     <section
       id="projects"
       style={{ padding: '140px 32px' }}
-      className="w-full max-w-[1200px] mx-auto relative flex flex-col items-center"
+      className="w-full max-w-[1200px] mx-auto relative flex flex-col items-center select-none"
     >
       {/* Section Header */}
       <div className="w-full flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 pb-8 border-b border-white/6">
         <div className="space-y-3">
           <div className="flex items-center gap-2 text-[11px] tracking-widest text-[#E2652B] font-mono uppercase">
-            <span className="live-dot" />
+            <Cpu className="w-3.5 h-3.5 text-[#E2652B]" />
             <span>02 // SELECTED WORKS &amp; CAPSTONE</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-sans font-bold tracking-tight text-white">
@@ -108,6 +108,7 @@ export default function Projects() {
 
       {/* 2. STRICT BENTO GRID (12-COLUMNS, GAP: 28PX, PADDING: 36PX) */}
       <div
+        id="projects-grid"
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(12, 1fr)',
@@ -140,7 +141,7 @@ export default function Projects() {
                 className="font-sans text-white group-hover:text-[#E2652B] transition-colors tracking-tight flex items-center justify-between"
               >
                 <span>{proj.title}</span>
-                <ArrowUpRight className="w-5 h-5 text-[#6B7280] group-hover:text-[#E2652B] group-hover:translate-x-1 group-hover:-translate-y-1 transition-all" />
+                <ArrowUpRight className="w-5 h-5 text-[#6B7280] group-hover:text-[#E2652B] group-hover:translate-x-1 group-hover:-translate-y-1 transition-all" strokeWidth={1.75} />
               </h3>
 
               {/* 3. Maximum 2-sentence summary (Geist Sans, 15px, line-height: 1.6, color: #9CA3AF) */}
@@ -156,8 +157,9 @@ export default function Projects() {
               {/* Collaborators row if present (ChalokApp) */}
               {proj.collaborators && proj.collaborators.length > 0 && (
                 <div className="mt-5 pt-4 border-t border-white/6 flex flex-wrap items-center gap-2">
-                  <span className="text-xs font-mono tracking-wider text-[#6B7280]">
-                    COLLABORATORS:
+                  <span className="text-xs font-mono tracking-wider text-[#6B7280] flex items-center gap-1.5">
+                    <GitBranch className="w-3.5 h-3.5 text-[#E2652B]" />
+                    <span>COLLABORATORS:</span>
                   </span>
                   {proj.collaborators.map((c) => (
                     <a
@@ -170,14 +172,14 @@ export default function Projects() {
                     >
                       <GithubIcon className="w-3.5 h-3.5" />
                       <span>{c.name}</span>
-                      <ArrowUpRight className="w-3 h-3 opacity-60" />
+                      <ArrowUpRight className="w-3 h-3 opacity-60" strokeWidth={1.75} />
                     </a>
                   ))}
                 </div>
               )}
 
               {/* 4. Clean minimal tech pills at the bottom (margin-top: 24px) */}
-              <div style={{ marginTop: '24px' }} className="flex flex-wrap gap-2">
+              <div style={{ marginTop: '24px', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                 {proj.stack.map((t) => (
                   <span
                     key={t}
@@ -192,59 +194,83 @@ export default function Projects() {
         ))}
       </div>
 
-      {/* QUICK SPECS DETAIL MODAL */}
+      {/* QUICK SPECS DETAIL MODAL (SPACIOUS GLASSMORPHISM - EXACT SPECS) */}
       <AnimatePresence>
         {selectedProject && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-xl">
+          <div
+            style={{
+              background: 'rgba(0, 0, 0, 0.75)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+            }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
+          >
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
               transition={{ duration: 0.2 }}
-              className="relative w-full max-w-xl bg-[#141416] border border-white/12 rounded-3xl p-8 shadow-[0_30px_90px_rgba(0,0,0,0.95)] max-h-[90vh] overflow-y-auto font-sans"
+              style={{
+                maxWidth: '640px',
+                width: '92%',
+                padding: '44px',
+                borderRadius: '24px',
+                background: '#121214',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                boxShadow: '0 32px 80px rgba(0, 0, 0, 0.9)',
+              }}
+              className="relative max-h-[90vh] overflow-y-auto font-sans"
             >
+              {/* Clean round top-right close button */}
               <button
                 onClick={() => setSelectedProject(null)}
-                className="absolute top-6 right-6 p-2 rounded-full bg-white/5 hover:bg-white/10 text-[#9CA3AF] hover:text-white transition-colors cursor-pointer"
+                style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
+                  background: 'rgba(255, 255, 255, 0.06)',
+                }}
+                className="absolute top-6 right-6 flex items-center justify-center text-[#9CA3AF] hover:text-white hover:bg-white/10 transition-colors cursor-pointer border border-white/8"
                 aria-label="Close modal"
               >
-                <X className="w-5 h-5" />
+                <X className="w-5 h-5" strokeWidth={1.75} />
               </button>
 
-              <div className="flex items-center gap-2 text-xs tracking-widest text-[#E2652B] font-mono mb-2 uppercase">
-                <span className="live-dot" />
+              <div className="flex items-center gap-2 text-xs tracking-widest text-[#E2652B] font-mono mb-3 uppercase">
+                <Cpu className="w-3.5 h-3.5 text-[#E2652B]" />
                 <span>{selectedProject.category}</span>
               </div>
 
-              <h3 className="text-3xl font-sans font-bold text-white mb-2">
+              <h3 className="text-3xl font-sans font-bold text-white mb-2 tracking-tight">
                 {selectedProject.title}
               </h3>
 
-              <p className="text-sm font-mono text-[#E2652B] mb-6">
-                Status: {selectedProject.status}
+              <p className="text-xs font-mono text-[#E2652B] mb-6">
+                STATUS: {selectedProject.status}
               </p>
 
-              <p className="text-base font-sans text-[#9CA3AF] leading-relaxed mb-6 pt-4 border-t border-white/8">
+              <p className="text-base font-sans text-[#D1D5DB] leading-relaxed mb-8 pt-4 border-t border-white/8">
                 {selectedProject.summary}
               </p>
 
               {selectedProject.collaborators && (
-                <div className="mb-6 p-4 rounded-2xl bg-black/40 border border-white/6">
-                  <span className="text-xs text-white font-medium font-mono block mb-2 uppercase tracking-wider">
-                    Capstone Collaborators
+                <div className="mb-8 p-5 rounded-2xl bg-black/40 border border-white/6">
+                  <span className="text-xs text-white font-medium font-mono block mb-3 uppercase tracking-wider flex items-center gap-1.5">
+                    <GitBranch className="w-3.5 h-3.5 text-[#E2652B]" />
+                    <span>Capstone Collaborators</span>
                   </span>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2.5">
                     {selectedProject.collaborators.map((c) => (
                       <a
                         key={c.name}
                         href={c.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-[#E2652B] text-white hover:text-black border border-white/10 text-xs font-mono transition-colors"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 hover:bg-[#E2652B] text-white hover:text-black border border-white/10 text-xs font-mono transition-colors no-underline"
                       >
-                        <GithubIcon className="w-3.5 h-3.5" />
+                        <GithubIcon className="w-4 h-4" />
                         <span>{c.name}</span>
-                        <ArrowUpRight className="w-3 h-3" />
+                        <ArrowUpRight className="w-3.5 h-3.5" strokeWidth={1.75} />
                       </a>
                     ))}
                   </div>
@@ -255,11 +281,12 @@ export default function Projects() {
                 <span className="text-xs text-white font-medium font-mono block mb-3 uppercase tracking-wider">
                   Tech Stack
                 </span>
-                <div className="flex flex-wrap gap-2">
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                   {selectedProject.stack.map((item) => (
                     <span
                       key={item}
-                      className="px-3 py-1 text-xs font-mono text-[#9CA3AF] bg-white/[0.04] border border-white/8 rounded-lg"
+                      style={{ padding: '8px 14px' }}
+                      className="text-xs font-mono text-[#A1A1AA] bg-white/[0.04] border border-white/8 rounded-lg"
                     >
                       {item}
                     </span>
@@ -269,13 +296,23 @@ export default function Projects() {
 
               <div className="pt-6 border-t border-white/8 flex items-center justify-between font-mono">
                 <span className="text-xs text-[#6B7280]">
-                  SYS.VERIFIED // EWU
+                  VERIFIED BUILD // EWU
                 </span>
                 <button
                   onClick={() => setSelectedProject(null)}
-                  className="px-6 py-2.5 rounded-full bg-white text-black font-semibold text-xs hover:bg-white/90 transition-transform active:scale-95 cursor-pointer"
+                  style={{
+                    height: '42px',
+                    padding: '0 24px',
+                    borderRadius: '999px',
+                    background: 'rgba(255, 255, 255, 0.08)',
+                    border: '1px solid rgba(255, 255, 255, 0.16)',
+                    color: '#FFFFFF',
+                    fontSize: '13px',
+                    fontWeight: 500,
+                  }}
+                  className="hover:bg-white hover:text-black transition-colors cursor-pointer"
                 >
-                  CLOSE
+                  Close
                 </button>
               </div>
             </motion.div>
