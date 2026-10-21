@@ -614,7 +614,7 @@ export default function DhakaNeonDrift() {
         </div>
       </div>
 
-      {/* RIGHT SIDE (38% WIDTH): PERSISTENT NOTHING OS GLASSMORPHISM HUD INSPECTOR PANEL */}
+      {/* RIGHT SIDE (38% WIDTH): PERSISTENT GLASSMORPHIC HUD INSPECTOR PANEL */}
       <div
         ref={panelRef}
         className="bento-card corner-plus flex flex-col justify-between w-full min-h-[500px] h-full"

@@ -24,13 +24,13 @@ export default function Skills() {
         </p>
       </div>
 
-      {/* 12-Cell Nothing OS Tornado Grid Matrix */}
+      {/* 12-Cell Interactive Tornado Grid Matrix */}
       <TornadoGridMatrix />
 
       {/* Matrix Telemetry Footer */}
       <div className="mt-8 flex items-center justify-between text-[11px] font-mono text-[#6B7280] border-t border-white/6 pt-4">
         <span>GRID: 28x28 LED MATRIX // 650ms CUBIC FUNNEL SWIRL</span>
-        <span>PALETTE: #D71921 NOTHING RED // #E2652B WARM ORANGE</span>
+        <span>PALETTE: #D71921 CRIMSON // #E2652B WARM ORANGE</span>
       </div>
     </section>
   )

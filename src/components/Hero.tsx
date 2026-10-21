@@ -56,7 +56,7 @@ export default function Hero() {
         {/* Subtle dark backdrop gradient directly behind title for 100% legibility */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-[#080808]/90 to-transparent blur-2xl -z-10 pointer-events-none scale-125" />
 
-        {/* EDITORIAL HEADLINE IN INSTRUMENT SERIF (Single line fit) */}
+        {/* HEADLINE IN INSTRUMENT SERIF (Single line fit) */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
