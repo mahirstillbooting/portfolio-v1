@@ -112,8 +112,8 @@ export default function DhakaNeonDrift() {
     if (panelRef.current) {
       gsap.fromTo(
         panelRef.current,
-        { opacity: 0.65, y: 8 },
-        { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out', overwrite: 'auto' }
+        { opacity: 0.45, y: 12, scale: 0.98 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.38, ease: 'power2.out', overwrite: 'auto' }
       )
     }
   }, [])
@@ -561,11 +561,10 @@ export default function DhakaNeonDrift() {
     <div
       style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
         gap: '24px',
         alignItems: 'stretch',
       }}
-      className="w-full lg:grid-cols-[1.6fr_1fr]"
+      className="w-full grid-cols-1 lg:grid-cols-[1.6fr_1fr]"
     >
       {/* LEFT SIDE (62% WIDTH ON DESKTOP): 3D ROVER CANVAS + AUTOPILOT PILLS */}
       <div className="flex flex-col justify-between w-full h-full">
