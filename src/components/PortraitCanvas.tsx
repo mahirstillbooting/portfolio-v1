@@ -180,9 +180,9 @@ export default function PortraitCanvas({ imageSrc }: PortraitCanvasProps) {
     if (!width || !height) return
 
     const centerX = width / 2
-    const centerY = Math.min(height * 0.44, 310)
-    const faceRadius = Math.min(width * 0.35, 280, height * 0.44)
-    const gridCount = 64
+    const centerY = Math.min(height * 0.42, 300)
+    const faceRadius = Math.min(width * 0.38, 315, height * 0.46)
+    const gridCount = 68
     const cellSize = (faceRadius * 2) / gridCount
 
     const newParticles: DotParticle[] = []
@@ -382,7 +382,7 @@ export default function PortraitCanvas({ imageSrc }: PortraitCanvasProps) {
       }
 
       const centerX = width / 2
-      const centerY = Math.min(height * 0.44, 310)
+      const centerY = Math.min(height * 0.42, 300)
       const v = vortexRef.current
       const isVortex = v.active
       const scrollDispersion = scrollDispersionRef.current
