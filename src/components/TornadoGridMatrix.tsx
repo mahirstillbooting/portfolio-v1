@@ -403,11 +403,12 @@ function MatrixCell({ item, audioCtxRef }: MatrixCellProps) {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       style={{
-        width: '150px',
-        height: '150px',
-        background: '#0D0D0D',
-        border: '1px solid rgba(255,255,255,0.08)',
-        borderRadius: '20px',
+        width: '100%',
+        aspectRatio: '1 / 1',
+        minHeight: '150px',
+        background: 'rgba(255, 255, 255, 0.02)',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
+        borderRadius: '18px',
         position: 'relative',
         display: 'flex',
         flexDirection: 'column',
@@ -418,7 +419,7 @@ function MatrixCell({ item, audioCtxRef }: MatrixCellProps) {
         overflow: 'hidden',
         transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
       }}
-      className="hover:border-[#E2652B]/40 hover:shadow-[0_12px_30px_rgba(0,0,0,0.8)] select-none group"
+      className="hover:border-[#E2652B]/40 hover:bg-white/[0.04] hover:shadow-[0_12px_30px_rgba(0,0,0,0.8)] select-none group"
     >
       {/* Top telemetry: N-01 code and red/orange status dot */}
       <div className="w-full flex items-center justify-between text-[10px] font-mono text-[#6B7280]">
