@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import * as THREE from 'three'
 import gsap from 'gsap'
-import { ArrowUpRight, Navigation } from 'lucide-react'
+import { ArrowUpRight, Navigation, Sparkles } from 'lucide-react'
 import { getAudioEnabled } from '../utils/audioState'
 
 export interface ProjectItem {
@@ -67,13 +67,13 @@ export default function DhakaNeonDrift() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   const [activeProject, setActiveProject] = useState<ProjectItem>(PROJECTS[0])
-  const [isFocused, setIsFocused] = useState<boolean>(true)
-  const [hasMoved, setHasMoved] = useState<boolean>(false)
+  const [isFocused, setIsFocused] = useState<boolean>(false)
+  const [isDriving, setIsDriving] = useState<boolean>(false)
 
   const audioCtxRef = useRef<AudioContext | null>(null)
   const jumpToProjectRef = useRef<((idx: number) => void) | null>(null)
 
-  // Web Audio mechanical synth chime
+  // Web Audio mechanical synth chime on beacon lock
   const playChime = useCallback(() => {
     if (!getAudioEnabled()) return
     try {
@@ -111,20 +111,20 @@ export default function DhakaNeonDrift() {
     // 1. Scene, Camera & Renderer
     const scene = new THREE.Scene()
     scene.background = new THREE.Color(0x000000) // Pure OLED Black
-    scene.fog = new THREE.FogExp2(0x000000, 0.022)
+    scene.fog = new THREE.FogExp2(0x000000, 0.02)
 
     const isMobile = window.innerWidth < 768
     const camera = new THREE.PerspectiveCamera(
-      isMobile ? 55 : 44,
+      isMobile ? 54 : 44,
       container.clientWidth / container.clientHeight,
       0.1,
-      120
+      140
     )
 
-    // Initial camera position focused on project 01
-    const p0 = PROJECTS[0]
-    camera.position.set(p0.pos[0], 2.2, p0.pos[2] + 7.2)
-    const camLookAt = new THREE.Vector3(p0.pos[0], 1.1, p0.pos[2])
+    // Initial isometric chase camera position
+    const camPos = new THREE.Vector3(0, 15, 20)
+    const camLookAt = new THREE.Vector3(0, 0.5, 0)
+    camera.position.copy(camPos)
     camera.lookAt(camLookAt)
 
     const renderer = new THREE.WebGLRenderer({
@@ -137,8 +137,8 @@ export default function DhakaNeonDrift() {
     renderer.setSize(container.clientWidth, container.clientHeight)
     renderer.setClearColor(0x000000, 1)
 
-    // 2. Minimal Ambient & Directional Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
+    // 2. Minimal Lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6)
     scene.add(ambientLight)
 
     const dirLight = new THREE.DirectionalLight(0xffffff, 1.2)
@@ -146,7 +146,7 @@ export default function DhakaNeonDrift() {
     scene.add(dirLight)
 
     // 3. Infinite Dot-Matrix Grid Plane & Starfield
-    const gridHelper = new THREE.GridHelper(56, 56, 0xd2531d, 0x1f1f1f)
+    const gridHelper = new THREE.GridHelper(60, 60, 0xd2531d, 0x1f1f1f)
     gridHelper.position.y = -0.01
     scene.add(gridHelper)
 
@@ -175,58 +175,73 @@ export default function DhakaNeonDrift() {
     const starGeo = new THREE.BufferGeometry()
     const starPos = new Float32Array(starCount * 3)
     for (let i = 0; i < starCount; i++) {
-      starPos[i * 3] = (Math.random() - 0.5) * 60
+      starPos[i * 3] = (Math.random() - 0.5) * 64
       starPos[i * 3 + 1] = Math.random() * 12 + 0.1
-      starPos[i * 3 + 2] = (Math.random() - 0.5) * 60
+      starPos[i * 3 + 2] = (Math.random() - 0.5) * 64
     }
     starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3))
     const starMat = new THREE.PointsMaterial({
       color: 0x555555,
-      size: 0.16,
+      size: 0.15,
       transparent: true,
       opacity: 0.6,
     })
     const starMesh = new THREE.Points(starGeo, starMat)
     scene.add(starMesh)
 
-    // 4. Low-Poly Mechanical Reticle/Drone
+    // 4. Low-Poly Mechanical Reticle/Drone (Player Vehicle)
     const droneGroup = new THREE.Group()
 
     // Sleek triangular wireframe body
-    const droneGeo = new THREE.ConeGeometry(0.7, 1.8, 3)
-    droneGeo.rotateX(Math.PI / 2)
-    const droneMat = new THREE.MeshStandardMaterial({
+    const bodyGeo = new THREE.BoxGeometry(1.6, 0.5, 2.3)
+    const bodyMat = new THREE.MeshStandardMaterial({
       color: 0x111111,
-      roughness: 0.2,
+      roughness: 0.25,
       metalness: 0.9,
     })
-    const droneMesh = new THREE.Mesh(droneGeo, droneMat)
-    droneMesh.position.y = 0.5
-    droneGroup.add(droneMesh)
+    const bodyMesh = new THREE.Mesh(bodyGeo, bodyMat)
+    bodyMesh.position.y = 0.45
+    droneGroup.add(bodyMesh)
 
     // Stark white wireframe outline
-    const droneWireGeo = new THREE.EdgesGeometry(droneGeo)
-    const droneWireMat = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 2 })
-    const droneWire = new THREE.LineSegments(droneWireGeo, droneWireMat)
-    droneWire.position.copy(droneMesh.position)
-    droneGroup.add(droneWire)
+    const wireGeo = new THREE.EdgesGeometry(bodyGeo)
+    const wireMat = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 2 })
+    const wireMesh = new THREE.LineSegments(wireGeo, wireMat)
+    wireMesh.position.copy(bodyMesh.position)
+    droneGroup.add(wireMesh)
+
+    // Glowing cockpit visor
+    const canopyGeo = new THREE.BoxGeometry(1.0, 0.3, 1.1)
+    const canopyMat = new THREE.MeshBasicMaterial({ color: 0xd2531d, wireframe: true })
+    const canopy = new THREE.Mesh(canopyGeo, canopyMat)
+    canopy.position.set(0, 0.75, -0.2)
+    droneGroup.add(canopy)
+
+    // Dual front headlights
+    const lightL = new THREE.PointLight(0xffffff, 2.0, 10)
+    lightL.position.set(-0.55, 0.5, -1.3)
+    droneGroup.add(lightL)
+
+    const lightR = new THREE.PointLight(0xffffff, 2.0, 10)
+    lightR.position.set(0.55, 0.5, -1.3)
+    droneGroup.add(lightR)
 
     // Glowing Nothing Red thruster
-    const thrusterLight = new THREE.PointLight(0xd2531d, 3.0, 8)
-    thrusterLight.position.set(0, 0.5, 0.9)
+    const thrusterLight = new THREE.PointLight(0xd2531d, 3.5, 8)
+    thrusterLight.position.set(0, 0.5, 1.2)
     droneGroup.add(thrusterLight)
 
-    droneGroup.position.set(p0.pos[0], 0, p0.pos[2] + 1.2)
+    droneGroup.position.set(0, 0, 0)
     scene.add(droneGroup)
 
     // Particle exhaust trail
-    const trailMax = 90
+    const trailMax = 120
     const trailPositions = new Float32Array(trailMax * 3)
     const trailGeo = new THREE.BufferGeometry()
     trailGeo.setAttribute('position', new THREE.BufferAttribute(trailPositions, 3))
     const trailMat = new THREE.PointsMaterial({
       color: 0xd2531d,
-      size: 0.22,
+      size: 0.24,
       transparent: true,
       opacity: 0.85,
       blending: THREE.AdditiveBlending,
@@ -243,7 +258,44 @@ export default function DhakaNeonDrift() {
       trailGeo.attributes.position.needsUpdate = true
     }
 
-    // 5. Glowing Red LED Ring Nodes for Each Project
+    // 5. Particle Burst System on Beacon Contact
+    const burstCount = 45
+    const burstGeo = new THREE.BufferGeometry()
+    const burstPositions = new Float32Array(burstCount * 3)
+    const burstVelocities: THREE.Vector3[] = []
+    for (let i = 0; i < burstCount; i++) {
+      burstPositions[i * 3] = 0
+      burstPositions[i * 3 + 1] = -999
+      burstPositions[i * 3 + 2] = 0
+      burstVelocities.push(new THREE.Vector3())
+    }
+    burstGeo.setAttribute('position', new THREE.BufferAttribute(burstPositions, 3))
+    const burstMat = new THREE.PointsMaterial({
+      color: 0xd2531d,
+      size: 0.28,
+      transparent: true,
+      opacity: 0,
+      blending: THREE.AdditiveBlending,
+    })
+    const burstMesh = new THREE.Points(burstGeo, burstMat)
+    scene.add(burstMesh)
+
+    const triggerBurst = (origin: THREE.Vector3) => {
+      burstMat.opacity = 1.0
+      for (let i = 0; i < burstCount; i++) {
+        burstPositions[i * 3] = origin.x
+        burstPositions[i * 3 + 1] = origin.y + 0.8
+        burstPositions[i * 3 + 2] = origin.z
+
+        const angle = Math.random() * Math.PI * 2
+        const speed = Math.random() * 0.2 + 0.08
+        const upSpeed = Math.random() * 0.25 + 0.1
+        burstVelocities[i].set(Math.cos(angle) * speed, upSpeed, Math.sin(angle) * speed)
+      }
+      burstGeo.attributes.position.needsUpdate = true
+    }
+
+    // 6. Glowing Red LED Ring Nodes for Each Project
     interface NodeMeshObj {
       group: THREE.Group
       data: ProjectItem
@@ -277,10 +329,10 @@ export default function DhakaNeonDrift() {
         color: 0xffffff,
         side: THREE.DoubleSide,
         transparent: true,
-        opacity: 0.4,
+        opacity: 0.45,
       })
       const verticalRing = new THREE.Mesh(vRingGeo, vRingMat)
-      verticalRing.position.y = 1.2
+      verticalRing.position.y = 1.3
       nGroup.add(verticalRing)
 
       // Unique Low-Poly Geometric Artifact per Project
@@ -292,14 +344,14 @@ export default function DhakaNeonDrift() {
       else artifactGeo = new THREE.CylinderGeometry(0.7, 0.7, 1.2, 8)
 
       const artifactMat = new THREE.MeshStandardMaterial({
-        color: 0x111111,
+        color: 0x141414,
         roughness: 0.15,
         metalness: 0.8,
         emissive: 0xd2531d,
-        emissiveIntensity: 0.4,
+        emissiveIntensity: 0.5,
       })
       const crystal = new THREE.Mesh(artifactGeo, artifactMat)
-      crystal.position.y = 1.2
+      crystal.position.y = 1.3
       nGroup.add(crystal)
 
       const crystalWireGeo = new THREE.EdgesGeometry(artifactGeo)
@@ -307,38 +359,39 @@ export default function DhakaNeonDrift() {
       crystal.add(new THREE.LineSegments(crystalWireGeo, crystalWireMat))
 
       // Vertical holographic light column
-      const beamGeo = new THREE.CylinderGeometry(0.04, 0.35, 5, 16, 1, true)
+      const beamGeo = new THREE.CylinderGeometry(0.04, 0.35, 6, 16, 1, true)
       const beamMat = new THREE.MeshBasicMaterial({
         color: 0xd2531d,
         transparent: true,
-        opacity: 0.22,
+        opacity: 0.24,
         side: THREE.DoubleSide,
       })
       const beam = new THREE.Mesh(beamGeo, beamMat)
-      beam.position.y = 2.5
+      beam.position.y = 3.0
       nGroup.add(beam)
 
       // Red LED PointLight
-      const nLight = new THREE.PointLight(0xd2531d, 3.0, 10)
-      nLight.position.y = 1.4
+      const nLight = new THREE.PointLight(0xd2531d, 3.2, 11)
+      nLight.position.y = 1.5
       nGroup.add(nLight)
 
       scene.add(nGroup)
       nodeMeshes.push({ group: nGroup, data: p, crystal, groundRing, verticalRing, light: nLight })
     })
 
-    // 6. Navigation Motion State
+    // 7. Navigation Motion State & Physics
     const state = {
-      x: p0.pos[0],
-      z: p0.pos[2] + 1.2,
+      x: 0,
+      z: 0,
       vx: 0,
       vz: 0,
       heading: 0,
       targetHeading: 0,
       isAutoNav: false,
+      isHeroCinematic: false,
     }
 
-    // 7. Instant GSAP Transition to Project
+    // 8. Instant GSAP Transition to Project Node
     const jumpToProject = (idx: number) => {
       const p = PROJECTS[idx]
       if (!p) return
@@ -346,7 +399,10 @@ export default function DhakaNeonDrift() {
       setActiveProject(p)
       setIsFocused(true)
       state.isAutoNav = true
+      state.isHeroCinematic = true
+      setIsDriving(true)
       playChime()
+      triggerBurst(new THREE.Vector3(p.pos[0], 0.5, p.pos[2]))
 
       // 1. Camera transition directly in front of the project artifact
       gsap.killTweensOf(camera.position)
@@ -354,35 +410,70 @@ export default function DhakaNeonDrift() {
 
       gsap.to(camera.position, {
         x: p.pos[0],
-        y: 2.2,
-        z: p.pos[2] + 7.2,
-        duration: 1.4,
+        y: 3.5,
+        z: p.pos[2] + 8.5,
+        duration: 1.3,
         ease: 'power4.inOut',
       })
 
       gsap.to(camLookAt, {
         x: p.pos[0],
-        y: 1.1,
+        y: 1.2,
         z: p.pos[2],
-        duration: 1.4,
+        duration: 1.3,
         ease: 'power4.inOut',
       })
 
-      // 2. Drone glides smoothly in front of the artifact
+      // 2. Drone glides smoothly to the artifact pad
       gsap.killTweensOf(state)
       gsap.to(state, {
         x: p.pos[0],
         z: p.pos[2] + 1.2,
-        duration: 1.4,
+        duration: 1.3,
         ease: 'power4.inOut',
         onComplete: () => {
           state.isAutoNav = false
+          setIsDriving(false)
         },
       })
     }
     jumpToProjectRef.current = jumpToProject
 
-    // 8. Desktop Keyboard & Steering
+    // Drive drone smoothly to coordinate on ground click/tap
+    const driveToCoord = (tx: number, tz: number, targetProject?: ProjectItem) => {
+      state.isAutoNav = true
+      setIsDriving(true)
+
+      if (targetProject) {
+        jumpToProject(PROJECTS.findIndex((p) => p.id === targetProject.id))
+        return
+      }
+
+      // Exit cinematic focus when driving in free space
+      setIsFocused(false)
+      state.isHeroCinematic = false
+
+      gsap.killTweensOf(state)
+      gsap.to(state, {
+        x: tx,
+        z: tz,
+        duration: Math.min(1.6, Math.max(0.6, Math.hypot(tx - state.x, tz - state.z) * 0.12)),
+        ease: 'power2.out',
+        onUpdate: () => {
+          const dx = tx - state.x
+          const dz = tz - state.z
+          if (Math.hypot(dx, dz) > 0.2) {
+            state.heading = Math.atan2(dx, dz)
+          }
+        },
+        onComplete: () => {
+          state.isAutoNav = false
+          setIsDriving(false)
+        },
+      })
+    }
+
+    // 9. Keyboard Controls (WASD & 1-5 Quick Keys)
     const keys: Record<string, boolean> = {}
 
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -390,7 +481,7 @@ export default function DhakaNeonDrift() {
       if (tag === 'INPUT' || tag === 'TEXTAREA') return
 
       const key = e.key
-      // 1-5 Instant GSAP jump
+      // 1-5 Numeric shortcuts to jump instantly
       if (['1', '2', '3', '4', '5'].includes(key)) {
         const idx = parseInt(key, 10) - 1
         jumpToProject(idx)
@@ -399,8 +490,8 @@ export default function DhakaNeonDrift() {
 
       keys[key.toLowerCase()] = true
       state.isAutoNav = false
-      setHasMoved(true)
-      setIsFocused(false) // Dismiss spatial typography when steering away
+      state.isHeroCinematic = false
+      setIsFocused(false) // Smoothly fade out spatial text when resuming free flight
     }
 
     const handleKeyUp = (e: KeyboardEvent) => {
@@ -410,54 +501,80 @@ export default function DhakaNeonDrift() {
     window.addEventListener('keydown', handleKeyDown)
     window.addEventListener('keyup', handleKeyUp)
 
-    // 9. Mouse Vector Steering & Click-to-Focus Raycasting
+    // 10. Pointer Steering & Raycasting (Ground Click / Beacon Click)
     const raycaster = new THREE.Raycaster()
     const mouse = new THREE.Vector2()
-    let isMouseDown = false
+    const groundPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0)
+
+    let pointerDownPos = { x: 0, y: 0 }
+    let isPointerDragging = false
 
     const handlePointerDown = (e: PointerEvent) => {
-      isMouseDown = true
-      const rect = canvas.getBoundingClientRect()
-      mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1
-      mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1
+      pointerDownPos = { x: e.clientX, y: e.clientY }
+      isPointerDragging = false
+    }
 
-      // Raycast check for project crystals
-      raycaster.setFromCamera(mouse, camera)
-      const crystals = nodeMeshes.map((nm) => nm.crystal)
-      const hits = raycaster.intersectObjects(crystals, true)
-      if (hits.length > 0) {
-        const hit = hits[0].object
-        const nm = nodeMeshes.find((n) => n.crystal === hit || n.crystal.children.includes(hit as THREE.LineSegments))
-        if (nm) {
-          const idx = PROJECTS.findIndex((p) => p.id === nm.data.id)
-          if (idx !== -1) jumpToProject(idx)
+    const handlePointerMove = (e: PointerEvent) => {
+      const dist = Math.hypot(e.clientX - pointerDownPos.x, e.clientY - pointerDownPos.y)
+      if (dist > 8) {
+        isPointerDragging = true
+        // Vector steering while dragging
+        const rect = canvas.getBoundingClientRect()
+        const nx = ((e.clientX - rect.left) / rect.width) * 2 - 1
+        const ny = -((e.clientY - rect.top) / rect.height) * 2 + 1
+        if (!state.isAutoNav) {
+          state.vx += nx * 0.45
+          state.vz += -ny * 0.45
+          state.isHeroCinematic = false
+          setIsFocused(false)
         }
       }
     }
 
-    const handlePointerMove = (e: PointerEvent) => {
-      const rect = canvas.getBoundingClientRect()
-      mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1
-      mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1
+    const handlePointerUp = (e: PointerEvent) => {
+      // If was just a tap / click (not a drag), navigate to destination
+      if (!isPointerDragging) {
+        const rect = canvas.getBoundingClientRect()
+        mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1
+        mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1
 
-      // Mouse vector steering when held down
-      if (isMouseDown && !state.isAutoNav) {
-        state.vx += mouse.x * 0.4
-        state.vz += -mouse.y * 0.4
-        setHasMoved(true)
-        setIsFocused(false)
+        raycaster.setFromCamera(mouse, camera)
+
+        // Check if clicked beacon crystal
+        const crystals = nodeMeshes.map((nm) => nm.crystal)
+        const hits = raycaster.intersectObjects(crystals, true)
+        if (hits.length > 0) {
+          const hit = hits[0].object
+          const nm = nodeMeshes.find((n) => n.crystal === hit || n.crystal.children.includes(hit as THREE.LineSegments))
+          if (nm) {
+            const idx = PROJECTS.findIndex((p) => p.id === nm.data.id)
+            if (idx !== -1) jumpToProject(idx)
+            return
+          }
+        }
+
+        // Otherwise drive to ground coordinate
+        const intersectPoint = new THREE.Vector3()
+        if (raycaster.ray.intersectPlane(groundPlane, intersectPoint)) {
+          // Check proximity to any node
+          let clickedNode: ProjectItem | undefined
+          for (const p of PROJECTS) {
+            if (Math.hypot(intersectPoint.x - p.pos[0], intersectPoint.z - p.pos[2]) < 2.5) {
+              clickedNode = p
+              break
+            }
+          }
+          driveToCoord(intersectPoint.x, intersectPoint.z, clickedNode)
+        }
       }
-    }
-
-    const handlePointerUp = () => {
-      isMouseDown = false
+      isPointerDragging = false
     }
 
     canvas.addEventListener('pointerdown', handlePointerDown)
     window.addEventListener('pointermove', handlePointerMove)
     window.addEventListener('pointerup', handlePointerUp)
 
-    // 10. Main Animation Loop
+    // 11. Main Animation Loop
     let animId: number
     const clock = new THREE.Clock()
 
@@ -465,11 +582,11 @@ export default function DhakaNeonDrift() {
       animId = requestAnimationFrame(animate)
       const time = clock.getElapsedTime()
 
-      // Manual WASD / Arrow steering
+      // WASD direct physics
       if (!state.isAutoNav) {
         let ax = 0
         let az = 0
-        const accel = 0.55
+        const accel = 0.6
 
         if (keys['w'] || keys['arrowup']) az -= accel
         if (keys['s'] || keys['arrowdown']) az += accel
@@ -480,41 +597,51 @@ export default function DhakaNeonDrift() {
           state.vx += ax
           state.vz += az
           state.targetHeading = Math.atan2(ax, az)
+          setIsDriving(true)
+        } else if (Math.hypot(state.vx, state.vz) < 0.05) {
+          setIsDriving(false)
         }
 
-        // Soft spring inertia damping
+        // Soft spring damping
         state.vx *= 0.88
         state.vz *= 0.88
         state.x += state.vx
         state.z += state.vz
-        state.x = Math.max(-24, Math.min(24, state.x))
-        state.z = Math.max(-24, Math.min(24, state.z))
+        state.x = Math.max(-25, Math.min(25, state.x))
+        state.z = Math.max(-25, Math.min(25, state.z))
 
         // Heading rotation
         if (Math.hypot(state.vx, state.vz) > 0.02) {
           const diff = state.targetHeading - state.heading
-          state.heading += THREE.MathUtils.clamp(diff, -0.15, 0.15)
+          state.heading += THREE.MathUtils.clamp(diff, -0.16, 0.16)
+        }
 
-          // Camera smoothly tracks drone in free roaming mode
-          camera.position.x += (state.x - camera.position.x) * 0.06
-          camera.position.z += (state.z + 10 - camera.position.z) * 0.06
-          camera.position.y += (7 - camera.position.y) * 0.06
+        // In free-flight mode, camera smoothly tracks drone in third-person chase
+        if (!state.isHeroCinematic) {
+          const targetCamX = state.x * 0.5
+          const targetCamY = 14
+          const targetCamZ = state.z + 18
+
+          camera.position.x += (targetCamX - camera.position.x) * 0.06
+          camera.position.y += (targetCamY - camera.position.y) * 0.06
+          camera.position.z += (targetCamZ - camera.position.z) * 0.06
+
           camLookAt.x += (state.x - camLookAt.x) * 0.08
+          camLookAt.y += (0.6 - camLookAt.y) * 0.08
           camLookAt.z += (state.z - camLookAt.z) * 0.08
-          camLookAt.y += (0.5 - camLookAt.y) * 0.08
         }
       }
 
-      // Update Drone
+      // Update Drone mesh
       droneGroup.position.set(state.x, 0, state.z)
       droneGroup.rotation.y = state.heading
 
-      // Exhaust particle trail
+      // Add particle exhaust trail when moving
       if (Math.hypot(state.vx, state.vz) > 0.02 || state.isAutoNav) {
         addTrailPoint(state.x, 0, state.z)
       }
 
-      // Animate Nodes & Check Drone Proximity
+      // Animate Nodes & Detect Proximity
       nodeMeshes.forEach((nm, idx) => {
         nm.crystal.rotation.y = time * 0.85 + idx * 0.5
         nm.crystal.rotation.x = Math.sin(time * 1.5 + idx) * 0.15
@@ -522,21 +649,35 @@ export default function DhakaNeonDrift() {
         nm.verticalRing.rotation.x = time * 0.8
 
         const isCurrent = activeProject.id === nm.data.id
-        nm.light.intensity = isCurrent ? 4.5 : 2.0
+        nm.light.intensity = isCurrent ? 4.5 : 1.8
         nm.groundRing.scale.setScalar(1 + Math.sin(time * 3 + idx) * 0.06)
 
-        // If drone approaches node in free flight, lock onto it
-        if (!state.isAutoNav) {
+        // If drone drives into beacon pad during free flight
+        if (!state.isAutoNav && !state.isHeroCinematic) {
           const dist = Math.hypot(state.x - nm.data.pos[0], state.z - nm.data.pos[2])
-          if (dist < 3.2 && activeProject.id !== nm.data.id) {
+          if (dist < 2.5 && activeProject.id !== nm.data.id) {
             setActiveProject(nm.data)
             setIsFocused(true)
+            state.isHeroCinematic = true
             playChime()
+            triggerBurst(new THREE.Vector3(nm.data.pos[0], 0.5, nm.data.pos[2]))
           }
         }
       })
 
-      // Starfield twinkle
+      // Update Burst Particles
+      if (burstMat.opacity > 0.01) {
+        burstMat.opacity *= 0.94
+        for (let i = 0; i < burstCount; i++) {
+          burstPositions[i * 3] += burstVelocities[i].x
+          burstPositions[i * 3 + 1] += burstVelocities[i].y
+          burstPositions[i * 3 + 2] += burstVelocities[i].z
+          burstVelocities[i].y -= 0.006
+        }
+        burstGeo.attributes.position.needsUpdate = true
+      }
+
+      // Starfield subtle rotation
       starMesh.rotation.y = time * 0.003
 
       // Camera orientation
@@ -547,13 +688,13 @@ export default function DhakaNeonDrift() {
 
     animate()
 
-    // 11. Resize Handler
+    // 12. Resize Handler
     const handleResize = () => {
       if (!container) return
       const w = container.clientWidth
       const h = container.clientHeight
       camera.aspect = w / h
-      camera.fov = window.innerWidth < 768 ? 55 : 44
+      camera.fov = window.innerWidth < 768 ? 54 : 44
       camera.updateProjectionMatrix()
       renderer.setSize(w, h)
     }
@@ -572,25 +713,36 @@ export default function DhakaNeonDrift() {
   }, [playChime, activeProject.id])
 
   return (
-    <div className="relative w-full h-[580px] sm:h-[680px] lg:h-[720px] rounded-3xl bg-black border border-[#1F1F1F] overflow-hidden select-none">
+    <div
+      ref={containerRef}
+      tabIndex={0}
+      className="relative w-full h-[580px] sm:h-[680px] lg:h-[720px] rounded-3xl bg-black border border-[#1F1F1F] overflow-hidden select-none outline-none focus:border-[#D2531D]/50 transition-colors"
+      style={{ touchAction: 'none' }}
+    >
       {/* 3D WebGL Canvas */}
       <canvas
         ref={canvasRef}
         className="w-full h-full block cursor-crosshair select-none"
       />
 
-      {/* Top Left Indicator: Minimal Reticle Status */}
+      {/* Top Left: Minimal Reticle Status */}
       <div className="absolute top-6 left-6 z-20 flex items-center gap-2.5 text-xs font-mono text-neutral-400 pointer-events-none">
         <Navigation className="w-3.5 h-3.5 text-[#D2531D]" />
         <span className="text-white font-medium">WASD / VECTOR STEER</span>
         <span className="text-neutral-600">•</span>
-        <span className="hidden sm:inline text-neutral-500">1-5 QUICK FOCUS</span>
+        <span className="hidden sm:inline text-neutral-500">CLICK GROUND TO DRIFT</span>
+      </div>
+
+      {/* Top Right: Active Status Indicator */}
+      <div className="absolute top-6 right-6 z-20 flex items-center gap-2 text-xs font-mono text-neutral-500 pointer-events-none">
+        <span className="w-2 h-2 rounded-full bg-[#D2531D] animate-ping" />
+        <span className="text-white font-medium">{isDriving ? 'DRIFT ENGAGED' : 'SYS READY'}</span>
       </div>
 
       {/* SPATIAL FLOATING TYPOGRAPHY IN 3D (NO RECTANGULAR CARDS, NO SIDE PANELS) */}
       <div
         className={`absolute inset-0 z-10 flex flex-col items-center justify-center p-6 transition-all duration-700 pointer-events-none ${
-          isFocused ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+          isFocused ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
         }`}
       >
         <div className="max-w-2xl text-center flex flex-col items-center pointer-events-auto">
@@ -638,13 +790,18 @@ export default function DhakaNeonDrift() {
               <span>[CODEBASE]</span>
             </a>
           </div>
+
+          {/* Resume flight hint */}
+          <div className="mt-8 text-[11px] font-mono text-neutral-500 uppercase tracking-widest">
+            [PRESS WASD OR CLICK GROUND TO RESUME FLIGHT]
+          </div>
         </div>
       </div>
 
       {/* FLOATING BOTTOM DOCK: CLEAN MINIMAL DOT-BAR NAVIGATOR */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-4 sm:gap-6 px-6 py-2.5 rounded-full bg-black/85 border border-[#1F1F1F] backdrop-blur-xl">
         {PROJECTS.map((p, idx) => {
-          const isSelected = activeProject.id === p.id
+          const isSelected = activeProject.id === p.id && isFocused
           return (
             <button
               key={p.id}
@@ -673,10 +830,11 @@ export default function DhakaNeonDrift() {
         })}
       </div>
 
-      {/* Soft Initial Movement Prompt */}
-      {!hasMoved && !isFocused && (
-        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-10 text-[11px] font-mono text-neutral-500 pointer-events-none animate-pulse">
-          DRAG OR PRESS WASD TO GLIDE
+      {/* Initial Guidance Prompt */}
+      {!isFocused && !isDriving && (
+        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-10 text-[11px] font-mono text-neutral-500 pointer-events-none animate-pulse flex items-center gap-2 bg-black/60 px-4 py-1.5 rounded-full border border-white/6 backdrop-blur-md">
+          <Sparkles className="w-3 h-3 text-[#D2531D]" />
+          <span>USE WASD OR CLICK/TAP ANYWHERE ON GROUND TO DRIFT</span>
         </div>
       )}
     </div>
