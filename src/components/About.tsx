@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
-import { Award, Gamepad2, Keyboard, Sparkles, MapPin, Compass } from 'lucide-react'
+import { Award, Gamepad2, Keyboard, MapPin, Compass } from 'lucide-react'
+import { PerfumeBottleIcon } from './Icons'
 
 export default function About() {
   const passions = [
@@ -9,7 +10,7 @@ export default function About() {
       desc: 'Custom switches, lubing sound signatures & tactile feedback.',
     },
     {
-      icon: Sparkles,
+      icon: PerfumeBottleIcon,
       title: 'Perfume Notes',
       desc: 'Niche accords, olfactory pyramids & fragrance chemistry.',
     },
