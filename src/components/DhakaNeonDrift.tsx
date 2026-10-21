@@ -67,9 +67,15 @@ export default function DhakaNeonDrift() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   const [activeProject, setActiveProject] = useState<ProjectItem>(PROJECTS[0])
+  const activeProjectIdRef = useRef<string>(PROJECTS[0].id)
   const [isFocused, setIsFocused] = useState<boolean>(false)
   const [isDriving, setIsDriving] = useState<boolean>(false)
   const [cameraAngle, setCameraAngle] = useState<'isometric' | 'topdown'>('isometric')
+
+  const selectProject = useCallback((p: ProjectItem) => {
+    activeProjectIdRef.current = p.id
+    setActiveProject(p)
+  }, [])
 
   const cameraAngleRef = useRef<'isometric' | 'topdown'>('isometric')
   const audioCtxRef = useRef<AudioContext | null>(null)
@@ -446,7 +452,7 @@ export default function DhakaNeonDrift() {
       const p = PROJECTS[idx]
       if (!p) return
 
-      setActiveProject(p)
+      selectProject(p)
       setIsFocused(true)
       state.isAutoNav = true
       state.isHeroCinematic = true
@@ -729,7 +735,7 @@ export default function DhakaNeonDrift() {
         nm.verticalRing.rotation.y = -time * 1.2
         nm.verticalRing.rotation.x = time * 0.8
 
-        const isCurrent = activeProject.id === nm.data.id
+        const isCurrent = activeProjectIdRef.current === nm.data.id
         nm.light.intensity = isCurrent ? 4.5 : 1.8
         nm.groundRing.scale.setScalar(1 + Math.sin(time * 3 + idx) * 0.06)
 
@@ -738,7 +744,7 @@ export default function DhakaNeonDrift() {
           const dist = Math.hypot(state.x - nm.data.pos[0], state.z - nm.data.pos[2])
           // Only trigger if arriving at an unvisited/different project
           if (dist < 2.4 && state.parkedBeaconId !== nm.data.id) {
-            setActiveProject(nm.data)
+            selectProject(nm.data)
             setIsFocused(true)
             state.isHeroCinematic = true
             state.parkedBeaconId = nm.data.id
@@ -827,7 +833,7 @@ export default function DhakaNeonDrift() {
       canvas.removeEventListener('pointerup', handlePointerUp)
       renderer.dispose()
     }
-  }, [playChime, activeProject.id])
+  }, [playChime, selectProject])
 
   return (
     <div
