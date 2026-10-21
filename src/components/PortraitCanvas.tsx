@@ -75,7 +75,7 @@ export default function PortraitCanvas({ imageSrc }: PortraitCanvasProps) {
   const particlesRef = useRef<DotParticle[]>([])
   const shockwavesRef = useRef<Shockwave[]>([])
   const dimsRef = useRef({ width: 0, height: 0, dpr: 1 })
-  const mouseRef = useRef({ x: -999, y: -999, active: false, radius: 115 })
+  const mouseRef = useRef({ x: -999, y: -999, active: false, radius: 125 })
   const vortexRef = useRef({
     active: false,
     startTime: 0,
@@ -180,9 +180,9 @@ export default function PortraitCanvas({ imageSrc }: PortraitCanvasProps) {
     if (!width || !height) return
 
     const centerX = width / 2
-    const centerY = Math.min(height * 0.44, 270)
-    const faceRadius = Math.min(width * 0.26, 215, height * 0.38)
-    const gridCount = 56
+    const centerY = Math.min(height * 0.44, 310)
+    const faceRadius = Math.min(width * 0.35, 280, height * 0.44)
+    const gridCount = 64
     const cellSize = (faceRadius * 2) / gridCount
 
     const newParticles: DotParticle[] = []
@@ -382,7 +382,7 @@ export default function PortraitCanvas({ imageSrc }: PortraitCanvasProps) {
       }
 
       const centerX = width / 2
-      const centerY = Math.min(height * 0.44, 270)
+      const centerY = Math.min(height * 0.44, 310)
       const v = vortexRef.current
       const isVortex = v.active
       const scrollDispersion = scrollDispersionRef.current

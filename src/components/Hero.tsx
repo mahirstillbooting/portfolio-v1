@@ -57,12 +57,12 @@ export default function Hero() {
       <div className="relative w-full flex-1 flex flex-col items-center justify-center my-auto py-2">
         
         {/* Full-width interactive portrait + ambient scattered particle canvas */}
-        <div className="relative w-full h-[520px] sm:h-[580px] md:h-[620px] flex items-center justify-center z-0">
+        <div className="relative w-full h-[580px] sm:h-[660px] md:h-[720px] lg:h-[760px] flex items-center justify-center z-0">
           <PortraitCanvas imageSrc={mahirImg} />
         </div>
 
         {/* Overlapping Editorial Headline in Instrument Serif (Positioned across lower chest with legibility gradient) */}
-        <div className="relative z-10 -mt-24 sm:-mt-28 md:-mt-32 w-full max-w-4xl flex flex-col items-center text-center px-4 pointer-events-none">
+        <div className="relative z-10 -mt-28 sm:-mt-36 md:-mt-40 lg:-mt-44 w-full max-w-4xl flex flex-col items-center text-center px-4 pointer-events-none">
           
           {/* Subtle dark backdrop gradient directly behind title for 100% legibility */}
           <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-[#080808]/90 to-transparent blur-xl -z-10 pointer-events-none scale-110" />
