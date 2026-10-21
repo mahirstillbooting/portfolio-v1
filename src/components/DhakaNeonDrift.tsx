@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import * as THREE from 'three'
 import gsap from 'gsap'
-import { ArrowUpRight, Navigation, Sparkles, Camera, X } from 'lucide-react'
+import { ArrowUpRight } from 'lucide-react'
 import { getAudioEnabled } from '../utils/audioState'
 
 export interface ProjectItem {
@@ -69,39 +69,14 @@ export default function DhakaNeonDrift() {
   const [activeProject, setActiveProject] = useState<ProjectItem>(PROJECTS[0])
   const activeProjectIdRef = useRef<string>(PROJECTS[0].id)
   const [isFocused, setIsFocused] = useState<boolean>(false)
-  const [isDriving, setIsDriving] = useState<boolean>(false)
-  const [cameraAngle, setCameraAngle] = useState<'isometric' | 'topdown'>('isometric')
 
   const selectProject = useCallback((p: ProjectItem) => {
     activeProjectIdRef.current = p.id
     setActiveProject(p)
   }, [])
 
-  const cameraAngleRef = useRef<'isometric' | 'topdown'>('isometric')
   const audioCtxRef = useRef<AudioContext | null>(null)
   const jumpToProjectRef = useRef<((idx: number) => void) | null>(null)
-  const motionStateRef = useRef<{
-    x: number
-    z: number
-    isHeroCinematic: boolean
-    isAutoNav: boolean
-    parkedBeaconId: string | null
-  } | null>(null)
-
-  // Toggle between 2 camera angles (Isometric vs Top-down tactical)
-  const toggleCameraAngle = () => {
-    const nextAngle = cameraAngle === 'isometric' ? 'topdown' : 'isometric'
-    setCameraAngle(nextAngle)
-    cameraAngleRef.current = nextAngle
-  }
-
-  // Dismiss project detail card and resume driving
-  const closeProjectCard = () => {
-    setIsFocused(false)
-    if (motionStateRef.current) {
-      motionStateRef.current.isHeroCinematic = false
-    }
-  }
 
   // Web Audio mechanical synth chime on beacon lock
   const playChime = useCallback(() => {
@@ -141,17 +116,20 @@ export default function DhakaNeonDrift() {
     // 1. Scene, Camera & Renderer
     const scene = new THREE.Scene()
     scene.background = new THREE.Color(0x000000) // Pure OLED Black
-    scene.fog = new THREE.FogExp2(0x000000, 0.02)
+    scene.fog = new THREE.FogExp2(0x000000, 0.022)
 
     const isMobile = window.innerWidth < 768
+    const initialW = window.innerWidth
+    const initialH = container.clientHeight || window.innerHeight
+
     const camera = new THREE.PerspectiveCamera(
-      isMobile ? 54 : 44,
-      container.clientWidth / container.clientHeight,
+      isMobile ? 52 : 42,
+      initialW / initialH,
       0.1,
       140
     )
 
-    // Initial isometric chase camera position focused near project 01
+    // Initial camera position framed on first project
     const p0 = PROJECTS[0]
     const camPos = new THREE.Vector3(p0.pos[0] * 0.45, 14, p0.pos[2] + 18)
     const camLookAt = new THREE.Vector3(p0.pos[0], 0.6, p0.pos[2])
@@ -165,7 +143,7 @@ export default function DhakaNeonDrift() {
       powerPreference: 'high-performance',
     })
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    renderer.setSize(container.clientWidth, container.clientHeight)
+    renderer.setSize(initialW, initialH)
     renderer.setClearColor(0x000000, 1)
 
     // 2. Minimal Lighting
@@ -257,76 +235,53 @@ export default function DhakaNeonDrift() {
     lightR.position.set(0.55, 0.5, -1.3)
     droneGroup.add(lightR)
 
-    // Glowing Nothing Red thruster
-    const thrusterLight = new THREE.PointLight(0xd2531d, 3.5, 8)
-    thrusterLight.position.set(0, 0.5, 1.2)
-    droneGroup.add(thrusterLight)
-
-    droneGroup.position.set(p0.pos[0], 0, p0.pos[2] + 1.2)
     scene.add(droneGroup)
 
-    // Particle exhaust trail
-    const trailMax = 120
-    const trailPositions = new Float32Array(trailMax * 3)
+    // 5. Interactive Particle Trail & Bursts
+    const maxTrail = 80
+    const trailPositions = new Float32Array(maxTrail * 3)
     const trailGeo = new THREE.BufferGeometry()
     trailGeo.setAttribute('position', new THREE.BufferAttribute(trailPositions, 3))
     const trailMat = new THREE.PointsMaterial({
       color: 0xd2531d,
-      size: 0.24,
+      size: 0.22,
       transparent: true,
-      opacity: 0.85,
+      opacity: 0.75,
       blending: THREE.AdditiveBlending,
     })
-    const trailMesh = new THREE.Points(trailGeo, trailMat)
-    scene.add(trailMesh)
+    const trailPoints = new THREE.Points(trailGeo, trailMat)
+    scene.add(trailPoints)
 
     let trailIdx = 0
     const addTrailPoint = (x: number, y: number, z: number) => {
-      trailPositions[trailIdx * 3] = x
-      trailPositions[trailIdx * 3 + 1] = y + 0.35
-      trailPositions[trailIdx * 3 + 2] = z
-      trailIdx = (trailIdx + 1) % trailMax
+      trailPositions[trailIdx * 3] = x + (Math.random() - 0.5) * 0.2
+      trailPositions[trailIdx * 3 + 1] = y + 0.35 + (Math.random() - 0.5) * 0.1
+      trailPositions[trailIdx * 3 + 2] = z + 1.2
+      trailIdx = (trailIdx + 1) % maxTrail
       trailGeo.attributes.position.needsUpdate = true
     }
 
-    // Glowing Ground Target Reticle on Click
-    const targetRingGeo = new THREE.RingGeometry(0.5, 0.7, 32)
-    targetRingGeo.rotateX(-Math.PI / 2)
-    const targetRingMat = new THREE.MeshBasicMaterial({
-      color: 0xd2531d,
-      side: THREE.DoubleSide,
-      transparent: true,
-      opacity: 0,
-    })
-    const targetRing = new THREE.Mesh(targetRingGeo, targetRingMat)
-    targetRing.position.y = 0.03
-    scene.add(targetRing)
-
-    const showClickReticle = (tx: number, tz: number) => {
-      targetRing.position.set(tx, 0.03, tz)
-      targetRing.scale.set(0.3, 0.3, 0.3)
-      targetRingMat.opacity = 0.95
-      gsap.killTweensOf(targetRing.scale)
-      gsap.killTweensOf(targetRingMat)
-      gsap.to(targetRing.scale, { x: 1.3, z: 1.3, duration: 0.5, ease: 'power2.out' })
-      gsap.to(targetRingMat, { opacity: 0, duration: 0.7, delay: 0.25, ease: 'power2.out' })
-    }
-
-    // 5. Particle Burst System on Beacon Contact
-    const burstCount = 45
+    // Spark burst system
+    const burstCount = 60
     const burstGeo = new THREE.BufferGeometry()
     const burstPositions = new Float32Array(burstCount * 3)
     const burstVelocities: THREE.Vector3[] = []
     for (let i = 0; i < burstCount; i++) {
       burstPositions[i * 3] = 0
-      burstPositions[i * 3 + 1] = -999
+      burstPositions[i * 3 + 1] = -100
       burstPositions[i * 3 + 2] = 0
-      burstVelocities.push(new THREE.Vector3())
+      burstVelocities.push(
+        new THREE.Vector3(
+          (Math.random() - 0.5) * 0.35,
+          Math.random() * 0.35 + 0.1,
+          (Math.random() - 0.5) * 0.35
+        )
+      )
     }
     burstGeo.setAttribute('position', new THREE.BufferAttribute(burstPositions, 3))
     const burstMat = new THREE.PointsMaterial({
       color: 0xd2531d,
-      size: 0.28,
+      size: 0.3,
       transparent: true,
       opacity: 0,
       blending: THREE.AdditiveBlending,
@@ -338,35 +293,68 @@ export default function DhakaNeonDrift() {
       burstMat.opacity = 1.0
       for (let i = 0; i < burstCount; i++) {
         burstPositions[i * 3] = origin.x
-        burstPositions[i * 3 + 1] = origin.y + 0.8
+        burstPositions[i * 3 + 1] = origin.y
         burstPositions[i * 3 + 2] = origin.z
-
-        const angle = Math.random() * Math.PI * 2
-        const speed = Math.random() * 0.2 + 0.08
-        const upSpeed = Math.random() * 0.25 + 0.1
-        burstVelocities[i].set(Math.cos(angle) * speed, upSpeed, Math.sin(angle) * speed)
+        burstVelocities[i].set(
+          (Math.random() - 0.5) * 0.38,
+          Math.random() * 0.38 + 0.12,
+          (Math.random() - 0.5) * 0.38
+        )
       }
       burstGeo.attributes.position.needsUpdate = true
     }
 
-    // 6. Glowing Red LED Ring Nodes for Each Project
-    interface NodeMeshObj {
+    // Ground Click Ripple
+    const reticleGeo = new THREE.RingGeometry(0.2, 0.26, 32)
+    const reticleMat = new THREE.MeshBasicMaterial({
+      color: 0xd2531d,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0,
+    })
+    const reticleMesh = new THREE.Mesh(reticleGeo, reticleMat)
+    reticleMesh.rotation.x = -Math.PI / 2
+    reticleMesh.position.y = 0.02
+    scene.add(reticleMesh)
+
+    const showClickReticle = (x: number, z: number) => {
+      reticleMesh.position.x = x
+      reticleMesh.position.z = z
+      reticleMesh.scale.set(1, 1, 1)
+      reticleMat.opacity = 0.95
+      gsap.killTweensOf(reticleMesh.scale)
+      gsap.killTweensOf(reticleMat)
+      gsap.to(reticleMesh.scale, { x: 3.2, y: 3.2, duration: 0.65, ease: 'power2.out' })
+      gsap.to(reticleMat, { opacity: 0, duration: 0.65, ease: 'power2.out' })
+    }
+
+    // 6. Interactive Red LED Project Ring Nodes & 3D Artifacts
+    const nodeMeshes: {
       group: THREE.Group
       data: ProjectItem
       crystal: THREE.Mesh
       groundRing: THREE.Mesh
       verticalRing: THREE.Mesh
       light: THREE.PointLight
-    }
-    const nodeMeshes: NodeMeshObj[] = []
+    }[] = []
 
     PROJECTS.forEach((p, idx) => {
       const nGroup = new THREE.Group()
-      nGroup.position.set(p.pos[0], p.pos[1], p.pos[2])
+      nGroup.position.set(p.pos[0], 0, p.pos[2])
 
-      // Horizontal Glowing LED Ring on Ground
-      const gRingGeo = new THREE.RingGeometry(1.5, 1.7, 48)
-      gRingGeo.rotateX(-Math.PI / 2)
+      // LED Ring Node Base
+      const baseGeo = new THREE.CylinderGeometry(1.6, 1.8, 0.15, 32)
+      const baseMat = new THREE.MeshStandardMaterial({
+        color: 0x080808,
+        metalness: 0.9,
+        roughness: 0.2,
+      })
+      const baseMesh = new THREE.Mesh(baseGeo, baseMat)
+      baseMesh.position.y = 0.08
+      nGroup.add(baseMesh)
+
+      // Crimson LED Floor Ring
+      const gRingGeo = new THREE.RingGeometry(1.4, 1.7, 48)
       const gRingMat = new THREE.MeshBasicMaterial({
         color: 0xd2531d,
         side: THREE.DoubleSide,
@@ -374,14 +362,14 @@ export default function DhakaNeonDrift() {
         opacity: 0.85,
       })
       const groundRing = new THREE.Mesh(gRingGeo, gRingMat)
-      groundRing.position.y = 0.02
+      groundRing.rotation.x = -Math.PI / 2
+      groundRing.position.y = 0.17
       nGroup.add(groundRing)
 
-      // Vertical Pulsing Ring
-      const vRingGeo = new THREE.RingGeometry(1.2, 1.32, 32)
+      // Revolving Orbital Gyro Ring
+      const vRingGeo = new THREE.TorusGeometry(1.2, 0.03, 16, 64)
       const vRingMat = new THREE.MeshBasicMaterial({
         color: 0xffffff,
-        side: THREE.DoubleSide,
         transparent: true,
         opacity: 0.45,
       })
@@ -445,7 +433,6 @@ export default function DhakaNeonDrift() {
       isHeroCinematic: false,
       parkedBeaconId: null as string | null,
     }
-    motionStateRef.current = state
 
     // 8. Instant GSAP Transition to Project Node
     const jumpToProject = (idx: number) => {
@@ -457,24 +444,23 @@ export default function DhakaNeonDrift() {
       state.isAutoNav = true
       state.isHeroCinematic = true
       state.parkedBeaconId = p.id
-      setIsDriving(true)
       playChime()
       triggerBurst(new THREE.Vector3(p.pos[0], 0.5, p.pos[2]))
 
-      // 1. Camera transition directly in front of the project artifact
+      // 1. Camera transition directly in front of the project artifact in space
       gsap.killTweensOf(camera.position)
       gsap.killTweensOf(camLookAt)
 
       gsap.to(camera.position, {
-        x: p.pos[0],
-        y: 3.5,
-        z: p.pos[2] + 8.5,
+        x: p.pos[0] - 2.8,
+        y: 2.8,
+        z: p.pos[2] + 7.5,
         duration: 1.3,
         ease: 'power4.inOut',
       })
 
       gsap.to(camLookAt, {
-        x: p.pos[0],
+        x: p.pos[0] + 0.6,
         y: 1.2,
         z: p.pos[2],
         duration: 1.3,
@@ -490,7 +476,6 @@ export default function DhakaNeonDrift() {
         ease: 'power4.inOut',
         onComplete: () => {
           state.isAutoNav = false
-          setIsDriving(false)
           state.vx = 0
           state.vz = 0
         },
@@ -508,7 +493,6 @@ export default function DhakaNeonDrift() {
       }
 
       state.isAutoNav = true
-      setIsDriving(true)
 
       // Exit cinematic focus when driving in free space
       setIsFocused(false)
@@ -533,7 +517,6 @@ export default function DhakaNeonDrift() {
         },
         onComplete: () => {
           state.isAutoNav = false
-          setIsDriving(false)
           state.vx = 0
           state.vz = 0
         },
@@ -548,13 +531,6 @@ export default function DhakaNeonDrift() {
       if (tag === 'INPUT' || tag === 'TEXTAREA') return
 
       const key = e.key
-      // Close project card on Escape
-      if (key === 'Escape') {
-        setIsFocused(false)
-        state.isHeroCinematic = false
-        return
-      }
-
       // 1-5 Numeric shortcuts to jump instantly
       if (['1', '2', '3', '4', '5'].includes(key)) {
         const idx = parseInt(key, 10) - 1
@@ -567,7 +543,7 @@ export default function DhakaNeonDrift() {
         keys[lk] = true
         state.isAutoNav = false
         state.isHeroCinematic = false
-        setIsFocused(false) // Smoothly fade out glassmorphic card when resuming free flight
+        setIsFocused(false) // Smoothly fade out spatial text when resuming free flight
       }
     }
 
@@ -591,7 +567,6 @@ export default function DhakaNeonDrift() {
 
     const handlePointerUp = (e: PointerEvent) => {
       const dist = Math.hypot(e.clientX - pointerDownPos.x, e.clientY - pointerDownPos.y)
-      // Ignore if user was dragging or scrolling
       if (dist > 14) return
 
       const rect = canvas.getBoundingClientRect()
@@ -653,8 +628,8 @@ export default function DhakaNeonDrift() {
       if (!state.isAutoNav) {
         let ax = 0
         let az = 0
-        const accel = 0.024 // Smooth, tactile acceleration
-        const maxSpeed = 0.22 // Comfortable, enjoyable cruising speed
+        const accel = 0.024 // Tactile acceleration
+        const maxSpeed = 0.22 // Comfortable cruising speed
 
         if (keys['w'] || keys['arrowup']) az -= accel
         if (keys['s'] || keys['arrowdown']) az += accel
@@ -667,14 +642,9 @@ export default function DhakaNeonDrift() {
           state.targetHeading = Math.atan2(ax, az)
           state.isHeroCinematic = false
           setIsFocused(false)
-          setIsDriving(true)
         } else if (state.isHeroCinematic && !state.isAutoNav) {
-          // Keep car firmly parked at project node
           state.vx = 0
           state.vz = 0
-          setIsDriving(false)
-        } else if (Math.hypot(state.vx, state.vz) < 0.01) {
-          setIsDriving(false)
         }
 
         // Clamp to maximum cruising speed
@@ -698,19 +668,18 @@ export default function DhakaNeonDrift() {
           state.heading += THREE.MathUtils.clamp(diff, -0.09, 0.09)
         }
 
-        // In free-flight mode, camera smoothly tracks drone based on active camera angle
+        // In free-flight mode, camera smoothly tracks drone
         if (!state.isHeroCinematic) {
-          const isTopDown = cameraAngleRef.current === 'topdown'
-          const targetCamX = isTopDown ? state.x : state.x * 0.45
-          const targetCamY = isTopDown ? 26 : 14
-          const targetCamZ = isTopDown ? state.z + 5 : state.z + 18
+          const targetCamX = state.x * 0.45
+          const targetCamY = 14
+          const targetCamZ = state.z + 18
 
           camera.position.x += (targetCamX - camera.position.x) * 0.045
           camera.position.y += (targetCamY - camera.position.y) * 0.045
           camera.position.z += (targetCamZ - camera.position.z) * 0.045
 
           const targetLookX = state.x
-          const targetLookY = isTopDown ? 0 : 0.6
+          const targetLookY = 0.6
           const targetLookZ = state.z
 
           camLookAt.x += (targetLookX - camLookAt.x) * 0.06
@@ -742,7 +711,6 @@ export default function DhakaNeonDrift() {
         // When drone enters another beacon pad during free flight
         if (!state.isAutoNav && !state.isHeroCinematic) {
           const dist = Math.hypot(state.x - nm.data.pos[0], state.z - nm.data.pos[2])
-          // Only trigger if arriving at an unvisited/different project
           if (dist < 2.4 && state.parkedBeaconId !== nm.data.id) {
             selectProject(nm.data)
             setIsFocused(true)
@@ -750,11 +718,10 @@ export default function DhakaNeonDrift() {
             state.parkedBeaconId = nm.data.id
             state.vx = 0
             state.vz = 0
-            setIsDriving(false)
             playChime()
             triggerBurst(new THREE.Vector3(nm.data.pos[0], 0.5, nm.data.pos[2]))
 
-            // Park drone right at the project pad and keep it there
+            // Park drone right at the project pad
             gsap.killTweensOf(state)
             gsap.to(state, {
               x: nm.data.pos[0],
@@ -768,21 +735,21 @@ export default function DhakaNeonDrift() {
               },
             })
 
-            // Frame project and spatial typography in 3D
+            // Orbit camera in space framing the artifact
             gsap.killTweensOf(camera.position)
             gsap.killTweensOf(camLookAt)
             gsap.to(camera.position, {
-              x: nm.data.pos[0],
-              y: 3.5,
-              z: nm.data.pos[2] + 8.5,
-              duration: 1.1,
+              x: nm.data.pos[0] - 2.8,
+              y: 2.8,
+              z: nm.data.pos[2] + 7.5,
+              duration: 1.2,
               ease: 'power3.out',
             })
             gsap.to(camLookAt, {
-              x: nm.data.pos[0],
+              x: nm.data.pos[0] + 0.6,
               y: 1.2,
               z: nm.data.pos[2],
-              duration: 1.1,
+              duration: 1.2,
               ease: 'power3.out',
             })
           }
@@ -812,15 +779,15 @@ export default function DhakaNeonDrift() {
 
     animate()
 
-    // 12. Resize Handler
+    // 12. Full-Bleed Resize Handler (100vw / 100vh)
     const handleResize = () => {
-      if (!container) return
-      const w = container.clientWidth
-      const h = container.clientHeight
+      const w = window.innerWidth
+      const h = container?.clientHeight || window.innerHeight
       camera.aspect = w / h
-      camera.fov = window.innerWidth < 768 ? 54 : 44
+      camera.fov = window.innerWidth < 768 ? 52 : 42
       camera.updateProjectionMatrix()
       renderer.setSize(w, h)
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     }
     window.addEventListener('resize', handleResize)
 
@@ -839,140 +806,79 @@ export default function DhakaNeonDrift() {
     <div
       ref={containerRef}
       tabIndex={0}
-      className="relative w-full h-[580px] sm:h-[680px] lg:h-[740px] rounded-3xl bg-black border border-[#1F1F1F] overflow-hidden select-none outline-none focus:border-[#D2531D]/50 transition-colors"
-      style={{ touchAction: 'none' }}
+      className="relative w-full h-screen min-h-[640px] bg-black overflow-hidden select-none outline-none"
+      style={{
+        touchAction: 'none',
+        maskImage: 'linear-gradient(to bottom, #000000 0%, #000000 85%, transparent 100%)',
+        WebkitMaskImage: 'linear-gradient(to bottom, #000000 0%, #000000 85%, transparent 100%)',
+      }}
     >
-      {/* 3D WebGL Canvas */}
+      {/* 3D WebGL Canvas (Full-bleed 100vw / 100vh) */}
       <canvas
         ref={canvasRef}
         className="w-full h-full block cursor-crosshair select-none"
       />
 
-      {/* Top Left: Controls Guidance */}
-      <div className="absolute top-6 left-6 z-20 flex items-center gap-2.5 text-xs font-mono text-neutral-400 pointer-events-none">
-        <Navigation className="w-3.5 h-3.5 text-[#D2531D]" />
-        <span className="text-white font-medium">WASD TO STEER</span>
-        <span className="text-neutral-600">•</span>
-        <span className="hidden sm:inline text-neutral-400">CLICK GROUND TO DRIFT</span>
+      {/* Clean Minimal Header at Top Left */}
+      <div className="absolute top-8 left-8 sm:top-10 sm:left-12 z-20 flex items-center gap-2.5 text-xs font-mono tracking-widest text-[#D2531D] uppercase font-semibold pointer-events-none">
+        <span className="w-2 h-2 rounded-full bg-[#D2531D] shadow-[0_0_8px_#D2531D]" />
+        <span>// SELECTED WORKS</span>
       </div>
 
-      {/* Top Right: Camera Angle Switcher + Status */}
-      <div className="absolute top-6 right-6 z-20 flex items-center gap-3">
-        {/* Camera Angle Toggle Button using Lucide Icon */}
-        <button
-          type="button"
-          onClick={toggleCameraAngle}
-          title={cameraAngle === 'isometric' ? 'Switch to Overhead Tactical View' : 'Switch to Isometric Chase View'}
-          style={{
-            height: '38px',
-            padding: '0 14px',
-            borderRadius: '12px',
-            background: 'rgba(18, 18, 20, 0.78)',
-            border: '1px solid rgba(255, 255, 255, 0.14)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.5)',
-          }}
-          className="flex items-center gap-2 text-xs font-mono text-neutral-300 hover:text-white hover:border-[#D2531D] transition-all cursor-pointer active:scale-95"
-        >
-          <Camera className="w-3.5 h-3.5 text-[#D2531D]" />
-          <span className="font-semibold uppercase">{cameraAngle === 'isometric' ? 'CAM // ISO' : 'CAM // TOP'}</span>
-        </button>
-
-        {/* Drift Status Indicator */}
-        <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-neutral-500 bg-black/60 px-3 py-2 rounded-xl border border-white/8 backdrop-blur-md">
-          <span className="w-2 h-2 rounded-full bg-[#D2531D] animate-ping" />
-          <span className="text-white font-medium">{isDriving ? 'DRIFT ENGAGED' : 'SYS READY'}</span>
-        </div>
-      </div>
-
-      {/* FLOATING GLASSMORPHIC PROJECT DETAIL CARD (MATCHING NAVBAR) */}
+      {/* SPATIAL PROJECT PRESENTATION OVERLAY IN 3D SPACE */}
       <div
-        className={`absolute inset-0 z-30 flex items-center justify-center p-4 sm:p-6 transition-all duration-500 ${
-          isFocused ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'
-        }`}
+        style={{
+          transition: 'opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+          opacity: isFocused ? 1 : 0,
+          transform: isFocused ? 'translateY(0)' : 'translateY(20px)',
+        }}
+        className="absolute bottom-24 sm:bottom-28 left-6 sm:left-12 lg:left-16 max-w-2xl z-20 pointer-events-none select-text"
       >
-        <div
-          style={{
-            maxWidth: '540px',
-            width: '100%',
-            background: 'rgba(18, 18, 20, 0.82)',
-            border: '1px solid rgba(255, 255, 255, 0.14)',
-            borderRadius: '24px',
-            backdropFilter: 'blur(24px)',
-            WebkitBackdropFilter: 'blur(24px)',
-            boxShadow: '0 20px 50px rgba(0, 0, 0, 0.85), 0 0 35px rgba(210, 83, 29, 0.18)',
-            padding: '28px 32px',
-          }}
-          className="relative flex flex-col text-left select-text"
+        {/* Project Tag */}
+        <div className="flex items-center gap-2 mb-3 text-xs font-mono text-[#D2531D] tracking-widest uppercase font-semibold">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#D2531D] shadow-[0_0_8px_#D2531D]" />
+          <span>PROJECT {activeProject.num} // 05</span>
+        </div>
+
+        {/* Project Name (Massive JetBrains Mono font) */}
+        <h2
+          style={{ fontFamily: "'JetBrains Mono', monospace, sans-serif" }}
+          className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tighter text-white uppercase mb-4 drop-shadow-[0_4px_30px_rgba(0,0,0,0.85)]"
         >
-          {/* Top Bar with Project Number & Close Button */}
-          <div className="flex items-center justify-between pb-3.5 mb-4 border-b border-white/8">
-            <div className="flex items-center gap-2 text-[11px] font-mono tracking-widest text-[#D2531D] uppercase font-semibold">
-              <span className="w-2 h-2 rounded-full bg-[#D2531D] shadow-[0_0_8px_#D2531D]" />
-              <span>PROJECT // {activeProject.num}</span>
-            </div>
+          {activeProject.title}
+        </h2>
 
-            <button
-              type="button"
-              onClick={closeProjectCard}
-              className="w-7 h-7 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-neutral-400 hover:text-white transition-colors cursor-pointer"
-              title="Close card (or press WASD)"
-            >
-              <X className="w-3.5 h-3.5" />
-            </button>
-          </div>
+        {/* Single-sentence description */}
+        <p className="text-sm sm:text-base font-mono text-neutral-300 max-w-lg mb-6 leading-relaxed drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]">
+          {activeProject.desc}
+        </p>
 
-          {/* Project Title */}
-          <h3
-            style={{ fontFamily: "'JetBrains Mono', monospace, sans-serif" }}
-            className="text-2xl sm:text-3xl font-bold tracking-tight text-white uppercase mb-3"
+        {/* Compact links (pointer-events: auto) */}
+        <div className="flex items-center gap-3 pointer-events-auto">
+          <a
+            href={activeProject.liveUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-5 py-2.5 rounded-full bg-[#D2531D] text-black text-xs font-mono font-bold tracking-wider hover:bg-[#E2652B] hover:text-white transition-all duration-200 active:scale-95 shadow-[0_0_24px_rgba(210,83,29,0.35)] flex items-center gap-1.5 no-underline"
           >
-            {activeProject.title}
-          </h3>
+            <span>[VIEW LIVE ↗]</span>
+            <ArrowUpRight className="w-3.5 h-3.5" strokeWidth={2.5} />
+          </a>
 
-          {/* Description */}
-          <p className="text-sm font-sans text-neutral-300 leading-relaxed mb-6 font-normal">
-            {activeProject.desc}
-          </p>
-
-          {/* Interactive CTA Buttons */}
-          <div className="flex items-center gap-3">
-            <a
-              href={activeProject.liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                background: '#D2531D',
-                color: '#000000',
-              }}
-              className="px-5 py-2.5 rounded-xl text-xs font-mono font-bold tracking-wider flex items-center gap-2 hover:bg-[#E2652B] transition-all duration-200 active:scale-95 shadow-[0_0_20px_rgba(210,83,29,0.35)] no-underline"
-            >
-              <span>VIEW LIVE</span>
-              <ArrowUpRight className="w-3.5 h-3.5" strokeWidth={2.2} />
-            </a>
-
-            <a
-              href={activeProject.codeUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-5 py-2.5 rounded-xl border border-white/15 bg-white/5 text-xs font-mono font-medium tracking-wider text-neutral-200 hover:text-white hover:border-white/30 transition-all duration-200 active:scale-95 no-underline flex items-center gap-2"
-            >
-              <span>CODEBASE</span>
-              <ArrowUpRight className="w-3.5 h-3.5 opacity-60" />
-            </a>
-          </div>
-
-          {/* Drive away tip */}
-          <div className="mt-5 pt-3 border-t border-white/6 flex items-center justify-between text-[10px] font-mono text-neutral-500">
-            <span>DRIVE WITH WASD OR CLICK GROUND TO RESUME</span>
-            <span className="hidden sm:inline">ESC TO CLOSE</span>
-          </div>
+          <a
+            href={activeProject.codeUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-5 py-2.5 rounded-full border border-neutral-700 bg-black/60 backdrop-blur-md text-xs font-mono font-medium tracking-wider text-neutral-300 hover:text-white hover:border-white transition-all duration-200 active:scale-95 flex items-center gap-1.5 no-underline"
+          >
+            <span>[CODEBASE ↗]</span>
+            <ArrowUpRight className="w-3.5 h-3.5 opacity-60" />
+          </a>
         </div>
       </div>
 
-      {/* FLOATING BOTTOM DOCK: CLEAN MINIMAL DOT-BAR NAVIGATOR */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-4 sm:gap-6 px-6 py-2.5 rounded-full bg-black/85 border border-[#1F1F1F] backdrop-blur-xl">
+      {/* FLOATING BOTTOM DOCK: PAGINATION DOCK (01 - 05) */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 sm:gap-5 px-5 py-2.5 rounded-full bg-black/75 border border-[#222222] backdrop-blur-xl">
         {PROJECTS.map((p, idx) => {
           const isSelected = activeProject.id === p.id && isFocused
           return (
@@ -982,17 +888,17 @@ export default function DhakaNeonDrift() {
                 if (jumpToProjectRef.current) jumpToProjectRef.current(idx)
               }}
               className="group flex items-center gap-2 cursor-pointer transition-all active:scale-90"
-              aria-label={`Focus project ${p.num}: ${p.title}`}
+              aria-label={`Select ${p.num}: ${p.title}`}
             >
               <span
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
                   isSelected
-                    ? 'bg-[#D2531D] scale-125 shadow-[0_0_10px_#D2531D]'
+                    ? 'bg-[#D2531D] scale-125 shadow-[0_0_8px_#D2531D]'
                     : 'bg-[#333333] group-hover:bg-neutral-400'
                 }`}
               />
               <span
-                className={`text-xs font-mono font-semibold transition-colors ${
+                className={`text-xs font-mono font-medium transition-colors ${
                   isSelected ? 'text-white' : 'text-neutral-500 group-hover:text-neutral-300'
                 }`}
               >
@@ -1002,14 +908,6 @@ export default function DhakaNeonDrift() {
           )
         })}
       </div>
-
-      {/* Initial Guidance Prompt */}
-      {!isFocused && !isDriving && (
-        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-10 text-[11px] font-mono text-neutral-400 pointer-events-none animate-pulse flex items-center gap-2 bg-black/70 px-4 py-1.5 rounded-full border border-white/10 backdrop-blur-md">
-          <Sparkles className="w-3 h-3 text-[#D2531D]" />
-          <span>USE WASD OR CLICK/TAP ANYWHERE ON GROUND TO DRIFT</span>
-        </div>
-      )}
     </div>
   )
 }
