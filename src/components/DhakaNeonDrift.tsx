@@ -258,6 +258,29 @@ export default function DhakaNeonDrift() {
       trailGeo.attributes.position.needsUpdate = true
     }
 
+    // Glowing Ground Target Reticle on Click
+    const targetRingGeo = new THREE.RingGeometry(0.5, 0.7, 32)
+    targetRingGeo.rotateX(-Math.PI / 2)
+    const targetRingMat = new THREE.MeshBasicMaterial({
+      color: 0xd2531d,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0,
+    })
+    const targetRing = new THREE.Mesh(targetRingGeo, targetRingMat)
+    targetRing.position.y = 0.03
+    scene.add(targetRing)
+
+    const showClickReticle = (tx: number, tz: number) => {
+      targetRing.position.set(tx, 0.03, tz)
+      targetRing.scale.set(0.3, 0.3, 0.3)
+      targetRingMat.opacity = 0.95
+      gsap.killTweensOf(targetRing.scale)
+      gsap.killTweensOf(targetRingMat)
+      gsap.to(targetRing.scale, { x: 1.3, z: 1.3, duration: 0.5, ease: 'power2.out' })
+      gsap.to(targetRingMat, { opacity: 0, duration: 0.7, delay: 0.25, ease: 'power2.out' })
+    }
+
     // 5. Particle Burst System on Beacon Contact
     const burstCount = 45
     const burstGeo = new THREE.BufferGeometry()
@@ -379,7 +402,7 @@ export default function DhakaNeonDrift() {
       nodeMeshes.push({ group: nGroup, data: p, crystal, groundRing, verticalRing, light: nLight })
     })
 
-    // 7. Navigation Motion State & Physics
+    // 7. Navigation Motion State & Calibrated Physics
     const state = {
       x: 0,
       z: 0,
@@ -441,24 +464,29 @@ export default function DhakaNeonDrift() {
 
     // Drive drone smoothly to coordinate on ground click/tap
     const driveToCoord = (tx: number, tz: number, targetProject?: ProjectItem) => {
-      state.isAutoNav = true
-      setIsDriving(true)
+      showClickReticle(tx, tz)
 
       if (targetProject) {
         jumpToProject(PROJECTS.findIndex((p) => p.id === targetProject.id))
         return
       }
 
+      state.isAutoNav = true
+      setIsDriving(true)
+
       // Exit cinematic focus when driving in free space
       setIsFocused(false)
       state.isHeroCinematic = false
+
+      const dist = Math.hypot(tx - state.x, tz - state.z)
+      const duration = Math.max(1.2, Math.min(2.8, dist * 0.16))
 
       gsap.killTweensOf(state)
       gsap.to(state, {
         x: tx,
         z: tz,
-        duration: Math.min(1.6, Math.max(0.6, Math.hypot(tx - state.x, tz - state.z) * 0.12)),
-        ease: 'power2.out',
+        duration,
+        ease: 'power2.inOut',
         onUpdate: () => {
           const dx = tx - state.x
           const dz = tz - state.z
@@ -501,78 +529,60 @@ export default function DhakaNeonDrift() {
     window.addEventListener('keydown', handleKeyDown)
     window.addEventListener('keyup', handleKeyUp)
 
-    // 10. Pointer Steering & Raycasting (Ground Click / Beacon Click)
+    // 10. Pointer Raycasting (Ground Click / Beacon Click)
     const raycaster = new THREE.Raycaster()
     const mouse = new THREE.Vector2()
     const groundPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0)
 
     let pointerDownPos = { x: 0, y: 0 }
-    let isPointerDragging = false
 
     const handlePointerDown = (e: PointerEvent) => {
       pointerDownPos = { x: e.clientX, y: e.clientY }
-      isPointerDragging = false
-    }
-
-    const handlePointerMove = (e: PointerEvent) => {
-      const dist = Math.hypot(e.clientX - pointerDownPos.x, e.clientY - pointerDownPos.y)
-      if (dist > 8) {
-        isPointerDragging = true
-        // Vector steering while dragging
-        const rect = canvas.getBoundingClientRect()
-        const nx = ((e.clientX - rect.left) / rect.width) * 2 - 1
-        const ny = -((e.clientY - rect.top) / rect.height) * 2 + 1
-        if (!state.isAutoNav) {
-          state.vx += nx * 0.45
-          state.vz += -ny * 0.45
-          state.isHeroCinematic = false
-          setIsFocused(false)
-        }
-      }
     }
 
     const handlePointerUp = (e: PointerEvent) => {
-      // If was just a tap / click (not a drag), navigate to destination
-      if (!isPointerDragging) {
-        const rect = canvas.getBoundingClientRect()
-        mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1
-        mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1
+      const dist = Math.hypot(e.clientX - pointerDownPos.x, e.clientY - pointerDownPos.y)
+      // Ignore if user was dragging or scrolling
+      if (dist > 14) return
 
-        raycaster.setFromCamera(mouse, camera)
+      const rect = canvas.getBoundingClientRect()
+      mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1
+      mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1
 
-        // Check if clicked beacon crystal
-        const crystals = nodeMeshes.map((nm) => nm.crystal)
-        const hits = raycaster.intersectObjects(crystals, true)
-        if (hits.length > 0) {
-          const hit = hits[0].object
-          const nm = nodeMeshes.find((n) => n.crystal === hit || n.crystal.children.includes(hit as THREE.LineSegments))
-          if (nm) {
-            const idx = PROJECTS.findIndex((p) => p.id === nm.data.id)
-            if (idx !== -1) jumpToProject(idx)
-            return
-          }
-        }
+      raycaster.setFromCamera(mouse, camera)
 
-        // Otherwise drive to ground coordinate
-        const intersectPoint = new THREE.Vector3()
-        if (raycaster.ray.intersectPlane(groundPlane, intersectPoint)) {
-          // Check proximity to any node
-          let clickedNode: ProjectItem | undefined
-          for (const p of PROJECTS) {
-            if (Math.hypot(intersectPoint.x - p.pos[0], intersectPoint.z - p.pos[2]) < 2.5) {
-              clickedNode = p
-              break
-            }
-          }
-          driveToCoord(intersectPoint.x, intersectPoint.z, clickedNode)
+      // 1. Check if clicked beacon crystal
+      const crystals = nodeMeshes.map((nm) => nm.crystal)
+      const hits = raycaster.intersectObjects(crystals, true)
+      if (hits.length > 0) {
+        const hit = hits[0].object
+        const nm = nodeMeshes.find((n) => n.crystal === hit || n.crystal.children.includes(hit as THREE.LineSegments))
+        if (nm) {
+          const idx = PROJECTS.findIndex((p) => p.id === nm.data.id)
+          if (idx !== -1) jumpToProject(idx)
+          return
         }
       }
-      isPointerDragging = false
+
+      // 2. Drive smoothly to ground coordinate
+      const intersectPoint = new THREE.Vector3()
+      if (raycaster.ray.intersectPlane(groundPlane, intersectPoint)) {
+        const tx = Math.max(-24, Math.min(24, intersectPoint.x))
+        const tz = Math.max(-24, Math.min(24, intersectPoint.z))
+
+        let clickedNode: ProjectItem | undefined
+        for (const p of PROJECTS) {
+          if (Math.hypot(tx - p.pos[0], tz - p.pos[2]) < 2.5) {
+            clickedNode = p
+            break
+          }
+        }
+        driveToCoord(tx, tz, clickedNode)
+      }
     }
 
     canvas.addEventListener('pointerdown', handlePointerDown)
-    window.addEventListener('pointermove', handlePointerMove)
-    window.addEventListener('pointerup', handlePointerUp)
+    canvas.addEventListener('pointerup', handlePointerUp)
 
     // 11. Main Animation Loop
     let animId: number
@@ -582,11 +592,12 @@ export default function DhakaNeonDrift() {
       animId = requestAnimationFrame(animate)
       const time = clock.getElapsedTime()
 
-      // WASD direct physics
+      // WASD direct physics with calibrated cruising speed and smooth drifting
       if (!state.isAutoNav) {
         let ax = 0
         let az = 0
-        const accel = 0.6
+        const accel = 0.024 // Smooth, tactile acceleration
+        const maxSpeed = 0.22 // Comfortable, enjoyable cruising speed
 
         if (keys['w'] || keys['arrowup']) az -= accel
         if (keys['s'] || keys['arrowdown']) az += accel
@@ -598,37 +609,44 @@ export default function DhakaNeonDrift() {
           state.vz += az
           state.targetHeading = Math.atan2(ax, az)
           setIsDriving(true)
-        } else if (Math.hypot(state.vx, state.vz) < 0.05) {
+        } else if (Math.hypot(state.vx, state.vz) < 0.01) {
           setIsDriving(false)
         }
 
-        // Soft spring damping
-        state.vx *= 0.88
-        state.vz *= 0.88
+        // Clamp to maximum cruising speed
+        const currentSpeed = Math.hypot(state.vx, state.vz)
+        if (currentSpeed > maxSpeed) {
+          state.vx = (state.vx / currentSpeed) * maxSpeed
+          state.vz = (state.vz / currentSpeed) * maxSpeed
+        }
+
+        // Gentle drift friction
+        state.vx *= 0.92
+        state.vz *= 0.92
         state.x += state.vx
         state.z += state.vz
         state.x = Math.max(-25, Math.min(25, state.x))
         state.z = Math.max(-25, Math.min(25, state.z))
 
-        // Heading rotation
-        if (Math.hypot(state.vx, state.vz) > 0.02) {
+        // Smooth realistic heading banking
+        if (Math.hypot(state.vx, state.vz) > 0.01) {
           const diff = state.targetHeading - state.heading
-          state.heading += THREE.MathUtils.clamp(diff, -0.16, 0.16)
+          state.heading += THREE.MathUtils.clamp(diff, -0.09, 0.09)
         }
 
-        // In free-flight mode, camera smoothly tracks drone in third-person chase
+        // In free-flight mode, camera smoothly tracks drone from cinematic chase angle
         if (!state.isHeroCinematic) {
-          const targetCamX = state.x * 0.5
+          const targetCamX = state.x * 0.45
           const targetCamY = 14
           const targetCamZ = state.z + 18
 
-          camera.position.x += (targetCamX - camera.position.x) * 0.06
-          camera.position.y += (targetCamY - camera.position.y) * 0.06
-          camera.position.z += (targetCamZ - camera.position.z) * 0.06
+          camera.position.x += (targetCamX - camera.position.x) * 0.04
+          camera.position.y += (targetCamY - camera.position.y) * 0.04
+          camera.position.z += (targetCamZ - camera.position.z) * 0.04
 
-          camLookAt.x += (state.x - camLookAt.x) * 0.08
-          camLookAt.y += (0.6 - camLookAt.y) * 0.08
-          camLookAt.z += (state.z - camLookAt.z) * 0.08
+          camLookAt.x += (state.x - camLookAt.x) * 0.06
+          camLookAt.y += (0.6 - camLookAt.y) * 0.06
+          camLookAt.z += (state.z - camLookAt.z) * 0.06
         }
       }
 
@@ -706,8 +724,7 @@ export default function DhakaNeonDrift() {
       window.removeEventListener('keyup', handleKeyUp)
       window.removeEventListener('resize', handleResize)
       canvas.removeEventListener('pointerdown', handlePointerDown)
-      window.removeEventListener('pointermove', handlePointerMove)
-      window.removeEventListener('pointerup', handlePointerUp)
+      canvas.removeEventListener('pointerup', handlePointerUp)
       renderer.dispose()
     }
   }, [playChime, activeProject.id])
@@ -725,12 +742,12 @@ export default function DhakaNeonDrift() {
         className="w-full h-full block cursor-crosshair select-none"
       />
 
-      {/* Top Left: Minimal Reticle Status */}
+      {/* Top Left: Controls Guidance */}
       <div className="absolute top-6 left-6 z-20 flex items-center gap-2.5 text-xs font-mono text-neutral-400 pointer-events-none">
         <Navigation className="w-3.5 h-3.5 text-[#D2531D]" />
-        <span className="text-white font-medium">WASD / VECTOR STEER</span>
+        <span className="text-white font-medium">WASD TO STEER</span>
         <span className="text-neutral-600">•</span>
-        <span className="hidden sm:inline text-neutral-500">CLICK GROUND TO DRIFT</span>
+        <span className="hidden sm:inline text-neutral-400">CLICK GROUND TO DRIFT</span>
       </div>
 
       {/* Top Right: Active Status Indicator */}
@@ -832,7 +849,7 @@ export default function DhakaNeonDrift() {
 
       {/* Initial Guidance Prompt */}
       {!isFocused && !isDriving && (
-        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-10 text-[11px] font-mono text-neutral-500 pointer-events-none animate-pulse flex items-center gap-2 bg-black/60 px-4 py-1.5 rounded-full border border-white/6 backdrop-blur-md">
+        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-10 text-[11px] font-mono text-neutral-400 pointer-events-none animate-pulse flex items-center gap-2 bg-black/70 px-4 py-1.5 rounded-full border border-white/10 backdrop-blur-md">
           <Sparkles className="w-3 h-3 text-[#D2531D]" />
           <span>USE WASD OR CLICK/TAP ANYWHERE ON GROUND TO DRIFT</span>
         </div>
