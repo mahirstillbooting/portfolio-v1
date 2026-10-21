@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import * as THREE from 'three'
 import gsap from 'gsap'
-import { ArrowUpRight, Navigation, Sparkles } from 'lucide-react'
+import { ArrowUpRight, Navigation, Sparkles, Camera, X } from 'lucide-react'
 import { getAudioEnabled } from '../utils/audioState'
 
 export interface ProjectItem {
@@ -69,9 +69,33 @@ export default function DhakaNeonDrift() {
   const [activeProject, setActiveProject] = useState<ProjectItem>(PROJECTS[0])
   const [isFocused, setIsFocused] = useState<boolean>(false)
   const [isDriving, setIsDriving] = useState<boolean>(false)
+  const [cameraAngle, setCameraAngle] = useState<'isometric' | 'topdown'>('isometric')
 
+  const cameraAngleRef = useRef<'isometric' | 'topdown'>('isometric')
   const audioCtxRef = useRef<AudioContext | null>(null)
   const jumpToProjectRef = useRef<((idx: number) => void) | null>(null)
+  const motionStateRef = useRef<{
+    x: number
+    z: number
+    isHeroCinematic: boolean
+    isAutoNav: boolean
+    parkedBeaconId: string | null
+  } | null>(null)
+
+  // Toggle between 2 camera angles (Isometric vs Top-down tactical)
+  const toggleCameraAngle = () => {
+    const nextAngle = cameraAngle === 'isometric' ? 'topdown' : 'isometric'
+    setCameraAngle(nextAngle)
+    cameraAngleRef.current = nextAngle
+  }
+
+  // Dismiss project detail card and resume driving
+  const closeProjectCard = () => {
+    setIsFocused(false)
+    if (motionStateRef.current) {
+      motionStateRef.current.isHeroCinematic = false
+    }
+  }
 
   // Web Audio mechanical synth chime on beacon lock
   const playChime = useCallback(() => {
@@ -413,7 +437,9 @@ export default function DhakaNeonDrift() {
       targetHeading: 0,
       isAutoNav: false,
       isHeroCinematic: false,
+      parkedBeaconId: null as string | null,
     }
+    motionStateRef.current = state
 
     // 8. Instant GSAP Transition to Project Node
     const jumpToProject = (idx: number) => {
@@ -424,6 +450,7 @@ export default function DhakaNeonDrift() {
       setIsFocused(true)
       state.isAutoNav = true
       state.isHeroCinematic = true
+      state.parkedBeaconId = p.id
       setIsDriving(true)
       playChime()
       triggerBurst(new THREE.Vector3(p.pos[0], 0.5, p.pos[2]))
@@ -480,6 +507,7 @@ export default function DhakaNeonDrift() {
       // Exit cinematic focus when driving in free space
       setIsFocused(false)
       state.isHeroCinematic = false
+      state.parkedBeaconId = null
 
       const dist = Math.hypot(tx - state.x, tz - state.z)
       const duration = Math.max(1.2, Math.min(2.8, dist * 0.16))
@@ -514,6 +542,13 @@ export default function DhakaNeonDrift() {
       if (tag === 'INPUT' || tag === 'TEXTAREA') return
 
       const key = e.key
+      // Close project card on Escape
+      if (key === 'Escape') {
+        setIsFocused(false)
+        state.isHeroCinematic = false
+        return
+      }
+
       // 1-5 Numeric shortcuts to jump instantly
       if (['1', '2', '3', '4', '5'].includes(key)) {
         const idx = parseInt(key, 10) - 1
@@ -521,10 +556,13 @@ export default function DhakaNeonDrift() {
         return
       }
 
-      keys[key.toLowerCase()] = true
-      state.isAutoNav = false
-      state.isHeroCinematic = false
-      setIsFocused(false) // Smoothly fade out spatial text when resuming free flight
+      const lk = key.toLowerCase()
+      if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(lk)) {
+        keys[lk] = true
+        state.isAutoNav = false
+        state.isHeroCinematic = false
+        setIsFocused(false) // Smoothly fade out glassmorphic card when resuming free flight
+      }
     }
 
     const handleKeyUp = (e: KeyboardEvent) => {
@@ -597,6 +635,14 @@ export default function DhakaNeonDrift() {
       animId = requestAnimationFrame(animate)
       const time = clock.getElapsedTime()
 
+      // Clear parked beacon lock once drone drives away
+      if (state.parkedBeaconId) {
+        const curProj = PROJECTS.find((p) => p.id === state.parkedBeaconId)
+        if (curProj && Math.hypot(state.x - curProj.pos[0], state.z - curProj.pos[2]) > 3.6) {
+          state.parkedBeaconId = null
+        }
+      }
+
       // WASD direct physics with calibrated cruising speed and smooth drifting
       if (!state.isAutoNav) {
         let ax = 0
@@ -646,19 +692,24 @@ export default function DhakaNeonDrift() {
           state.heading += THREE.MathUtils.clamp(diff, -0.09, 0.09)
         }
 
-        // In free-flight mode, camera smoothly tracks drone from cinematic chase angle
+        // In free-flight mode, camera smoothly tracks drone based on active camera angle
         if (!state.isHeroCinematic) {
-          const targetCamX = state.x * 0.45
-          const targetCamY = 14
-          const targetCamZ = state.z + 18
+          const isTopDown = cameraAngleRef.current === 'topdown'
+          const targetCamX = isTopDown ? state.x : state.x * 0.45
+          const targetCamY = isTopDown ? 26 : 14
+          const targetCamZ = isTopDown ? state.z + 5 : state.z + 18
 
-          camera.position.x += (targetCamX - camera.position.x) * 0.04
-          camera.position.y += (targetCamY - camera.position.y) * 0.04
-          camera.position.z += (targetCamZ - camera.position.z) * 0.04
+          camera.position.x += (targetCamX - camera.position.x) * 0.045
+          camera.position.y += (targetCamY - camera.position.y) * 0.045
+          camera.position.z += (targetCamZ - camera.position.z) * 0.045
 
-          camLookAt.x += (state.x - camLookAt.x) * 0.06
-          camLookAt.y += (0.6 - camLookAt.y) * 0.06
-          camLookAt.z += (state.z - camLookAt.z) * 0.06
+          const targetLookX = state.x
+          const targetLookY = isTopDown ? 0 : 0.6
+          const targetLookZ = state.z
+
+          camLookAt.x += (targetLookX - camLookAt.x) * 0.06
+          camLookAt.y += (targetLookY - camLookAt.y) * 0.06
+          camLookAt.z += (targetLookZ - camLookAt.z) * 0.06
         }
       }
 
@@ -671,7 +722,7 @@ export default function DhakaNeonDrift() {
         addTrailPoint(state.x, 0, state.z)
       }
 
-      // Animate Nodes & Detect Proximity
+      // Animate Nodes & Detect Proximity to other projects
       nodeMeshes.forEach((nm, idx) => {
         nm.crystal.rotation.y = time * 0.85 + idx * 0.5
         nm.crystal.rotation.x = Math.sin(time * 1.5 + idx) * 0.15
@@ -682,13 +733,15 @@ export default function DhakaNeonDrift() {
         nm.light.intensity = isCurrent ? 4.5 : 1.8
         nm.groundRing.scale.setScalar(1 + Math.sin(time * 3 + idx) * 0.06)
 
-        // If drone drives into beacon pad during free flight, smoothly park and STAY at the project
+        // When drone enters another beacon pad during free flight
         if (!state.isAutoNav && !state.isHeroCinematic) {
           const dist = Math.hypot(state.x - nm.data.pos[0], state.z - nm.data.pos[2])
-          if (dist < 2.5) {
+          // Only trigger if arriving at an unvisited/different project
+          if (dist < 2.4 && state.parkedBeaconId !== nm.data.id) {
             setActiveProject(nm.data)
             setIsFocused(true)
             state.isHeroCinematic = true
+            state.parkedBeaconId = nm.data.id
             state.vx = 0
             state.vz = 0
             setIsDriving(false)
@@ -780,7 +833,7 @@ export default function DhakaNeonDrift() {
     <div
       ref={containerRef}
       tabIndex={0}
-      className="relative w-full h-[580px] sm:h-[680px] lg:h-[720px] rounded-3xl bg-black border border-[#1F1F1F] overflow-hidden select-none outline-none focus:border-[#D2531D]/50 transition-colors"
+      className="relative w-full h-[580px] sm:h-[680px] lg:h-[740px] rounded-3xl bg-black border border-[#1F1F1F] overflow-hidden select-none outline-none focus:border-[#D2531D]/50 transition-colors"
       style={{ touchAction: 'none' }}
     >
       {/* 3D WebGL Canvas */}
@@ -797,67 +850,117 @@ export default function DhakaNeonDrift() {
         <span className="hidden sm:inline text-neutral-400">CLICK GROUND TO DRIFT</span>
       </div>
 
-      {/* Top Right: Active Status Indicator */}
-      <div className="absolute top-6 right-6 z-20 flex items-center gap-2 text-xs font-mono text-neutral-500 pointer-events-none">
-        <span className="w-2 h-2 rounded-full bg-[#D2531D] animate-ping" />
-        <span className="text-white font-medium">{isDriving ? 'DRIFT ENGAGED' : 'SYS READY'}</span>
+      {/* Top Right: Camera Angle Switcher + Status */}
+      <div className="absolute top-6 right-6 z-20 flex items-center gap-3">
+        {/* Camera Angle Toggle Button using Lucide Icon */}
+        <button
+          type="button"
+          onClick={toggleCameraAngle}
+          title={cameraAngle === 'isometric' ? 'Switch to Overhead Tactical View' : 'Switch to Isometric Chase View'}
+          style={{
+            height: '38px',
+            padding: '0 14px',
+            borderRadius: '12px',
+            background: 'rgba(18, 18, 20, 0.78)',
+            border: '1px solid rgba(255, 255, 255, 0.14)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.5)',
+          }}
+          className="flex items-center gap-2 text-xs font-mono text-neutral-300 hover:text-white hover:border-[#D2531D] transition-all cursor-pointer active:scale-95"
+        >
+          <Camera className="w-3.5 h-3.5 text-[#D2531D]" />
+          <span className="font-semibold uppercase">{cameraAngle === 'isometric' ? 'CAM // ISO' : 'CAM // TOP'}</span>
+        </button>
+
+        {/* Drift Status Indicator */}
+        <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-neutral-500 bg-black/60 px-3 py-2 rounded-xl border border-white/8 backdrop-blur-md">
+          <span className="w-2 h-2 rounded-full bg-[#D2531D] animate-ping" />
+          <span className="text-white font-medium">{isDriving ? 'DRIFT ENGAGED' : 'SYS READY'}</span>
+        </div>
       </div>
 
-      {/* SPATIAL FLOATING TYPOGRAPHY IN 3D (NO RECTANGULAR CARDS, NO SIDE PANELS) */}
+      {/* FLOATING GLASSMORPHIC PROJECT DETAIL CARD (MATCHING NAVBAR) */}
       <div
-        className={`absolute inset-0 z-10 flex flex-col items-center justify-center p-6 transition-all duration-700 pointer-events-none ${
-          isFocused ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
+        className={`absolute inset-0 z-30 flex items-center justify-center p-4 sm:p-6 transition-all duration-500 ${
+          isFocused ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'
         }`}
       >
-        <div className="max-w-2xl text-center flex flex-col items-center pointer-events-auto">
-          {/* Spatial Node Marker */}
-          <div className="text-xs font-mono tracking-widest text-[#D2531D] mb-3 uppercase flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#D2531D]" />
-            <span>PROJECT // {activeProject.num}</span>
+        <div
+          style={{
+            maxWidth: '540px',
+            width: '100%',
+            background: 'rgba(18, 18, 20, 0.82)',
+            border: '1px solid rgba(255, 255, 255, 0.14)',
+            borderRadius: '24px',
+            backdropFilter: 'blur(24px)',
+            WebkitBackdropFilter: 'blur(24px)',
+            boxShadow: '0 20px 50px rgba(0, 0, 0, 0.85), 0 0 35px rgba(210, 83, 29, 0.18)',
+            padding: '28px 32px',
+          }}
+          className="relative flex flex-col text-left select-text"
+        >
+          {/* Top Bar with Project Number & Close Button */}
+          <div className="flex items-center justify-between pb-3.5 mb-4 border-b border-white/8">
+            <div className="flex items-center gap-2 text-[11px] font-mono tracking-widest text-[#D2531D] uppercase font-semibold">
+              <span className="w-2 h-2 rounded-full bg-[#D2531D] shadow-[0_0_8px_#D2531D]" />
+              <span>PROJECT // {activeProject.num}</span>
+            </div>
+
+            <button
+              type="button"
+              onClick={closeProjectCard}
+              className="w-7 h-7 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-neutral-400 hover:text-white transition-colors cursor-pointer"
+              title="Close card (or press WASD)"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
           </div>
 
-          {/* Massive Stark White Project Title (JetBrains Mono / Dot-matrix aesthetic) */}
+          {/* Project Title */}
           <h3
             style={{ fontFamily: "'JetBrains Mono', monospace, sans-serif" }}
-            className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white uppercase mb-4 drop-shadow-[0_0_35px_rgba(255,255,255,0.25)]"
+            className="text-2xl sm:text-3xl font-bold tracking-tight text-white uppercase mb-3"
           >
             {activeProject.title}
           </h3>
 
-          {/* Ultra-concise 1-sentence description */}
-          <p className="text-sm sm:text-base font-mono text-neutral-400 max-w-lg mb-8 leading-relaxed">
+          {/* Description */}
+          <p className="text-sm font-sans text-neutral-300 leading-relaxed mb-6 font-normal">
             {activeProject.desc}
           </p>
 
-          {/* Minimal Spatial Interactive CTA Buttons */}
-          <div className="flex items-center gap-4">
+          {/* Interactive CTA Buttons */}
+          <div className="flex items-center gap-3">
             <a
               href={activeProject.liveUrl}
               target="_blank"
               rel="noopener noreferrer"
               style={{
-                borderColor: '#D2531D',
-                color: '#FFFFFF',
+                background: '#D2531D',
+                color: '#000000',
               }}
-              className="px-6 py-2.5 rounded-full border text-xs font-mono font-medium tracking-wider flex items-center gap-2 hover:bg-[#D2531D] hover:text-black transition-all duration-200 active:scale-95 shadow-[0_0_20px_rgba(210,83,29,0.3)] no-underline"
+              className="px-5 py-2.5 rounded-xl text-xs font-mono font-bold tracking-wider flex items-center gap-2 hover:bg-[#E2652B] transition-all duration-200 active:scale-95 shadow-[0_0_20px_rgba(210,83,29,0.35)] no-underline"
             >
-              <span>[VIEW LIVE]</span>
-              <ArrowUpRight className="w-3.5 h-3.5" />
+              <span>VIEW LIVE</span>
+              <ArrowUpRight className="w-3.5 h-3.5" strokeWidth={2.2} />
             </a>
 
             <a
               href={activeProject.codeUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-6 py-2.5 rounded-full border border-neutral-700 text-xs font-mono font-medium tracking-wider text-neutral-300 hover:text-white hover:border-white transition-all duration-200 active:scale-95 no-underline"
+              className="px-5 py-2.5 rounded-xl border border-white/15 bg-white/5 text-xs font-mono font-medium tracking-wider text-neutral-200 hover:text-white hover:border-white/30 transition-all duration-200 active:scale-95 no-underline flex items-center gap-2"
             >
-              <span>[CODEBASE]</span>
+              <span>CODEBASE</span>
+              <ArrowUpRight className="w-3.5 h-3.5 opacity-60" />
             </a>
           </div>
 
-          {/* Resume flight hint */}
-          <div className="mt-8 text-[11px] font-mono text-neutral-500 uppercase tracking-widest">
-            [PRESS WASD OR CLICK GROUND TO RESUME FLIGHT]
+          {/* Drive away tip */}
+          <div className="mt-5 pt-3 border-t border-white/6 flex items-center justify-between text-[10px] font-mono text-neutral-500">
+            <span>DRIVE WITH WASD OR CLICK GROUND TO RESUME</span>
+            <span className="hidden sm:inline">ESC TO CLOSE</span>
           </div>
         </div>
       </div>
