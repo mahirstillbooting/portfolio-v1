@@ -11,7 +11,7 @@ export default function Hero() {
     <section
       ref={containerRef}
       id="hero"
-      className="relative min-h-[92vh] sm:min-h-screen w-full flex flex-col items-center justify-center pt-20 pb-16 overflow-hidden select-none"
+      className="relative min-h-screen w-full flex flex-col items-center justify-center pt-16 pb-8 overflow-hidden select-none"
     >
       {/* Background ambient radial glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[520px] bg-gradient-to-b from-[#E2652B]/10 via-transparent to-transparent blur-[160px] pointer-events-none" />
@@ -20,53 +20,55 @@ export default function Hero() {
       <div className="relative w-full flex flex-col items-center justify-center my-auto">
         
         {/* Full-width interactive portrait + ambient scattered particle canvas */}
-        <div className="relative w-full h-[580px] sm:h-[660px] md:h-[720px] lg:h-[760px] flex items-center justify-center z-0">
+        <div className="relative w-full h-[480px] sm:h-[520px] md:h-[560px] flex items-center justify-center z-0">
           <PortraitCanvas imageSrc={mahirImg} />
         </div>
 
-        {/* Hero Text Overlay (Translated higher up so it sits across lower chest with ample room below) */}
+        {/* Hero Text Overlay (Pulled UP by 180px directly across lower chest/neck area) */}
         <div
           style={{
             zIndex: 10,
             position: 'relative',
+            marginTop: '-180px',
             textAlign: 'center',
           }}
-          className="w-full max-w-4xl px-4 flex flex-col items-center pointer-events-none -mt-44 sm:-mt-52 md:-mt-60 lg:-mt-64"
+          className="w-full max-w-4xl px-4 flex flex-col items-center pointer-events-none"
         >
           {/* Subtle dark backdrop gradient directly behind title for 100% legibility */}
           <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-[#080808]/90 to-transparent blur-2xl -z-10 pointer-events-none scale-125" />
 
-          {/* EDITORIAL HEADLINE IN INSTRUMENT SERIF */}
+          {/* EDITORIAL HEADLINE IN INSTRUMENT SERIF (Single line fit) */}
           <motion.h1
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
             style={{
               fontFamily: "'Instrument Serif', Georgia, serif",
-              fontSize: 'clamp(3.8rem, 7.5vw, 6.8rem)',
+              fontSize: 'clamp(3.2rem, 6.5vw, 5.8rem)',
               fontWeight: 400,
               letterSpacing: '-0.03em',
-              lineHeight: 0.92,
+              lineHeight: 1.02,
+              whiteSpace: 'normal',
             }}
             className="italic text-white select-none drop-shadow-[0_16px_48px_rgba(0,0,0,0.95)]"
           >
             Mahiruddin Chowdhury
           </motion.h1>
 
-          {/* Single clean subtitle */}
+          {/* Clean subtitle */}
           <motion.p
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             style={{
-              fontSize: '18px',
+              fontSize: '17px',
               color: '#A1A1AA',
-              marginTop: '14px',
-              marginBottom: '28px',
+              marginTop: '10px',
+              marginBottom: '24px',
             }}
             className="font-sans font-normal leading-relaxed text-center"
           >
-            Building full-stack web systems &amp; IoT hardware.
+            Computer Science &amp; Engineering Student • Building Web &amp; Software Systems.
           </motion.p>
 
           {/* Spacious Modern Hero CTA Buttons */}
