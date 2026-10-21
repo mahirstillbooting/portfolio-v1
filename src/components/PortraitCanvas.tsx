@@ -260,41 +260,41 @@ export default function PortraitCanvas({ imageSrc }: PortraitCanvasProps) {
 
     // 2. Wide Peripheral Scattered Particles across the entire canvas (Left & Right voids)
     // Spans from slight bright near the portrait to dark obsidian near the outer borders
-    const stepX = 22
-    const stepY = 22
-    const maxDistX = width * 0.5
+    const stepX = 20
+    const stepY = 20
+    const maxDistX = width * 0.52
 
-    for (let gx = 10; gx < width - 10; gx += stepX) {
-      for (let gy = 10; gy < height - 10; gy += stepY) {
+    for (let gx = 8; gx < width - 8; gx += stepX) {
+      for (let gy = 8; gy < height - 8; gy += stepY) {
         const dx = gx - centerX
         const dy = gy - centerY
-        const dist = Math.hypot(dx, dy * 1.08)
+        const dist = Math.hypot(dx, dy * 1.05)
 
         // Skip inside the core of the face so face particles remain crisp
-        if (dist < faceRadius * 0.82) continue
+        if (dist < faceRadius * 0.8) continue
 
         // Organic jitter for natural scattered dot-matrix feel
-        const ox = gx + (Math.random() - 0.5) * 14
-        const oy = gy + (Math.random() - 0.5) * 14
+        const ox = gx + (Math.random() - 0.5) * 16
+        const oy = gy + (Math.random() - 0.5) * 16
 
-        const distFromFace = Math.max(0, dist - faceRadius * 0.82)
+        const distFromFace = Math.max(0, dist - faceRadius * 0.8)
         const normDist = Math.min(1, distFromFace / maxDistX)
 
-        // Smooth exponential falloff: bright near face -> dark at peripheral edges
-        const falloff = Math.exp(-normDist * 2.3)
+        // Smooth exponential falloff: bright near face -> subtle dark obsidian towards peripheral edges
+        const falloff = Math.exp(-normDist * 1.85)
 
         // Denser close to face, organically sparser towards peripheral void
-        const keepProb = 0.54 + falloff * 0.38
+        const keepProb = 0.58 + falloff * 0.36
         if (Math.random() > keepProb) continue
 
-        // Luminance: slight bright (0.65..0.8) smoothly fading to dark embers (0.07..0.15)
+        // Luminance: slight bright (0.68..0.85) smoothly fading to dark embers (0.09..0.18)
         const lum = Math.min(
-          0.82,
-          Math.max(0.06, (0.07 + 0.73 * falloff) * (0.8 + Math.random() * 0.4))
+          0.85,
+          Math.max(0.08, (0.1 + 0.72 * falloff) * (0.8 + Math.random() * 0.4))
         )
 
-        // Subtle smaller particle radius for ambient field (0.75px to 1.5px)
-        const baseRadius = 0.75 + falloff * 0.75 + Math.random() * 0.35
+        // Subtle smaller particle radius for ambient field (0.8px to 1.6px)
+        const baseRadius = 0.8 + falloff * 0.8 + Math.random() * 0.35
 
         const r0 = Math.hypot(ox - centerX, oy - centerY)
         const a0 = Math.atan2(oy - centerY, ox - centerX)
@@ -493,8 +493,8 @@ export default function PortraitCanvas({ imageSrc }: PortraitCanvasProps) {
           ctx.fillStyle = totalHeat > 0.55 ? '#E2652B' : '#D71921'
         } else {
           // Smooth luminance to color/alpha: slight bright (silver/white) to dark (charcoal/obsidian)
-          const val = Math.round(20 + p.lum * 220)
-          const alpha = Math.min(0.95, Math.max(0.18, p.lum * 1.15))
+          const val = Math.round(28 + p.lum * 215)
+          const alpha = Math.min(0.96, Math.max(0.2, p.lum * 1.18))
           ctx.fillStyle = `rgba(${val}, ${val}, ${val}, ${alpha})`
         }
 
@@ -534,10 +534,6 @@ export default function PortraitCanvas({ imageSrc }: PortraitCanvasProps) {
       onClick={triggerVortex}
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
-      style={{
-        maskImage: 'radial-gradient(circle at center, black 45%, transparent 72%)',
-        WebkitMaskImage: 'radial-gradient(circle at center, black 45%, transparent 72%)',
-      }}
       className="relative w-full h-full flex flex-col items-center justify-center will-change-transform select-none cursor-pointer overflow-visible"
     >
       <canvas

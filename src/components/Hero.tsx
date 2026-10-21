@@ -11,21 +11,21 @@ export default function Hero() {
     <section
       ref={containerRef}
       id="hero"
-      className="relative min-h-screen w-full flex flex-col items-center justify-center pt-28 pb-20 px-6 sm:px-8 max-w-[1200px] mx-auto overflow-visible select-none"
+      className="relative min-h-screen w-full flex flex-col items-center justify-center pt-24 pb-16 overflow-hidden select-none"
     >
       {/* Background ambient radial glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[850px] h-[520px] bg-gradient-to-b from-[#E2652B]/10 via-transparent to-transparent blur-[160px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[520px] bg-gradient-to-b from-[#E2652B]/10 via-transparent to-transparent blur-[160px] pointer-events-none" />
 
-      {/* MAIN HERO STAGE (SARTHAK SHARMA EDITORIAL COMPOSITION) */}
+      {/* MAIN HERO STAGE (FULL-WIDTH SCATTERED PARTICLES + EDITORIAL COMPOSITION) */}
       <div className="relative w-full flex flex-col items-center justify-center my-auto">
         
-        {/* 1. Borderless Dot-Matrix Portrait Canvas (Masked seamlessly into #080808 with zero box boundaries) */}
-        <div className="relative w-full max-w-[700px] h-[520px] sm:h-[600px] md:h-[660px] flex items-center justify-center z-0">
+        {/* Full-width interactive portrait + ambient scattered particle canvas */}
+        <div className="relative w-full h-[580px] sm:h-[640px] md:h-[700px] lg:h-[760px] flex items-center justify-center z-0">
           <PortraitCanvas imageSrc={mahirImg} />
         </div>
 
-        {/* 2. Overlapping Editorial Headline in Instrument Serif (Positioned across lower chest with legibility gradient) */}
-        <div className="relative z-10 -mt-28 sm:-mt-36 md:-mt-40 lg:-mt-44 w-full flex flex-col items-center text-center px-4 pointer-events-none">
+        {/* Overlapping Editorial Headline in Instrument Serif (Positioned across lower chest with legibility gradient) */}
+        <div className="relative z-10 -mt-28 sm:-mt-36 md:-mt-40 lg:-mt-44 w-full max-w-4xl flex flex-col items-center text-center px-4 pointer-events-none">
           
           {/* Subtle dark backdrop gradient directly behind title for 100% legibility */}
           <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-[#080808]/90 to-transparent blur-2xl -z-10 pointer-events-none scale-110" />
