@@ -19,9 +19,9 @@ export const PROJECTS_LIST: ProjectCardData[] = [
   {
     id: 'chalokapp',
     title: 'ChalokApp',
-    category: 'CAPSTONE // HARDWARE & IOT',
+    category: 'CAPSTONE // WEB & TRACKING',
     summary:
-      'A hybrid IoT platform modernizing Bangladeshi auto-rickshaws with live ESP32 GPS tracking without disrupting grassroots hiring.',
+      'Collaborating with my capstone team to prototype a basic ESP32 and GPS tracking module for auto-rickshaw management in Bangladesh.',
     stack: ['ESP32', 'NEO-M8N GPS', 'C++', 'Node.js', 'React', 'MongoDB'],
     status: 'CAPSTONE IN PROGRESS',
     colSpan: 'col-span-12', // Hero prominent bento card across full 12 cols
@@ -53,10 +53,10 @@ export const PROJECTS_LIST: ProjectCardData[] = [
   {
     id: 'waste',
     title: 'Smart Waste Dhaka',
-    category: 'CIVIC TECH // MUNICIPAL IOT',
+    category: 'CIVIC TECH // WEB PLATFORM',
     summary:
       'Civic platform bringing schedule transparency and dispute mitigation to door-to-door waste collector crews across Dhaka.',
-    stack: ['JavaScript', 'Civic Tech UI', 'IoT Architecture', 'HTML5'],
+    stack: ['JavaScript', 'Civic Tech UI', 'System Architecture', 'HTML5'],
     status: 'ARCHIVED PROTOTYPE',
     colSpan: 'col-span-12 md:col-span-6',
   },

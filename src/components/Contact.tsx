@@ -61,7 +61,7 @@ export default function Contact() {
         </h2>
 
         <p className="text-sm sm:text-base text-[#9CA3AF] font-sans max-w-md mx-auto mb-8 leading-relaxed">
-          Open to full-stack engineering roles, embedded IoT challenges, and tech discussions.
+          Open to full-stack engineering roles, software challenges, and technical discussions.
         </p>
 
         {/* Interactive Copyable Email Pill */}

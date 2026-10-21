@@ -63,7 +63,7 @@ export default function About() {
                 I am <strong className="text-white font-medium">Mahiruddin Chowdhury</strong>, a 4th-year Computer Science and Engineering student at East West University in Dhaka, Bangladesh. I am not a prodigy or seasoned veteran—I struggle often, learn at my own deliberate pace, and work persistently until every assigned problem is resolved with absolute polish.
               </p>
               <p>
-                My passion sparked as a kid watching <span className="text-white font-medium">Metal Slug</span> arcades and playing <span className="text-[#E2652B] font-medium">GTA: San Andreas</span>, which evolved into hands-on hardware and full-stack software tinkering. Today, I pair core CS fundamentals in C, C++, and Java with modern JavaScript and high-velocity AI engineering workflows.
+                My passion sparked as a kid watching <span className="text-white font-medium">Metal Slug</span> arcades and playing <span className="text-[#E2652B] font-medium">GTA: San Andreas</span>, which evolved into hands-on software development and web tinkering. Today, I pair core CS fundamentals in C, C++, and Java with modern JavaScript and high-velocity AI engineering workflows.
               </p>
             </div>
           </div>
@@ -141,7 +141,7 @@ export default function About() {
               East West University (4th Year Student)
             </div>
             <p className="text-xs font-sans text-[#9CA3AF] leading-relaxed">
-              Software engineering, database architectures, IoT devices, and QA verification.
+              Software engineering, database architectures, and QA verification.
             </p>
           </motion.div>
 

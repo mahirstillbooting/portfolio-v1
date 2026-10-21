@@ -25,7 +25,7 @@ export default function DhakaNeonDrift() {
     {
       id: 'chalokapp',
       title: '01: ChalokApp',
-      tag: 'CAPSTONE IOT',
+      tag: 'CAPSTONE TRACKING',
       pos: [-8.5, 0, -3.5],
       project: PROJECTS_LIST[0],
     },
@@ -46,7 +46,7 @@ export default function DhakaNeonDrift() {
     {
       id: 'waste',
       title: '04: Smart Waste Dhaka',
-      tag: 'MUNICIPAL IOT',
+      tag: 'CIVIC TECH',
       pos: [8.0, 0, 4.5],
       project: PROJECTS_LIST[3],
     },
