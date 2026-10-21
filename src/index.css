@@ -1,0 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&family=Instrument+Serif:ital@0;1&display=swap');
+@import "tailwindcss";
+
+:root {
+  --bg: #080808;
+  --card-bg: rgba(20, 20, 22, 0.65);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(226, 101, 43, 0.45);
+  --accent-orange: #e2652b;
+  --accent-red: #d71921;
+  --cream: #e6d5b8;
+  --text: #f3f4f6;
+  --text-muted: #9ca3af;
+  --text-dim: #6b7280;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+  background-color: var(--bg);
+}
+
+body {
+  background-color: var(--bg);
+  /* Ultra-subtle dot grid for Nothing OS feel without hard noise */
+  background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 28px 28px;
+  color: var(--text);
+  font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--accent-orange);
+  color: #080808;
+}
+
+/* Custom minimal scrollbar */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.12); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-orange); }
+
+/* Typography utility classes */
+.font-serif {
+  font-family: 'Instrument Serif', Georgia, serif !important;
+}
+
+.font-sans {
+  font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+.font-mono {
+  font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+}
+
+/* Standardized Bento Card with exact rule: padding: 36px, radius: 20px, rgba(20,20,22,0.65), 1px border */
+.bento-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 36px;
+  transition: border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.bento-card:hover {
+  border-color: var(--border-hover);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.7), 0 0 30px rgba(226, 101, 43, 0.08);
+}
+
+/* Subtle corner plus marker */
+.corner-plus {
+  position: relative;
+}
+.corner-plus::after {
+  content: '+';
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  color: var(--text-dim);
+  font-size: 11px;
+  pointer-events: none;
+  font-family: 'Geist Mono', monospace;
+  opacity: 0.5;
+}
+
+/* Live pulse dot */
+@keyframes livePulse {
+  0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 8px var(--accent-orange); }
+  50% { opacity: 0.4; transform: scale(0.8); box-shadow: 0 0 2px var(--accent-orange); }
+}
+
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-orange);
+  display: inline-block;
+  animation: livePulse 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
