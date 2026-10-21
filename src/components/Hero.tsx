@@ -149,6 +149,14 @@ export default function Hero() {
           </a>
         </motion.div>
       </div>
+
+      {/* Smooth Bottom Gradient Fade into Projects */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none z-20"
+        style={{
+          background: 'linear-gradient(to bottom, transparent 0%, rgba(11, 11, 12, 0.7) 60%, #0b0b0c 100%)',
+        }}
+      />
     </section>
   )
 }

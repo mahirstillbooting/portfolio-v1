@@ -76,37 +76,151 @@ export default function DhakaNeonDrift() {
   }, [])
 
   const audioCtxRef = useRef<AudioContext | null>(null)
-  const jumpToProjectRef = useRef<((idx: number) => void) | null>(null)
+  const engineSoundRef = useRef<{
+    osc1: OscillatorNode
+    osc2: OscillatorNode
+    filter: BiquadFilterNode
+    gain: GainNode
+    isStarted: boolean
+  } | null>(null)
 
-  // Web Audio mechanical synth chime on beacon lock
-  const playChime = useCallback(() => {
+  const jumpToProjectRef = useRef<((idx: number) => void) | null>(null)
+  const lockUntilRef = useRef<number>(0)
+
+  // Ensure AudioContext is ready on user gesture
+  const ensureAudioContext = useCallback(() => {
+    if (!audioCtxRef.current) {
+      audioCtxRef.current = new (
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
+      )()
+    }
+    const ctx = audioCtxRef.current
+    if (ctx.state === 'suspended') {
+      ctx.resume().catch(() => {})
+    }
+    return ctx
+  }, [])
+
+  // Setup rich video-game style cyber engine synthesizer
+  const ensureEngineSound = useCallback(() => {
+    if (engineSoundRef.current) return engineSoundRef.current
+    try {
+      const ctx = ensureAudioContext()
+      const osc1 = ctx.createOscillator()
+      const osc2 = ctx.createOscillator()
+      const filter = ctx.createBiquadFilter()
+      const gain = ctx.createGain()
+
+      osc1.type = 'sawtooth'
+      osc1.frequency.setValueAtTime(60, ctx.currentTime)
+
+      osc2.type = 'triangle'
+      osc2.frequency.setValueAtTime(40, ctx.currentTime)
+
+      filter.type = 'lowpass'
+      filter.frequency.setValueAtTime(200, ctx.currentTime)
+      filter.Q.setValueAtTime(3.0, ctx.currentTime)
+
+      gain.gain.setValueAtTime(0.0001, ctx.currentTime)
+
+      osc1.connect(filter)
+      osc2.connect(filter)
+      filter.connect(gain)
+      gain.connect(ctx.destination)
+
+      osc1.start()
+      osc2.start()
+
+      const engine = { osc1, osc2, filter, gain, isStarted: true }
+      engineSoundRef.current = engine
+      return engine
+    } catch {
+      return null
+    }
+  }, [ensureAudioContext])
+
+  // Dynamic engine sound modulation matching car velocity
+  const updateEngineAudio = useCallback((speed: number) => {
+    if (!getAudioEnabled()) {
+      if (engineSoundRef.current && audioCtxRef.current) {
+        engineSoundRef.current.gain.gain.setTargetAtTime(0.0001, audioCtxRef.current.currentTime, 0.05)
+      }
+      return
+    }
+
+    const engine = ensureEngineSound()
+    if (!engine || !audioCtxRef.current) return
+    const ctx = audioCtxRef.current
+    const now = ctx.currentTime
+
+    const norm = Math.min(1, Math.max(0, speed / 0.22))
+    if (norm > 0.03) {
+      // Accelerating cyber engine pitch & resonance
+      const targetFreq = 58 + norm * 82
+      const targetFilter = 220 + norm * 400
+      const targetVol = 0.004 + norm * 0.026
+
+      engine.osc1.frequency.setTargetAtTime(targetFreq, now, 0.08)
+      engine.osc2.frequency.setTargetAtTime(targetFreq * 0.66, now, 0.08)
+      engine.filter.frequency.setTargetAtTime(targetFilter, now, 0.08)
+      engine.gain.gain.setTargetAtTime(targetVol, now, 0.06)
+    } else {
+      // Idle / stopped
+      engine.gain.gain.setTargetAtTime(0.0001, now, 0.12)
+    }
+  }, [ensureEngineSound])
+
+  // Futuristic video game lock-on chime
+  const playLockSound = useCallback(() => {
     if (!getAudioEnabled()) return
     try {
-      if (!audioCtxRef.current) {
-        audioCtxRef.current = new (
-          window.AudioContext ||
-          (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
-        )()
-      }
-      const ctx = audioCtxRef.current
-      if (ctx.state === 'suspended') ctx.resume()
+      const ctx = ensureAudioContext()
       const now = ctx.currentTime
 
-      const osc = ctx.createOscillator()
-      const gain = ctx.createGain()
-      osc.type = 'sine'
-      osc.frequency.setValueAtTime(540, now)
-      osc.frequency.exponentialRampToValueAtTime(1080, now + 0.18)
-      gain.gain.setValueAtTime(0.12, now)
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45)
-      osc.connect(gain)
-      gain.connect(ctx.destination)
-      osc.start(now)
-      osc.stop(now + 0.46)
+      // 1. Primary high harmonic crystal ping
+      const ping1 = ctx.createOscillator()
+      const pingGain1 = ctx.createGain()
+      ping1.type = 'sine'
+      ping1.frequency.setValueAtTime(587.33, now) // D5
+      ping1.frequency.exponentialRampToValueAtTime(880, now + 0.12) // A5
+      pingGain1.gain.setValueAtTime(0.14, now)
+      pingGain1.gain.exponentialRampToValueAtTime(0.0001, now + 0.42)
+      ping1.connect(pingGain1)
+      pingGain1.connect(ctx.destination)
+      ping1.start(now)
+      ping1.stop(now + 0.45)
+
+      // 2. Secondary chime overtone
+      const ping2 = ctx.createOscillator()
+      const pingGain2 = ctx.createGain()
+      ping2.type = 'triangle'
+      ping2.frequency.setValueAtTime(880, now + 0.06)
+      ping2.frequency.exponentialRampToValueAtTime(1760, now + 0.22)
+      pingGain2.gain.setValueAtTime(0.001, now)
+      pingGain2.gain.setValueAtTime(0.08, now + 0.06)
+      pingGain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.5)
+      ping2.connect(pingGain2)
+      pingGain2.connect(ctx.destination)
+      ping2.start(now + 0.06)
+      ping2.stop(now + 0.52)
+
+      // 3. Tactile sub lock thud
+      const sub = ctx.createOscillator()
+      const subGain = ctx.createGain()
+      sub.type = 'sine'
+      sub.frequency.setValueAtTime(95, now)
+      sub.frequency.exponentialRampToValueAtTime(38, now + 0.18)
+      subGain.gain.setValueAtTime(0.09, now)
+      subGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.22)
+      sub.connect(subGain)
+      subGain.connect(ctx.destination)
+      sub.start(now)
+      sub.stop(now + 0.24)
     } catch {
       // Audio fallback
     }
-  }, [])
+  }, [ensureAudioContext])
 
   useEffect(() => {
     const container = containerRef.current
@@ -115,8 +229,8 @@ export default function DhakaNeonDrift() {
 
     // 1. Scene, Camera & Renderer
     const scene = new THREE.Scene()
-    scene.background = new THREE.Color(0x000000) // Pure OLED Black
-    scene.fog = new THREE.FogExp2(0x000000, 0.022)
+    scene.background = new THREE.Color(0x0b0b0c) // Matches portfolio background perfectly
+    scene.fog = new THREE.FogExp2(0x0b0b0c, 0.022)
 
     const isMobile = window.innerWidth < 768
     const initialW = window.innerWidth
@@ -144,10 +258,10 @@ export default function DhakaNeonDrift() {
     })
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     renderer.setSize(initialW, initialH)
-    renderer.setClearColor(0x000000, 1)
+    renderer.setClearColor(0x0b0b0c, 1)
 
     // 2. Minimal Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6)
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.65)
     scene.add(ambientLight)
 
     const dirLight = new THREE.DirectionalLight(0xffffff, 1.2)
@@ -444,7 +558,9 @@ export default function DhakaNeonDrift() {
       state.isAutoNav = true
       state.isHeroCinematic = true
       state.parkedBeaconId = p.id
-      playChime()
+      lockUntilRef.current = Date.now() + 650
+
+      playLockSound()
       triggerBurst(new THREE.Vector3(p.pos[0], 0.5, p.pos[2]))
 
       // 1. Camera transition directly in front of the project artifact in space
@@ -542,8 +658,11 @@ export default function DhakaNeonDrift() {
       if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(lk)) {
         keys[lk] = true
         state.isAutoNav = false
-        state.isHeroCinematic = false
-        setIsFocused(false) // Smoothly fade out spatial text when resuming free flight
+        // Only break cinematic lock if grace period has passed
+        if (Date.now() > lockUntilRef.current) {
+          state.isHeroCinematic = false
+          setIsFocused(false)
+        }
       }
     }
 
@@ -596,7 +715,7 @@ export default function DhakaNeonDrift() {
 
         let clickedNode: ProjectItem | undefined
         for (const p of PROJECTS) {
-          if (Math.hypot(tx - p.pos[0], tz - p.pos[2]) < 2.5) {
+          if (Math.hypot(tx - p.pos[0], tz - p.pos[2]) < 3.2) {
             clickedNode = p
             break
           }
@@ -616,10 +735,10 @@ export default function DhakaNeonDrift() {
       animId = requestAnimationFrame(animate)
       const time = clock.getElapsedTime()
 
-      // Clear parked beacon lock once drone drives away
+      // Clear parked beacon lock once drone drives safely away
       if (state.parkedBeaconId) {
         const curProj = PROJECTS.find((p) => p.id === state.parkedBeaconId)
-        if (curProj && Math.hypot(state.x - curProj.pos[0], state.z - curProj.pos[2]) > 3.6) {
+        if (curProj && Math.hypot(state.x - curProj.pos[0], state.z - curProj.pos[2]) > 4.2) {
           state.parkedBeaconId = null
         }
       }
@@ -640,9 +759,11 @@ export default function DhakaNeonDrift() {
           state.vx += ax
           state.vz += az
           state.targetHeading = Math.atan2(ax, az)
-          state.isHeroCinematic = false
-          setIsFocused(false)
-        } else if (state.isHeroCinematic && !state.isAutoNav) {
+          if (Date.now() > lockUntilRef.current) {
+            state.isHeroCinematic = false
+            setIsFocused(false)
+          }
+        } else if (state.isHeroCinematic) {
           state.vx = 0
           state.vz = 0
         }
@@ -688,12 +809,16 @@ export default function DhakaNeonDrift() {
         }
       }
 
+      // Update video-game engine noise in real-time
+      const liveSpeed = Math.hypot(state.vx, state.vz)
+      updateEngineAudio(state.isAutoNav ? 0.16 : liveSpeed)
+
       // Update Drone mesh
       droneGroup.position.set(state.x, 0, state.z)
       droneGroup.rotation.y = state.heading
 
       // Add particle exhaust trail when moving
-      if (Math.hypot(state.vx, state.vz) > 0.02 || state.isAutoNav) {
+      if (liveSpeed > 0.02 || state.isAutoNav) {
         addTrailPoint(state.x, 0, state.z)
       }
 
@@ -705,20 +830,23 @@ export default function DhakaNeonDrift() {
         nm.verticalRing.rotation.x = time * 0.8
 
         const isCurrent = activeProjectIdRef.current === nm.data.id
-        nm.light.intensity = isCurrent ? 4.5 : 1.8
+        nm.light.intensity = isCurrent ? 4.8 : 1.8
         nm.groundRing.scale.setScalar(1 + Math.sin(time * 3 + idx) * 0.06)
 
-        // When drone enters another beacon pad during free flight
-        if (!state.isAutoNav && !state.isHeroCinematic) {
+        // When drone enters another beacon pad (free flight or ground nav)
+        if (!state.isHeroCinematic) {
           const dist = Math.hypot(state.x - nm.data.pos[0], state.z - nm.data.pos[2])
-          if (dist < 2.4 && state.parkedBeaconId !== nm.data.id) {
+          // Robust trigger radius (3.2 units) to prevent missing nodes
+          if (dist < 3.2 && state.parkedBeaconId !== nm.data.id) {
             selectProject(nm.data)
             setIsFocused(true)
             state.isHeroCinematic = true
             state.parkedBeaconId = nm.data.id
             state.vx = 0
             state.vz = 0
-            playChime()
+            lockUntilRef.current = Date.now() + 650
+
+            playLockSound()
             triggerBurst(new THREE.Vector3(nm.data.pos[0], 0.5, nm.data.pos[2]))
 
             // Park drone right at the project pad
@@ -726,7 +854,7 @@ export default function DhakaNeonDrift() {
             gsap.to(state, {
               x: nm.data.pos[0],
               z: nm.data.pos[2] + 1.2,
-              duration: 0.5,
+              duration: 0.55,
               ease: 'power2.out',
               onComplete: () => {
                 state.vx = 0
@@ -799,18 +927,28 @@ export default function DhakaNeonDrift() {
       canvas.removeEventListener('pointerdown', handlePointerDown)
       canvas.removeEventListener('pointerup', handlePointerUp)
       renderer.dispose()
+
+      if (engineSoundRef.current) {
+        try {
+          engineSoundRef.current.osc1.stop()
+          engineSoundRef.current.osc2.stop()
+        } catch {
+          // cleanup
+        }
+        engineSoundRef.current = null
+      }
     }
-  }, [playChime, selectProject])
+  }, [playLockSound, selectProject, updateEngineAudio])
 
   return (
     <div
       ref={containerRef}
       tabIndex={0}
-      className="relative w-full h-screen min-h-[640px] bg-black overflow-hidden select-none outline-none"
+      className="relative w-full h-screen min-h-[640px] bg-[#0b0b0c] overflow-hidden select-none outline-none"
       style={{
         touchAction: 'none',
-        maskImage: 'linear-gradient(to bottom, #000000 0%, #000000 85%, transparent 100%)',
-        WebkitMaskImage: 'linear-gradient(to bottom, #000000 0%, #000000 85%, transparent 100%)',
+        maskImage: 'linear-gradient(to bottom, transparent 0%, #000000 12%, #000000 88%, transparent 100%)',
+        WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, #000000 12%, #000000 88%, transparent 100%)',
       }}
     >
       {/* 3D WebGL Canvas (Full-bleed 100vw / 100vh) */}
