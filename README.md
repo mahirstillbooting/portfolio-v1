@@ -1,6 +1,6 @@
 # Mahiruddin Chowdhury — Portfolio v1
 
-> **An editorial, Nothing OS-inspired portfolio merging tactile dot-matrix aesthetics, 3D interactive Three.js rover mechanics, and high-performance web engineering.**
+> **An editorial, Nothing OS-inspired portfolio merging tactile dot-matrix aesthetics, split-viewport 3D Three.js rover mechanics, 12-cell Tornado particle matrix, and high-performance web engineering.**
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-mahirstillbooting.github.io%2Fportfolio--v1-E2652B?style=for-the-badge&logo=github)](https://mahirstillbooting.github.io/portfolio-v1)
 [![Built With React 19](https://img.shields.io/badge/React%2019-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
@@ -13,32 +13,36 @@
 
 Designed with an obsession for physical telemetry, tactile feedback, and brutalist minimalism. Inspired by the industrial design language of **Nothing OS**, modern editorial typography (**Instrument Serif** & **Geist**), and real-time 3D canvas mechanics.
 
-Engineered by **Mahiruddin Chowdhury** — 4th-year Computer Science & Engineering undergraduate at East West University, Dhaka.
+Engineered by **Mahiruddin Chowdhury** — Computer Science & Engineering undergraduate at East West University, Dhaka, focused on building clean web and software systems.
 
 ---
 
-## ⚡ Key Highlights & Features
+## ⚡ Key Highlights & Architecture
 
-### 1. "Dhaka Neon Drift" — Borderless 3D Three.js Cyber Rover Game
-- **Interactive Isometric Grid:** Controllable 3D glowing wireframe rover inspired by the *ChalokApp* IoT capstone.
+### 1. Editorial Hero Section (Sarthak Sharma Style)
+- **Zero Hard Box Borders:** The interactive dot-matrix portrait blends seamlessly into the `#080808` canvas using radial CSS masking (`radial-gradient(circle, black 45%, transparent 72%)`).
+- **Overlapping Typography:** Giant display title in *Instrument Serif* italic (`font-size: clamp(3.2rem, 6.5vw, 5.8rem)`) pulled up over the lower chest/neck of the portrait (`-mt-[180px]`) with a dark backdrop gradient for 100% legibility and zero 100vh gap.
+- **S-Curve Tornado Swirl & Scroll Dispersion:** Interactive vortex swirl on click, and GSAP scroll dispersion fading particles smoothly into the dark background.
+- **Floating Glassmorphism Pill Navbar:** Minimalist navbar with 36px link spacing, Instrument Serif brandmark, and zero clutter.
+
+### 2. "Dhaka Neon Drift" — Split-Viewport 3D Three.js Cyber Rover
+- **Split Interactive Viewport (62% / 38%):** Eliminates popups and modal overlays. The 3D rover game is always visible on the left (`1.6fr`), while the right side (`1fr`) features a persistent, glassmorphic Project Inspector HUD with live telemetry, live demo links, and GitHub sources.
+- **Interactive Isometric Grid:** Controllable 3D glowing wireframe rover inspired by the *ChalokApp* capstone.
 - **Controls:** Smooth keyboard steering via `WASD` / `Arrow Keys` or **Click/Tap anywhere** on the 3D grid to auto-pilot/drift to that position using GSAP physics, leaving an amber (`#E2652B`) particle trail.
-- **5 Holographic Project Beacons:** Drive into or click any of the 5 glowing beacons (`01: ChalokApp`, `02: ARS System`, `03: Ivory Pastry`, `04: Smart Waste Dhaka`, `05: Book Shop DB`) to trigger a 3D particle burst, a synthesized Web Audio mechanical synth chime, camera zoom, and open the floating Glassmorphism Project Drawer.
-- **Quick-Select Fallback Tabs:** Recruiter-friendly pill tabs below the stage to instantly auto-pilot the rover to any project.
+- **5 Holographic Project Beacons:** Drive into or click any of the 5 glowing beacons (`01: ChalokApp`, `02: ARS System`, `03: Ivory Pastry`, `04: Smart Waste Dhaka`, `05: Book Shop DB`) to trigger a 3D particle burst, a synthesized Web Audio mechanical synth chime, camera zoom, and update the HUD inspector.
+- **Zero Duplicate Bento Cards:** Visitors explore projects exclusively through the 3D rover stage and HUD, keeping the interface uncluttered.
 
-### 2. Editorial Hero Section (Sarthak Sharma Style)
-- **Zero Box Borders:** The interactive portrait matrix blends seamlessly into the `#080808` canvas using radial CSS masking (`radial-gradient(circle, black 45%, transparent 72%)`).
-- **Overlapping Typography:** Giant display title in *Instrument Serif* italic (`font-size: clamp(3.8rem, 7.5vw, 6.8rem)`) overlapping the lower chest portion with a subtle dark backdrop gradient for 100% legibility.
-- **S-Curve Tornado Swirl & Scroll Dispersion:** Interactive vortex swirl on click, and GSAP scroll dispersion fading particles into the dark background.
+### 3. Section 04: 12-Cell "Nothing OS Tornado" Hover Grid Matrix
+- **12 Dedicated Matrix Cells:** Responsive `repeat(auto-fit, minmax(150px, 1fr))` grid replacing legacy charts with a bespoke tactile matrix.
+- **28x28 LED Dot-Matrix Canvas:** Each cell renders a `280x280` canvas displaying the technology abbreviation in dot-matrix typography.
+- **650ms Cubic Funnel Swirl:** On hover, particles break apart, spiral inward in a tight vortex with cubic easing (`easeInOutCubic`), and reconstitute into the official logo/icon bitmap in Nothing Red (`#D71921`) and Orange (`#E2652B`).
+- **Web Audio Sound Effects:** Real-time synthesized high-frequency oscillator sweep accompanies each particle vortex.
+- **12 Technologies:** JavaScript, HTML5, CSS3, SQL, C, C++, Java, Firebase, Git, Figma, AI Prompting, and QA Testing.
 
-### 3. Strict Spacing & Bento Card Architecture
+### 4. Strict Spacing & Bento Standards
 - **Whitespace:** Strict `140px 32px` vertical padding between sections with a `max-width: 1200px` centered layout.
 - **Bento Standards:** `28px` minimum grid gaps, `36px` card padding, and `20px` border radius with subtle corner markers.
-- **Text Discipline:** Strict 25-word summary limits per project card with collaborator GitHub links for *ChalokApp* (`@Smswad` & `@Emon-2004`).
-
-### 4. Honest Journey & Technical Matrix
-- **Biography:** Two scannable paragraphs (`max-width: 65ch`, `line-height: 1.8`) capturing real academic progress at East West University.
-- **Hobbies & Passions:** 4-column balanced grid featuring Mechanical Keyboards, Perfume Notes, Retro PC Gaming, and AI Engineering.
-- **10D Telemetry Bar Chart:** Interactive Nothing OS-inspired unrounded blocky bar chart tracking language and tool proficiencies.
+- **Text Discipline & Honest Bio:** Strict 25-word summary limits per project card with collaborator GitHub links for *ChalokApp* (`@Smswad` & `@Emon-2004`), truthfully describing capstone hardware prototyping.
 
 ---
 
@@ -48,7 +52,7 @@ Engineered by **Mahiruddin Chowdhury** — 4th-year Computer Science & Engineeri
 |-------|--------------|
 | **Core** | [React 19](https://react.dev/), [TypeScript](https://www.typescriptlang.org/), [Vite](https://vitejs.dev/) |
 | **Styling** | [Tailwind CSS v4](https://tailwindcss.com/), CSS Radial Masking, Nothing OS Palette |
-| **3D & Canvas** | [Three.js](https://threejs.org/), HTML5 Canvas 2D Physics Engine |
+| **3D & Canvas** | [Three.js](https://threejs.org/), HTML5 Canvas 2D Physics & Particle Engines |
 | **Animation** | [GSAP](https://gsap.com/) (GreenSock), [Framer Motion](https://www.framer.com/motion/) |
 | **Audio** | Web Audio API (Synthesized triangle/sine oscillators) |
 | **Typography** | Geist Sans, Geist Mono, Instrument Serif |
