@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import * as THREE from 'three'
 import gsap from 'gsap'
-import { ArrowUpRight, X, Sparkles, Navigation } from 'lucide-react'
+import { ArrowUpRight, Sparkles, Navigation, GitBranch, Terminal } from 'lucide-react'
 import { PROJECTS_LIST, type ProjectCardData } from './Projects'
+import { GithubIcon } from './Icons'
 
 interface BeaconData {
   id: string
@@ -15,7 +16,8 @@ interface BeaconData {
 export default function DhakaNeonDrift() {
   const containerRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [activeProject, setActiveProject] = useState<ProjectCardData | null>(null)
+  const panelRef = useRef<HTMLDivElement>(null)
+  const [activeProject, setActiveProject] = useState<ProjectCardData>(PROJECTS_LIST[0])
   const [activeBeaconId, setActiveBeaconId] = useState<string>('chalokapp')
   const [isDriving, setIsDriving] = useState(false)
   const audioCtxRef = useRef<AudioContext | null>(null)
@@ -102,6 +104,19 @@ export default function DhakaNeonDrift() {
 
   // Ref to trigger drive from outside Three.js loop
   const driveToRef = useRef<((targetX: number, targetZ: number, beacon?: BeaconData) => void) | null>(null)
+
+  // Smoothly update HUD panel with GSAP transition when activeProject changes
+  const updateProjectSelection = useCallback((proj: ProjectCardData, beaconId: string) => {
+    setActiveProject(proj)
+    setActiveBeaconId(beaconId)
+    if (panelRef.current) {
+      gsap.fromTo(
+        panelRef.current,
+        { opacity: 0.65, y: 8 },
+        { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out', overwrite: 'auto' }
+      )
+    }
+  }, [])
 
   useEffect(() => {
     const container = containerRef.current
@@ -363,7 +378,7 @@ export default function DhakaNeonDrift() {
       gsap.to(state, {
         x: tx,
         z: tz,
-        duration: 1.25,
+        duration: 1.1,
         ease: 'power2.out',
         onUpdate: () => {
           const dx = tx - state.x
@@ -378,15 +393,14 @@ export default function DhakaNeonDrift() {
           if (targetBeacon) {
             triggerBurst(new THREE.Vector3(tx, 0.5, tz))
             playBeaconChime()
-            setActiveProject(targetBeacon.project)
-            setActiveBeaconId(targetBeacon.id)
+            updateProjectSelection(targetBeacon.project, targetBeacon.id)
 
             // Camera subtle zoom toward beacon
             gsap.to(camera.position, {
               x: tx + 0,
-              y: 11,
-              z: tz + 12,
-              duration: 1.1,
+              y: 12,
+              z: tz + 13,
+              duration: 1.0,
               ease: 'power3.out',
             })
           }
@@ -421,7 +435,6 @@ export default function DhakaNeonDrift() {
       // Otherwise click on ground
       const hitPoint = new THREE.Vector3()
       if (raycaster.ray.intersectPlane(groundPlane, hitPoint)) {
-        // Clamp to map boundary
         const clampedX = Math.max(-16, Math.min(16, hitPoint.x))
         const clampedZ = Math.max(-16, Math.min(16, hitPoint.z))
         driveTo(clampedX, clampedZ)
@@ -492,8 +505,7 @@ export default function DhakaNeonDrift() {
         // Check proximity collision with beacons
         const dist = Math.hypot(state.x - bm.data.pos[0], state.z - bm.data.pos[2])
         if (dist < 2.0 && activeBeaconId !== bm.data.id) {
-          setActiveBeaconId(bm.data.id)
-          setActiveProject(bm.data.project)
+          updateProjectSelection(bm.data.project, bm.data.id)
           playBeaconChime()
           triggerBurst(new THREE.Vector3(bm.data.pos[0], 0.5, bm.data.pos[2]))
         }
@@ -536,12 +548,7 @@ export default function DhakaNeonDrift() {
       canvas.removeEventListener('click', handleCanvasClick)
       renderer.dispose()
     }
-  }, [playBeaconChime, activeBeaconId])
-
-  // Reset camera view
-  const resetCamera = () => {
-    setActiveProject(null)
-  }
+  }, [playBeaconChime, activeBeaconId, updateProjectSelection])
 
   // Quick-select beacon click
   const selectBeacon = (beacon: BeaconData) => {
@@ -551,127 +558,147 @@ export default function DhakaNeonDrift() {
   }
 
   return (
-    <div className="relative w-full flex flex-col items-center">
-      {/* 3D GAME STAGE (BORDERLESS WITH RADIAL CSS MASK FADING TO #080808) */}
-      <div
-        ref={containerRef}
-        style={{
-          maskImage: 'radial-gradient(ellipse at center, black 52%, transparent 78%)',
-          WebkitMaskImage: 'radial-gradient(ellipse at center, black 52%, transparent 78%)',
-        }}
-        className="relative w-full h-[520px] bg-transparent overflow-hidden cursor-crosshair select-none"
-      >
-        <canvas ref={canvasRef} className="w-full h-full block" />
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+        gap: '24px',
+        alignItems: 'stretch',
+      }}
+      className="w-full lg:grid-cols-[1.6fr_1fr]"
+    >
+      {/* LEFT SIDE (62% WIDTH ON DESKTOP): 3D ROVER CANVAS + AUTOPILOT PILLS */}
+      <div className="flex flex-col justify-between w-full h-full">
+        {/* 3D Canvas Stage */}
+        <div
+          ref={containerRef}
+          style={{
+            maskImage: 'radial-gradient(ellipse at center, black 55%, transparent 80%)',
+            WebkitMaskImage: 'radial-gradient(ellipse at center, black 55%, transparent 80%)',
+          }}
+          className="relative w-full h-[480px] sm:h-[520px] bg-transparent overflow-hidden cursor-crosshair select-none"
+        >
+          <canvas ref={canvasRef} className="w-full h-full block" />
 
-        {/* Minimal HUD telemetry status overlay */}
-        <div className="absolute top-4 left-6 flex items-center gap-3 text-[11px] font-mono tracking-widest text-[#9CA3AF] pointer-events-none uppercase bg-black/40 px-3.5 py-1.5 rounded-full border border-white/6 backdrop-blur-md">
-          <Sparkles className="w-3.5 h-3.5 text-[#E2652B]" />
-          <span className="text-[#E2652B] font-semibold">DHAKA NEON DRIFT // 3D</span>
-          <span className="text-white/20">•</span>
-          <span className="hidden sm:inline text-white/70">
-            {isDriving ? 'DRIFTING / MOTORS ACTIVE' : 'STEER WITH WASD OR CLICK TO DRIFT'}
-          </span>
+          {/* Minimal HUD status overlay */}
+          <div className="absolute top-4 left-6 flex items-center gap-3 text-[11px] font-mono tracking-widest text-[#9CA3AF] pointer-events-none uppercase bg-black/40 px-3.5 py-1.5 rounded-full border border-white/6 backdrop-blur-md">
+            <Sparkles className="w-3.5 h-3.5 text-[#E2652B]" />
+            <span className="text-[#E2652B] font-semibold">DHAKA NEON DRIFT // 3D</span>
+            <span className="text-white/20">•</span>
+            <span className="hidden sm:inline text-white/70">
+              {isDriving ? 'DRIFTING / MOTORS ACTIVE' : 'WASD OR CLICK GROUND TO DRIFT'}
+            </span>
+          </div>
         </div>
 
-        {/* Floating Glassmorphism Project Drawer Overlay */}
-        {activeProject && (
-          <div className="absolute top-6 right-6 bottom-6 w-full max-w-[380px] bg-[#111214]/94 border border-white/12 rounded-2xl p-7 shadow-2xl backdrop-blur-2xl flex flex-col justify-between z-20 transition-all duration-300">
-            <div>
-              <div className="flex items-center justify-between pb-3 border-b border-white/8">
-                <span className="text-[10px] font-mono text-[#E2652B] tracking-widest uppercase font-semibold">
-                  {activeProject.category}
-                </span>
-                <button
-                  onClick={resetCamera}
-                  style={{
-                    width: '36px',
-                    height: '36px',
-                    borderRadius: '50%',
-                    background: 'rgba(255, 255, 255, 0.06)',
-                  }}
-                  className="flex items-center justify-center text-[#9CA3AF] hover:text-white hover:bg-white/10 transition-colors cursor-pointer border border-white/8"
-                  aria-label="Close project preview"
-                >
-                  <X className="w-4 h-4" strokeWidth={1.75} />
-                </button>
-              </div>
+        {/* QUICK-SELECT ROVER AUTOPILOT PILLS */}
+        <div className="w-full mt-4 flex flex-wrap items-center justify-start gap-2 px-2 z-10">
+          <span className="text-[10px] font-mono text-[#6B7280] tracking-widest mr-1 uppercase flex items-center gap-1">
+            <Navigation className="w-3 h-3 text-[#E2652B]" />
+            <span>ROVER AUTOPILOT:</span>
+          </span>
+          {beacons.map((b) => (
+            <button
+              key={b.id}
+              onClick={() => selectBeacon(b)}
+              className={`px-3 py-1 text-xs font-mono rounded-full border transition-all duration-200 active:scale-95 cursor-pointer flex items-center gap-1.5 ${
+                activeBeaconId === b.id
+                  ? 'bg-[#E2652B] text-black border-[#E2652B] font-semibold shadow-[0_0_16px_rgba(226,101,43,0.35)]'
+                  : 'bg-white/[0.04] text-[#9CA3AF] border-white/8 hover:text-white hover:border-white/20'
+              }`}
+            >
+              <span>{b.title}</span>
+            </button>
+          ))}
+        </div>
+      </div>
 
-              <h3 className="mt-4 text-2xl font-sans font-bold text-white tracking-tight">
-                {activeProject.title}
-              </h3>
+      {/* RIGHT SIDE (38% WIDTH): PERSISTENT NOTHING OS GLASSMORPHISM HUD INSPECTOR PANEL */}
+      <div
+        ref={panelRef}
+        className="bento-card corner-plus flex flex-col justify-between w-full min-h-[500px] h-full"
+      >
+        <div>
+          {/* Top Telemetry Header */}
+          <div className="flex items-center justify-between pb-4 border-b border-white/8">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#E2652B] shadow-[0_0_8px_#E2652B]" />
+              <span className="text-[11px] font-mono text-[#E2652B] tracking-widest uppercase font-semibold">
+                {activeProject.category}
+              </span>
+            </div>
+            <span className="text-[11px] font-mono text-[#6B7280]">
+              SYS // BEACON LOCKED
+            </span>
+          </div>
 
-              <p className="mt-3 text-xs font-sans text-[#D1D5DB] leading-relaxed">
-                {activeProject.summary}
-              </p>
+          {/* Project Title */}
+          <h3 className="mt-5 text-3xl font-sans font-bold text-white tracking-tight">
+            {activeProject.title}
+          </h3>
 
-              {/* Collaborators for ChalokApp */}
-              {activeProject.collaborators && (
-                <div className="mt-4 pt-3 border-t border-white/6 flex items-center gap-2 text-xs font-mono">
-                  <span className="text-[#6B7280]">TEAM:</span>
-                  {activeProject.collaborators.map((c) => (
-                    <a
-                      key={c.name}
-                      href={c.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[#E2652B] hover:underline"
-                    >
-                      {c.name}
-                    </a>
-                  ))}
-                </div>
-              )}
+          {/* Status Badge */}
+          <div className="mt-2 text-xs font-mono text-[#E2652B]">
+            STATUS: <span className="text-white/80">{activeProject.status}</span>
+          </div>
 
-              {/* Stack Pills with exact padding: 6px 12px, gap: 8px */}
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '16px' }}>
-                {activeProject.stack.slice(0, 4).map((tech) => (
-                  <span
-                    key={tech}
-                    style={{ padding: '6px 12px' }}
-                    className="text-[11px] font-mono text-[#9CA3AF] bg-white/[0.04] border border-white/8 rounded-lg"
+          {/* Concise Summary (Under 25 words) */}
+          <p className="mt-4 text-sm sm:text-base font-sans text-[#D1D5DB] leading-relaxed">
+            {activeProject.summary}
+          </p>
+
+          {/* Collaborator GitHub Links for ChalokApp */}
+          {activeProject.collaborators && activeProject.collaborators.length > 0 && (
+            <div className="mt-6 pt-4 border-t border-white/6">
+              <span className="text-xs font-mono tracking-wider text-[#6B7280] block mb-2.5 flex items-center gap-1.5">
+                <GitBranch className="w-3.5 h-3.5 text-[#E2652B]" />
+                <span>CAPSTONE COLLABORATORS:</span>
+              </span>
+              <div className="flex flex-wrap gap-2">
+                {activeProject.collaborators.map((c) => (
+                  <a
+                    key={c.name}
+                    href={c.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-[#E2652B] text-white hover:text-black border border-white/10 text-xs font-mono transition-colors no-underline"
                   >
-                    {tech}
-                  </span>
+                    <GithubIcon className="w-3.5 h-3.5" />
+                    <span>{c.name}</span>
+                    <ArrowUpRight className="w-3 h-3 opacity-60" strokeWidth={1.75} />
+                  </a>
                 ))}
               </div>
             </div>
+          )}
 
-            <div className="pt-4 border-t border-white/8 flex items-center justify-between">
-              <span className="text-[10px] font-mono text-white/50 tracking-wider">
-                {activeProject.status}
-              </span>
-              <a
-                href="#projects-grid"
-                className="inline-flex items-center gap-1.5 text-xs font-mono text-[#E2652B] hover:text-white transition-colors no-underline font-medium"
-              >
-                <span>Read details</span>
-                <ArrowUpRight className="w-3.5 h-3.5" strokeWidth={1.75} />
-              </a>
+          {/* Tech Stack Pills */}
+          <div className="mt-6 pt-4 border-t border-white/6">
+            <span className="text-xs font-mono tracking-wider text-[#6B7280] block mb-2.5">
+              TECH STACK:
+            </span>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+              {activeProject.stack.map((tech) => (
+                <span
+                  key={tech}
+                  style={{ padding: '6px 12px' }}
+                  className="text-xs font-mono text-[#A1A1AA] bg-white/[0.04] border border-white/8 rounded-lg"
+                >
+                  {tech}
+                </span>
+              ))}
             </div>
           </div>
-        )}
-      </div>
+        </div>
 
-      {/* QUICK-SELECT FALLBACK TABS */}
-      <div className="w-full max-w-[900px] mt-4 flex flex-wrap items-center justify-center gap-2 px-4 z-10">
-        <span className="text-[10px] font-mono text-[#6B7280] tracking-widest mr-2 uppercase flex items-center gap-1">
-          <Navigation className="w-3 h-3 text-[#E2652B]" />
-          <span>ROVER AUTOPILOT:</span>
-        </span>
-        {beacons.map((b) => (
-          <button
-            key={b.id}
-            onClick={() => selectBeacon(b)}
-            className={`px-3.5 py-1.5 text-xs font-mono rounded-full border transition-all duration-200 active:scale-95 cursor-pointer flex items-center gap-1.5 ${
-              activeBeaconId === b.id
-                ? 'bg-[#E2652B] text-black border-[#E2652B] font-semibold shadow-[0_0_16px_rgba(226,101,43,0.35)]'
-                : 'bg-white/[0.04] text-[#9CA3AF] border-white/8 hover:text-white hover:border-white/20'
-            }`}
-          >
-            <Sparkles className="w-3 h-3" />
-            <span>{b.title}</span>
-          </button>
-        ))}
+        {/* Bottom Panel Telemetry */}
+        <div className="mt-8 pt-4 border-t border-white/8 flex items-center justify-between text-xs font-mono text-[#6B7280]">
+          <span className="flex items-center gap-1.5">
+            <Terminal className="w-3.5 h-3.5 text-[#E2652B]" />
+            <span>EAST WEST UNIVERSITY // EWU</span>
+          </span>
+          <span className="text-[#E2652B]">SYS.READY</span>
+        </div>
       </div>
     </div>
   )
