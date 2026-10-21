@@ -24,12 +24,11 @@ Engineered by **Mahiruddin Chowdhury** — Computer Science & Engineering underg
 - **S-Curve Tornado Swirl & Scroll Dispersion:** Interactive vortex swirl on click, and GSAP scroll dispersion fading particles smoothly into the dark background.
 - **Floating Pill Navbar & Global Audio Toggle:** Minimalist navbar featuring 36px link spacing, brandmark, and a dedicated sound mute/unmute toggle (`Volume2` / `VolumeX`) controlling all synthetic Web Audio sound effects across the site.
 
-### 2. "Dhaka Neon Drift" — Split-Viewport 3D Three.js Cyber Rover
-- **Split Interactive Viewport (62% / 38%):** Eliminates popups and modal overlays. The 3D rover game is always visible on the left (`1.6fr`), while the right side (`1fr`) features a persistent, glassmorphic Project Inspector HUD with live telemetry, live demo links, and GitHub sources.
-- **Interactive Isometric Grid:** Controllable 3D glowing wireframe rover inspired by the *ChalokApp* capstone.
-- **Controls:** Smooth keyboard steering via `WASD` / `Arrow Keys` or **Click/Tap anywhere** on the 3D grid to auto-pilot/drift to that position using GSAP physics, leaving an amber (`#E2652B`) particle trail.
-- **5 Holographic Project Beacons:** Drive into or click any of the 5 glowing beacons (`01: ChalokApp`, `02: ARS System`, `03: Ivory Pastry`, `04: Smart Waste Dhaka`, `05: Book Shop DB`) to trigger a 3D particle burst, a synthesized Web Audio mechanical synth chime, camera zoom, and update the HUD inspector.
-- **Zero Duplicate Bento Cards:** Visitors explore projects exclusively through the 3D rover stage and HUD, keeping the interface uncluttered.
+### 2. Spatial 3D Project Universe (Zero Cards, Pure 3D Immersion)
+- **Full-Bleed 3D Viewport:** Pure OLED black (`#000000`) space with an infinite dot-matrix grid plane in charcoal (`#1F1F1F`) and 5 glowing red LED ring nodes (`#D2531D`).
+- **Spatial Floating Typography:** Zero rectangular cards and zero side panels. Approaching or selecting a project node transitions the camera via GSAP (`power4.inOut`) directly in front of the artifact, unfolding massive typography, 1-sentence descriptions, and interactive `[VIEW LIVE]` and `[CODEBASE]` CTAs.
+- **Drone Navigation & Controls:** Glides using `WASD` or mouse vector steering on desktop, and touch-drag with soft spring inertia on mobile.
+- **Minimal Dot-Bar Dock & Shortcuts:** Floating dot-bar navigator (`01 • 02 • 03 • 04 • 05`) and `1-5` numeric shortcuts for instant orbital transitions.
 
 ### 3. Section 04: 12-Cell Interactive Tornado Grid Matrix
 - **12 Dedicated Matrix Cells:** Responsive `repeat(auto-fit, minmax(150px, 1fr))` grid replacing legacy charts with a bespoke tactile matrix.
