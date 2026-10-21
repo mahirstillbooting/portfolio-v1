@@ -58,7 +58,7 @@ export default function About() {
               <span className="text-[#E2652B]">EAST WEST UNIVERSITY</span>
             </div>
 
-            <div className="space-y-6 text-[16px] font-sans text-[#9CA3AF] leading-[1.8]">
+            <div style={{ maxWidth: '65ch' }} className="space-y-6 text-[16px] font-sans text-[#9CA3AF] leading-[1.8]">
               <p>
                 I am <strong className="text-white font-medium">Mahiruddin Chowdhury</strong>, a 4th-year Computer Science and Engineering student at East West University in Dhaka, Bangladesh. I am not a prodigy or seasoned veteran—I struggle often, learn at my own deliberate pace, and work persistently until every assigned problem is resolved with absolute polish.
               </p>
