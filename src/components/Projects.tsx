@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowUpRight, X } from 'lucide-react'
 import { GithubIcon } from './Icons'
-import ThreeOrbitalProjects from './ThreeOrbitalProjects'
+import DhakaNeonDrift from './DhakaNeonDrift'
 
 export interface ProjectCardData {
   id: string
@@ -101,9 +101,9 @@ export default function Projects() {
         </div>
       </div>
 
-      {/* 1. BORDERLESS 3D THREE.JS PROJECT ORBITAL CAROUSEL */}
+      {/* 1. BORDERLESS 3D THREE.JS PROJECT ROVER GAME: DHAKA NEON DRIFT */}
       <div className="w-full mb-20">
-        <ThreeOrbitalProjects />
+        <DhakaNeonDrift />
       </div>
 
       {/* 2. STRICT BENTO GRID (12-COLUMNS, GAP: 28PX, PADDING: 36PX) */}
