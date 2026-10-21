@@ -121,9 +121,10 @@ export default function DhakaNeonDrift() {
       140
     )
 
-    // Initial isometric chase camera position
-    const camPos = new THREE.Vector3(0, 15, 20)
-    const camLookAt = new THREE.Vector3(0, 0.5, 0)
+    // Initial isometric chase camera position focused near project 01
+    const p0 = PROJECTS[0]
+    const camPos = new THREE.Vector3(p0.pos[0] * 0.45, 14, p0.pos[2] + 18)
+    const camLookAt = new THREE.Vector3(p0.pos[0], 0.6, p0.pos[2])
     camera.position.copy(camPos)
     camera.lookAt(camLookAt)
 
@@ -231,7 +232,7 @@ export default function DhakaNeonDrift() {
     thrusterLight.position.set(0, 0.5, 1.2)
     droneGroup.add(thrusterLight)
 
-    droneGroup.position.set(0, 0, 0)
+    droneGroup.position.set(p0.pos[0], 0, p0.pos[2] + 1.2)
     scene.add(droneGroup)
 
     // Particle exhaust trail
@@ -404,8 +405,8 @@ export default function DhakaNeonDrift() {
 
     // 7. Navigation Motion State & Calibrated Physics
     const state = {
-      x: 0,
-      z: 0,
+      x: p0.pos[0],
+      z: p0.pos[2] + 1.2,
       vx: 0,
       vz: 0,
       heading: 0,
@@ -457,6 +458,8 @@ export default function DhakaNeonDrift() {
         onComplete: () => {
           state.isAutoNav = false
           setIsDriving(false)
+          state.vx = 0
+          state.vz = 0
         },
       })
     }
@@ -497,6 +500,8 @@ export default function DhakaNeonDrift() {
         onComplete: () => {
           state.isAutoNav = false
           setIsDriving(false)
+          state.vx = 0
+          state.vz = 0
         },
       })
     }
@@ -608,7 +613,14 @@ export default function DhakaNeonDrift() {
           state.vx += ax
           state.vz += az
           state.targetHeading = Math.atan2(ax, az)
+          state.isHeroCinematic = false
+          setIsFocused(false)
           setIsDriving(true)
+        } else if (state.isHeroCinematic && !state.isAutoNav) {
+          // Keep car firmly parked at project node
+          state.vx = 0
+          state.vz = 0
+          setIsDriving(false)
         } else if (Math.hypot(state.vx, state.vz) < 0.01) {
           setIsDriving(false)
         }
@@ -670,15 +682,50 @@ export default function DhakaNeonDrift() {
         nm.light.intensity = isCurrent ? 4.5 : 1.8
         nm.groundRing.scale.setScalar(1 + Math.sin(time * 3 + idx) * 0.06)
 
-        // If drone drives into beacon pad during free flight
+        // If drone drives into beacon pad during free flight, smoothly park and STAY at the project
         if (!state.isAutoNav && !state.isHeroCinematic) {
           const dist = Math.hypot(state.x - nm.data.pos[0], state.z - nm.data.pos[2])
-          if (dist < 2.5 && activeProject.id !== nm.data.id) {
+          if (dist < 2.5) {
             setActiveProject(nm.data)
             setIsFocused(true)
             state.isHeroCinematic = true
+            state.vx = 0
+            state.vz = 0
+            setIsDriving(false)
             playChime()
             triggerBurst(new THREE.Vector3(nm.data.pos[0], 0.5, nm.data.pos[2]))
+
+            // Park drone right at the project pad and keep it there
+            gsap.killTweensOf(state)
+            gsap.to(state, {
+              x: nm.data.pos[0],
+              z: nm.data.pos[2] + 1.2,
+              duration: 0.5,
+              ease: 'power2.out',
+              onComplete: () => {
+                state.vx = 0
+                state.vz = 0
+                state.isAutoNav = false
+              },
+            })
+
+            // Frame project and spatial typography in 3D
+            gsap.killTweensOf(camera.position)
+            gsap.killTweensOf(camLookAt)
+            gsap.to(camera.position, {
+              x: nm.data.pos[0],
+              y: 3.5,
+              z: nm.data.pos[2] + 8.5,
+              duration: 1.1,
+              ease: 'power3.out',
+            })
+            gsap.to(camLookAt, {
+              x: nm.data.pos[0],
+              y: 1.2,
+              z: nm.data.pos[2],
+              duration: 1.1,
+              ease: 'power3.out',
+            })
           }
         }
       })
