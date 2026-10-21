@@ -20,10 +20,11 @@ Engineered by **Mahiruddin Chowdhury** — Computer Science & Engineering underg
 ## ⚡ Key Highlights & Architecture
 
 ### 1. Editorial Hero Section (Sarthak Sharma Style)
-- **Zero Hard Box Borders:** The interactive dot-matrix portrait blends seamlessly into the `#080808` canvas using radial CSS masking (`radial-gradient(circle, black 45%, transparent 72%)`).
-- **Overlapping Typography:** Giant display title in *Instrument Serif* italic (`font-size: clamp(3.2rem, 6.5vw, 5.8rem)`) pulled up over the lower chest/neck of the portrait (`-mt-[180px]`) with a dark backdrop gradient for 100% legibility and zero 100vh gap.
+- **100% Viewport Height Canvas:** The interactive portrait and ambient scattered particle field span the entire viewport (`100vw` x `100vh`), smoothly filling all empty spaces above and below the portrait.
+- **Darkened Shade Behind Text:** Background pixels and scatter dots falling directly behind the name, subtitle, and buttons are automatically darkened (`opacity: 0.18`, charcoal `#222222`), while the central portrait face remains crisp and bright.
+- **Strict Z-Index Layering:** Text overlay sits strictly on top (`z-index: 10`) with display title in *Instrument Serif* italic (`font-size: clamp(3.2rem, 6.5vw, 5.8rem)`) overlapping the lower chest/neck.
 - **S-Curve Tornado Swirl & Scroll Dispersion:** Interactive vortex swirl on click, and GSAP scroll dispersion fading particles smoothly into the dark background.
-- **Floating Glassmorphism Pill Navbar:** Minimalist navbar with 36px link spacing, Instrument Serif brandmark, and zero clutter.
+- **Floating Pill Navbar & Global Audio Toggle:** Minimalist navbar featuring 36px link spacing, Instrument Serif brandmark, and a dedicated Lucide sound mute/unmute toggle (`Volume2` / `VolumeX`) controlling all synthetic Web Audio sound effects across the site.
 
 ### 2. "Dhaka Neon Drift" — Split-Viewport 3D Three.js Cyber Rover
 - **Split Interactive Viewport (62% / 38%):** Eliminates popups and modal overlays. The 3D rover game is always visible on the left (`1.6fr`), while the right side (`1fr`) features a persistent, glassmorphic Project Inspector HUD with live telemetry, live demo links, and GitHub sources.

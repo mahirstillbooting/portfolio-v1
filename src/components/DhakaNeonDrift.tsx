@@ -4,6 +4,7 @@ import gsap from 'gsap'
 import { ArrowUpRight, Sparkles, Navigation, GitBranch, Terminal } from 'lucide-react'
 import { PROJECTS_LIST, type ProjectCardData } from './Projects'
 import { GithubIcon } from './Icons'
+import { getAudioEnabled } from '../utils/audioState'
 
 interface BeaconData {
   id: string
@@ -63,6 +64,7 @@ export default function DhakaNeonDrift() {
 
   // Synthesized mechanical futuristic chime on beacon unlock
   const playBeaconChime = useCallback(() => {
+    if (!getAudioEnabled()) return
     try {
       if (!audioCtxRef.current) {
         audioCtxRef.current = new (

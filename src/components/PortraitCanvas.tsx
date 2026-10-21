@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import gsap from 'gsap'
+import { getAudioEnabled } from '../utils/audioState'
 
 interface PortraitCanvasProps {
   imageSrc: string
@@ -88,6 +89,7 @@ export default function PortraitCanvas({ imageSrc }: PortraitCanvasProps) {
   const imgRef = useRef<HTMLImageElement | HTMLCanvasElement | null>(null)
 
   const playVortexAudio = useCallback(() => {
+    if (!getAudioEnabled()) return
     try {
       if (!audioCtxRef.current) {
         audioCtxRef.current = new (
@@ -175,13 +177,13 @@ export default function PortraitCanvas({ imageSrc }: PortraitCanvasProps) {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Initialize and populate both face particles and wide ambient scattered particles
+  // Initialize and populate both face particles and wide ambient scattered particles across 100vh
   const initParticles = useCallback((width: number, height: number) => {
     if (!width || !height) return
 
     const centerX = width / 2
-    const centerY = Math.min(height * 0.42, 300)
-    const faceRadius = Math.min(width * 0.38, 315, height * 0.46)
+    const centerY = Math.round(height * 0.40)
+    const faceRadius = Math.min(width * 0.36, 310, height * 0.38)
     const gridCount = 68
     const cellSize = (faceRadius * 2) / gridCount
 
@@ -258,11 +260,10 @@ export default function PortraitCanvas({ imageSrc }: PortraitCanvasProps) {
       }
     }
 
-    // 2. Wide Peripheral Scattered Particles across the entire canvas (Left & Right voids)
-    // Spans from slight bright near the portrait to dark obsidian near the outer borders
+    // 2. Wide Peripheral Scattered Particles across 100% viewport width & height (all empty spaces)
     const stepX = 20
     const stepY = 20
-    const maxDistX = width * 0.52
+    const maxDist = Math.max(width * 0.52, height * 0.52)
 
     for (let gx = 8; gx < width - 8; gx += stepX) {
       for (let gy = 8; gy < height - 8; gy += stepY) {
@@ -278,9 +279,9 @@ export default function PortraitCanvas({ imageSrc }: PortraitCanvasProps) {
         const oy = gy + (Math.random() - 0.5) * 16
 
         const distFromFace = Math.max(0, dist - faceRadius * 0.8)
-        const normDist = Math.min(1, distFromFace / maxDistX)
+        const normDist = Math.min(1, distFromFace / maxDist)
 
-        // Smooth exponential falloff: bright near face -> subtle dark obsidian towards peripheral edges
+        // Smooth exponential falloff: bright near face -> subtle dark obsidian towards outer margins
         const falloff = Math.exp(-normDist * 1.85)
 
         // Denser close to face, organically sparser towards peripheral void
@@ -334,8 +335,8 @@ export default function PortraitCanvas({ imageSrc }: PortraitCanvasProps) {
 
     const handleResize = () => {
       const rect = container.getBoundingClientRect()
-      const width = Math.floor(rect.width) || 1200
-      const height = Math.floor(rect.height) || 600
+      const width = Math.floor(rect.width) || window.innerWidth || 1200
+      const height = Math.floor(rect.height) || window.innerHeight || 800
       const dpr = Math.min(window.devicePixelRatio || 1, 2)
 
       canvas.width = width * dpr
@@ -382,10 +383,25 @@ export default function PortraitCanvas({ imageSrc }: PortraitCanvasProps) {
       }
 
       const centerX = width / 2
-      const centerY = Math.min(height * 0.42, 300)
+      const centerY = Math.round(height * 0.40)
       const v = vortexRef.current
       const isVortex = v.active
       const scrollDispersion = scrollDispersionRef.current
+
+      // Detect text overlay bounding box to darken background/scatter dots behind text
+      let textLeft = -9999
+      let textRight = -9999
+      let textTop = 9999
+      let textBottom = -9999
+      const textEl = document.getElementById('hero-text-overlay')
+      if (textEl && canvas) {
+        const tr = textEl.getBoundingClientRect()
+        const cr = canvas.getBoundingClientRect()
+        textLeft = tr.left - cr.left - 20
+        textRight = tr.right - cr.left + 20
+        textTop = tr.top - cr.top - 12
+        textBottom = tr.bottom - cr.top + 16
+      }
 
       if (isVortex) {
         const elapsed = now - v.startTime
@@ -489,7 +505,19 @@ export default function PortraitCanvas({ imageSrc }: PortraitCanvasProps) {
         const scrollHeat = scrollDispersion * 0.6
         const totalHeat = Math.max(p.heat, scrollHeat)
 
-        if (totalHeat > 0.25) {
+        const isBehindText =
+          p.x >= textLeft &&
+          p.x <= textRight &&
+          p.y >= textTop &&
+          p.y <= textBottom
+
+        if (isBehindText && !isVortex) {
+          // Darker shade behind text: reduced opacity/brightness (opacity: 0.18 / charcoal #222222)
+          // so dots never strain eyes or obscure text, while center portrait face remains bright & crisp
+          ctx.fillStyle = p.isAmbient
+            ? 'rgba(34, 34, 34, 0.18)'
+            : 'rgba(38, 38, 38, 0.22)'
+        } else if (totalHeat > 0.25) {
           ctx.fillStyle = totalHeat > 0.55 ? '#E2652B' : '#D71921'
         } else {
           // Smooth luminance to color/alpha: slight bright (silver/white) to dark (charcoal/obsidian)

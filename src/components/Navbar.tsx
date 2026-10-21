@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowUpRight, Menu, X } from 'lucide-react'
+import { ArrowUpRight, Menu, X, Volume2, VolumeX } from 'lucide-react'
+import { useAudioState } from '../utils/audioState'
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [audioEnabled, toggleAudio] = useAudioState()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,7 +35,7 @@ export default function Navbar() {
             : 'bg-[#121214]/75 border-white/8 shadow-[0_12px_30px_rgba(0,0,0,0.6)]'
         } backdrop-blur-[20px]`}
       >
-        {/* Left: Name only in Instrument Serif (24px, #ffffff, pl-3, NO blinking dot, NO // 01) */}
+        {/* Left: Name only in Instrument Serif */}
         <a
           href="#hero"
           style={{
@@ -63,8 +65,37 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Right: Spacious Modern CTA Button */}
-        <div className="flex items-center gap-2">
+        {/* Right: Sound Toggle + CTA Button */}
+        <div className="flex items-center gap-2.5">
+          {/* Sound Mute / Unmute Toggle Button */}
+          <button
+            type="button"
+            onClick={toggleAudio}
+            title={audioEnabled ? 'Mute audio' : 'Unmute audio'}
+            aria-label={audioEnabled ? 'Mute audio' : 'Unmute audio'}
+            style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '12px',
+              background: 'rgba(255, 255, 255, 0.06)',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#E4E4E7',
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+            }}
+            className="hover:bg-white/10 hover:border-white/25 active:scale-95"
+          >
+            {audioEnabled ? (
+              <Volume2 className="w-4 h-4 text-[#E2652B]" />
+            ) : (
+              <VolumeX className="w-4 h-4 text-[#71717A]" />
+            )}
+          </button>
+
+          {/* Let's talk CTA */}
           <a
             href="mailto:stellaroasis116@gmail.com"
             style={{

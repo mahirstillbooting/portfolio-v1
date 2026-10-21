@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useCallback } from 'react'
+import { getAudioEnabled } from '../utils/audioState'
 
 export interface TechItem {
   id: string
@@ -97,6 +98,7 @@ function MatrixCell({ item, audioCtxRef }: MatrixCellProps) {
 
   // Web Audio Sine Frequency Sweep
   const playSweepSound = useCallback((isEntering: boolean) => {
+    if (!getAudioEnabled()) return
     try {
       if (!audioCtxRef.current) {
         audioCtxRef.current = new (
