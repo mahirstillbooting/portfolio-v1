@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowDown, ArrowUpRight } from 'lucide-react'
 import PortraitCanvas from './PortraitCanvas'
+import mahirImg from '../assets/mahir.png'
 
 function LiveClock() {
   const clockRef = useRef<HTMLSpanElement>(null)
@@ -57,7 +58,7 @@ export default function Hero() {
         
         {/* Full-width interactive portrait + ambient scattered particle canvas */}
         <div className="relative w-full h-[520px] sm:h-[580px] md:h-[620px] flex items-center justify-center z-0">
-          <PortraitCanvas imageSrc="./assets/mahir.png" />
+          <PortraitCanvas imageSrc={mahirImg} />
         </div>
 
         {/* Overlapping Editorial Headline in Instrument Serif (Positioned across lower chest with legibility gradient) */}

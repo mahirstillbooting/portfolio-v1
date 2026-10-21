@@ -30,12 +30,51 @@ interface Shockwave {
   maxR: number
 }
 
+// High-contrast fallback silhouette if image is loading or offline
+function createFallbackPortrait(): HTMLCanvasElement {
+  const c = document.createElement('canvas')
+  c.width = 400
+  c.height = 400
+  const g = c.getContext('2d')!
+  g.fillStyle = '#000'
+  g.fillRect(0, 0, 400, 400)
+
+  // Head & face shading
+  const headGrad = g.createRadialGradient(195, 165, 15, 200, 180, 120)
+  headGrad.addColorStop(0, '#ffffff')
+  headGrad.addColorStop(0.55, '#888888')
+  headGrad.addColorStop(1, '#000000')
+  g.fillStyle = headGrad
+  g.beginPath()
+  g.ellipse(200, 175, 80, 105, 0, 0, Math.PI * 2)
+  g.fill()
+
+  // Shoulders
+  const bodyGrad = g.createRadialGradient(200, 360, 20, 200, 370, 150)
+  bodyGrad.addColorStop(0, '#bbbbbb')
+  bodyGrad.addColorStop(1, '#000000')
+  g.fillStyle = bodyGrad
+  g.beginPath()
+  g.ellipse(200, 370, 140, 90, 0, 0, Math.PI * 2)
+  g.fill()
+
+  // Stylized cyber glasses / visor
+  g.fillStyle = '#111111'
+  g.fillRect(145, 150, 48, 22)
+  g.fillRect(207, 150, 48, 22)
+  g.fillStyle = '#ffffff'
+  g.fillRect(152, 155, 16, 4)
+  g.fillRect(214, 155, 16, 4)
+
+  return c
+}
+
 export default function PortraitCanvas({ imageSrc }: PortraitCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const particlesRef = useRef<DotParticle[]>([])
   const shockwavesRef = useRef<Shockwave[]>([])
-  const dimsRef = useRef({ width: 1200, height: 600, dpr: 1 })
+  const dimsRef = useRef({ width: 0, height: 0, dpr: 1 })
   const mouseRef = useRef({ x: -999, y: -999, active: false, radius: 115 })
   const vortexRef = useRef({
     active: false,
@@ -45,8 +84,8 @@ export default function PortraitCanvas({ imageSrc }: PortraitCanvasProps) {
   })
   const scrollDispersionRef = useRef(0)
   const audioCtxRef = useRef<AudioContext | null>(null)
-  const [isSwirling, setIsSwirling] = useState(false)
-  const imgRef = useRef<HTMLImageElement | null>(null)
+  const [, setIsSwirling] = useState(false)
+  const imgRef = useRef<HTMLImageElement | HTMLCanvasElement | null>(null)
 
   const playVortexAudio = useCallback(() => {
     try {
@@ -98,7 +137,7 @@ export default function PortraitCanvas({ imageSrc }: PortraitCanvasProps) {
     v.startTime = performance.now()
     v.spinDir *= -1
 
-    const { width } = dimsRef.current
+    const width = dimsRef.current.width || 1200
     shockwavesRef.current.push({
       r: 20,
       alpha: 0.85,
@@ -138,6 +177,8 @@ export default function PortraitCanvas({ imageSrc }: PortraitCanvasProps) {
 
   // Initialize and populate both face particles and wide ambient scattered particles
   const initParticles = useCallback((width: number, height: number) => {
+    if (!width || !height) return
+
     const centerX = width / 2
     const centerY = Math.min(height * 0.44, 270)
     const faceRadius = Math.min(width * 0.26, 215, height * 0.38)
@@ -145,73 +186,75 @@ export default function PortraitCanvas({ imageSrc }: PortraitCanvasProps) {
     const cellSize = (faceRadius * 2) / gridCount
 
     const newParticles: DotParticle[] = []
-    const img = imgRef.current
+    const imgSource = imgRef.current || createFallbackPortrait()
 
-    // 1. Central Face Portrait sampling
-    if (img && img.complete && img.naturalWidth > 0) {
-      const offscreen = document.createElement('canvas')
-      offscreen.width = gridCount
-      offscreen.height = gridCount
-      const octx = offscreen.getContext('2d', { willReadFrequently: true })!
+    // 1. Central Face Portrait LED sampling
+    const offscreen = document.createElement('canvas')
+    offscreen.width = gridCount
+    offscreen.height = gridCount
+    const octx = offscreen.getContext('2d', { willReadFrequently: true })!
+    octx.fillStyle = '#000'
+    octx.fillRect(0, 0, gridCount, gridCount)
 
-      const sw = img.naturalWidth
-      const sh = img.naturalHeight
+    const sw = (imgSource as HTMLImageElement).naturalWidth || imgSource.width
+    const sh = (imgSource as HTMLImageElement).naturalHeight || imgSource.height
+    if (sw > 0 && sh > 0) {
       const minDim = Math.min(sw, sh)
       const sx = (sw - minDim) / 2
       const sy = (sh - minDim) / 2
-      octx.drawImage(img, sx, sy, minDim, minDim, 0, 0, gridCount, gridCount)
+      octx.drawImage(imgSource, sx, sy, minDim, minDim, 0, 0, gridCount, gridCount)
+    }
 
-      const imgData = octx.getImageData(0, 0, gridCount, gridCount).data
+    const imgData = octx.getImageData(0, 0, gridCount, gridCount).data
 
-      for (let r = 0; r < gridCount; r++) {
-        for (let c = 0; c < gridCount; c++) {
-          const idx = (r * gridCount + c) * 4
-          const red = imgData[idx]
-          const green = imgData[idx + 1]
-          const blue = imgData[idx + 2]
-          const alpha = imgData[idx + 3] / 255
+    for (let r = 0; r < gridCount; r++) {
+      for (let c = 0; c < gridCount; c++) {
+        const idx = (r * gridCount + c) * 4
+        const red = imgData[idx]
+        const green = imgData[idx + 1]
+        const blue = imgData[idx + 2]
+        const alpha = imgData[idx + 3] / 255
 
-          let lum = ((0.299 * red + 0.587 * green + 0.114 * blue) / 255) * alpha
-          lum = Math.pow(lum, 1.25)
+        let lum = ((0.299 * red + 0.587 * green + 0.114 * blue) / 255) * alpha
+        lum = Math.pow(lum, 1.18) // Punchy shadows & high-contrast LEDs
 
-          const ox = centerX - faceRadius + c * cellSize + cellSize / 2
-          const oy = centerY - faceRadius + r * cellSize + cellSize / 2
-          const dx = ox - centerX
-          const dy = oy - centerY
-          const r0 = Math.hypot(dx, dy)
+        const ox = centerX - faceRadius + c * cellSize + cellSize / 2
+        const oy = centerY - faceRadius + r * cellSize + cellSize / 2
+        const dx = ox - centerX
+        const dy = oy - centerY
+        const r0 = Math.hypot(dx, dy)
 
-          if (r0 > faceRadius) continue
+        if (r0 > faceRadius) continue
 
-          // Feather edges of portrait circle seamlessly
-          const edgeFade =
-            r0 > faceRadius * 0.72
-              ? Math.max(0, 1 - (r0 - faceRadius * 0.72) / (faceRadius * 0.28))
-              : 1
-          lum *= edgeFade
+        // Feather boundary smoothly into ambient field
+        const edgeFade =
+          r0 > faceRadius * 0.74
+            ? Math.max(0, 1 - (r0 - faceRadius * 0.74) / (faceRadius * 0.26))
+            : 1
+        lum *= edgeFade
 
-          if (lum < 0.04) continue
+        if (lum < 0.04) continue
 
-          const a0 = Math.atan2(dy, dx)
+        const a0 = Math.atan2(dy, dx)
 
-          newParticles.push({
-            ox,
-            oy,
-            x: ox,
-            y: oy,
-            vx: 0,
-            vy: 0,
-            r0,
-            a0,
-            lum,
-            baseRadius: Math.max(0.65, cellSize * 0.44 * Math.max(0.2, lum)),
-            heat: 0,
-            delay: (1 - Math.min(r0 / faceRadius, 1)) * 0.16 + Math.random() * 0.03,
-            totalSpin: 0,
-            scatterAngle: a0 + (Math.random() - 0.5) * 0.8,
-            scatterDist: (Math.random() * 140 + 50) * (1 + r0 / faceRadius),
-            isAmbient: false,
-          })
-        }
+        newParticles.push({
+          ox,
+          oy,
+          x: ox,
+          y: oy,
+          vx: 0,
+          vy: 0,
+          r0,
+          a0,
+          lum,
+          baseRadius: Math.max(0.7, (cellSize * 0.46) * Math.max(0.18, lum)),
+          heat: 0,
+          delay: (1 - Math.min(r0 / faceRadius, 1)) * 0.16 + Math.random() * 0.03,
+          totalSpin: 0,
+          scatterAngle: a0 + (Math.random() - 0.5) * 0.8,
+          scatterDist: (Math.random() * 140 + 50) * (1 + r0 / faceRadius),
+          isAmbient: false,
+        })
       }
     }
 
@@ -228,13 +271,13 @@ export default function PortraitCanvas({ imageSrc }: PortraitCanvasProps) {
         const dist = Math.hypot(dx, dy * 1.08)
 
         // Skip inside the core of the face so face particles remain crisp
-        if (dist < faceRadius * 0.78) continue
+        if (dist < faceRadius * 0.82) continue
 
         // Organic jitter for natural scattered dot-matrix feel
         const ox = gx + (Math.random() - 0.5) * 14
         const oy = gy + (Math.random() - 0.5) * 14
 
-        const distFromFace = Math.max(0, dist - faceRadius * 0.78)
+        const distFromFace = Math.max(0, dist - faceRadius * 0.82)
         const normDist = Math.min(1, distFromFace / maxDistX)
 
         // Smooth exponential falloff: bright near face -> dark at peripheral edges
@@ -280,7 +323,7 @@ export default function PortraitCanvas({ imageSrc }: PortraitCanvasProps) {
     particlesRef.current = newParticles
   }, [])
 
-  // Canvas setup, resize listener, and main animation loop
+  // Canvas setup, resize listener, image loader, and main animation loop
   useEffect(() => {
     const canvas = canvasRef.current
     const container = containerRef.current
@@ -295,17 +338,11 @@ export default function PortraitCanvas({ imageSrc }: PortraitCanvasProps) {
       const height = Math.floor(rect.height) || 600
       const dpr = Math.min(window.devicePixelRatio || 1, 2)
 
-      if (
-        Math.abs(width - dimsRef.current.width) > 20 ||
-        Math.abs(height - dimsRef.current.height) > 20 ||
-        dimsRef.current.dpr !== dpr
-      ) {
-        canvas.width = width * dpr
-        canvas.height = height * dpr
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-        dimsRef.current = { width, height, dpr }
-        initParticles(width, height)
-      }
+      canvas.width = width * dpr
+      canvas.height = height * dpr
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      dimsRef.current = { width, height, dpr }
+      initParticles(width, height)
     }
 
     // Load Image
@@ -316,15 +353,21 @@ export default function PortraitCanvas({ imageSrc }: PortraitCanvasProps) {
       handleResize()
     }
     img.onerror = () => {
+      imgRef.current = createFallbackPortrait()
       handleResize()
     }
     img.src = imageSrc
 
-    // Initial sizing
+    // Initial sizing immediately
     handleResize()
 
     const ro = new ResizeObserver(() => {
-      handleResize()
+      const rect = container.getBoundingClientRect()
+      const w = Math.floor(rect.width)
+      const h = Math.floor(rect.height)
+      if (Math.abs(w - dimsRef.current.width) > 20 || Math.abs(h - dimsRef.current.height) > 20) {
+        handleResize()
+      }
     })
     ro.observe(container)
 
@@ -333,6 +376,11 @@ export default function PortraitCanvas({ imageSrc }: PortraitCanvasProps) {
 
     const renderLoop = (now: number) => {
       const { width, height } = dimsRef.current
+      if (!width || !height) {
+        animId = requestAnimationFrame(renderLoop)
+        return
+      }
+
       const centerX = width / 2
       const centerY = Math.min(height * 0.44, 270)
       const v = vortexRef.current
@@ -343,7 +391,7 @@ export default function PortraitCanvas({ imageSrc }: PortraitCanvasProps) {
         const elapsed = now - v.startTime
         const progress = Math.min(elapsed / v.duration, 1)
 
-        // Subtle phosphor motion blur
+        // Phosphor motion blur
         ctx.fillStyle = 'rgba(8, 8, 8, 0.28)'
         ctx.fillRect(0, 0, width, height)
 
@@ -451,7 +499,7 @@ export default function PortraitCanvas({ imageSrc }: PortraitCanvasProps) {
         }
 
         const sizeFade = Math.max(0.15, 1 - scrollDispersion * 0.85)
-        const r = Math.max(0.45, p.baseRadius * (1 + p.heat * 0.35) * sizeFade)
+        const r = Math.max(0.5, p.baseRadius * (1 + p.heat * 0.35) * sizeFade)
         ctx.beginPath()
         ctx.arc(p.x, p.y, r, 0, Math.PI * 2)
         ctx.fill()
@@ -492,12 +540,6 @@ export default function PortraitCanvas({ imageSrc }: PortraitCanvasProps) {
         ref={canvasRef}
         className="w-full h-full block pointer-events-none"
       />
-
-      {/* Subtle indicator hint placed below the portrait center */}
-      <div className="absolute bottom-2 sm:bottom-4 flex items-center gap-2 text-[10px] text-[#6B7280] tracking-widest font-mono pointer-events-none uppercase bg-black/40 px-3 py-1 rounded-full border border-white/6 backdrop-blur-sm">
-        <span className="text-[#E2652B]">{isSwirling ? '●' : '↻'}</span>
-        <span>CLICK TO SWIRL · HOVER TO REPEL · SCROLL TO DISPERSE</span>
-      </div>
     </div>
   )
 }
