@@ -730,9 +730,33 @@ export default function DhakaNeonDrift() {
     // 11. Main Animation Loop
     let animId: number
     const clock = new THREE.Clock()
+    let isVisible = true
+
+    // Pause physics & mute audio when scrolled outside Projects section
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          isVisible = entry.isIntersecting && entry.intersectionRatio > 0.05
+          if (!isVisible && engineSoundRef.current && audioCtxRef.current) {
+            engineSoundRef.current.gain.gain.setTargetAtTime(0.0001, audioCtxRef.current.currentTime, 0.05)
+          }
+        })
+      },
+      { threshold: [0, 0.05, 0.2] }
+    )
+    observer.observe(container)
 
     const animate = () => {
       animId = requestAnimationFrame(animate)
+
+      // Sleep loop when section is scrolled out of viewport
+      if (!isVisible) {
+        if (engineSoundRef.current && audioCtxRef.current) {
+          engineSoundRef.current.gain.gain.setTargetAtTime(0.0001, audioCtxRef.current.currentTime, 0.05)
+        }
+        return
+      }
+
       const time = clock.getElapsedTime()
 
       // Clear parked beacon lock once drone drives safely away
@@ -921,6 +945,7 @@ export default function DhakaNeonDrift() {
 
     return () => {
       cancelAnimationFrame(animId)
+      observer.disconnect()
       window.removeEventListener('keydown', handleKeyDown)
       window.removeEventListener('keyup', handleKeyUp)
       window.removeEventListener('resize', handleResize)
