@@ -686,7 +686,8 @@ export default function DhakaNeonDrift() {
 
     const handlePointerUp = (e: PointerEvent) => {
       const dist = Math.hypot(e.clientX - pointerDownPos.x, e.clientY - pointerDownPos.y)
-      if (dist > 14) return
+      // Ignore if user was scrolling/swiping on mobile or dragging
+      if (dist > 8) return
 
       const rect = canvas.getBoundingClientRect()
       mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1
@@ -969,16 +970,17 @@ export default function DhakaNeonDrift() {
     <div
       ref={containerRef}
       tabIndex={0}
-      className="relative w-full h-screen min-h-[640px] bg-[#0b0b0c] overflow-hidden select-none outline-none"
+      className="relative w-full h-[85vh] min-h-[580px] sm:h-screen sm:min-h-[640px] bg-[#0b0b0c] overflow-hidden select-none outline-none"
       style={{
-        touchAction: 'none',
+        touchAction: 'pan-y',
         maskImage: 'linear-gradient(to bottom, transparent 0%, #000000 12%, #000000 88%, transparent 100%)',
         WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, #000000 12%, #000000 88%, transparent 100%)',
       }}
     >
-      {/* 3D WebGL Canvas (Full-bleed 100vw / 100vh) */}
+      {/* 3D WebGL Canvas (Full-bleed) */}
       <canvas
         ref={canvasRef}
+        style={{ touchAction: 'pan-y' }}
         className="w-full h-full block cursor-crosshair select-none"
       />
 
