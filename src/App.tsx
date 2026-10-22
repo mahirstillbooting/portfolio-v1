@@ -6,6 +6,7 @@ import About from './components/About'
 import Skills from './components/Skills'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
+import SoundToggle from './components/SoundToggle'
 
 export default function App() {
   useEffect(() => {
@@ -40,6 +41,7 @@ export default function App() {
         <Contact />
       </main>
       <Footer />
+      <SoundToggle />
     </div>
   )
 }
