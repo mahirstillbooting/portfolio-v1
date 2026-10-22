@@ -27,14 +27,28 @@ export default function Navbar() {
         initial={{ y: -30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className={`pointer-events-auto flex items-center justify-between w-full max-w-[980px] h-[60px] sm:h-[66px] pl-8 sm:pl-10 md:pl-12 pr-4 sm:pr-6 md:pr-7 rounded-full transition-all duration-300 border ${
-          scrolled
-            ? 'bg-[#101012]/85 border-white/12 shadow-[0_16px_40px_rgba(0,0,0,0.85)]'
-            : 'bg-[#121214]/75 border-white/8 shadow-[0_12px_30px_rgba(0,0,0,0.6)]'
-        } backdrop-blur-[20px]`}
+        style={{
+          height: '64px',
+          padding: '0 24px 0 32px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          width: '100%',
+          maxWidth: '1080px',
+          background: scrolled ? 'rgba(16, 16, 18, 0.88)' : 'rgba(20, 20, 22, 0.75)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          border: '1px solid rgba(255, 255, 255, 0.12)',
+          borderRadius: '24px',
+          boxSizing: 'border-box',
+        }}
+        className="pointer-events-auto transition-all duration-300 shadow-[0_12px_30px_rgba(0,0,0,0.6)]"
       >
-        {/* Left: Name in Instrument Serif with generous breathing room from the pill curve */}
-        <div className="flex items-center shrink-0 pl-2 sm:pl-3">
+        {/* Left: Brand name container with strict 8px left breathing room */}
+        <div
+          style={{ paddingLeft: '8px', flexShrink: 0 }}
+          className="flex items-center"
+        >
           <a
             href="#hero"
             style={{
@@ -64,18 +78,31 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Right: Larger "Let's talk" CTA Button with generous padding + Mobile Menu */}
+        {/* Right: Full "Let's talk" CTA Button with strict non-wrapping styles + Mobile Menu */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <a
             href="#contact"
             style={{
+              whiteSpace: 'nowrap',
+              flexShrink: 0,
+              padding: '10px 20px',
+              borderRadius: '12px',
               background: 'rgba(255, 255, 255, 0.08)',
               border: '1px solid rgba(255, 255, 255, 0.16)',
+              color: '#FFFFFF',
+              fontFamily: "'Geist Sans', sans-serif",
+              fontSize: '13px',
+              fontWeight: 500,
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
             }}
-            className="px-5 py-2.5 sm:px-7 sm:py-3 rounded-full text-sm sm:text-[15px] font-semibold font-sans text-white hover:bg-[#E2652B] hover:border-[#E2652B] hover:text-black transition-all duration-200 active:scale-95 no-underline flex items-center gap-2.5 shadow-sm"
+            className="hover:bg-[#E2652B] hover:border-[#E2652B] hover:text-black active:scale-95 no-underline shadow-sm"
           >
-            <span>Let's talk</span>
-            <ArrowUpRight className="w-4 h-4 sm:w-4.5 sm:h-4.5" strokeWidth={2} />
+            <span className="whitespace-nowrap">Let's talk</span>
+            <ArrowUpRight className="w-4 h-4 shrink-0" strokeWidth={1.75} />
           </a>
 
           {/* Mobile hamburger */}
