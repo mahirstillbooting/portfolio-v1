@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import * as THREE from 'three'
 import gsap from 'gsap'
-import { ArrowUpRight } from 'lucide-react'
+import { ArrowUpRight, ExternalLink, X } from 'lucide-react'
+import { GithubIcon } from './Icons'
 import { getAudioEnabled } from '../utils/audioState'
 
 export interface ProjectItem {
@@ -647,6 +648,13 @@ export default function DhakaNeonDrift() {
       if (tag === 'INPUT' || tag === 'TEXTAREA') return
 
       const key = e.key
+      // Close project HUD card on Escape
+      if (key === 'Escape') {
+        setIsFocused(false)
+        state.isHeroCinematic = false
+        return
+      }
+
       // 1-5 Numeric shortcuts to jump instantly
       if (['1', '2', '3', '4', '5'].includes(key)) {
         const idx = parseInt(key, 10) - 1
@@ -990,60 +998,104 @@ export default function DhakaNeonDrift() {
         <span>// SELECTED WORKS</span>
       </div>
 
-      {/* SPATIAL PROJECT PRESENTATION OVERLAY IN 3D SPACE */}
+      {/* SPATIAL PROJECT DETAIL MODAL / CARD (ULTRA-CLEAN GLASSMORPHIC HUD) */}
       <div
         style={{
-          transition: 'opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+          transition: 'all 0.45s cubic-bezier(0.16, 1, 0.3, 1)',
           opacity: isFocused ? 1 : 0,
-          transform: isFocused ? 'translateY(0)' : 'translateY(20px)',
+          transform: isFocused ? 'translateY(0) scale(1)' : 'translateY(16px) scale(0.97)',
+          pointerEvents: isFocused ? 'auto' : 'none',
         }}
-        className="absolute bottom-24 sm:bottom-28 left-6 sm:left-12 lg:left-16 max-w-2xl z-20 pointer-events-none select-text"
+        className="absolute top-1/2 -translate-y-1/2 left-4 sm:left-10 lg:left-14 w-[calc(100%-32px)] sm:w-auto max-w-xl z-20 select-text"
       >
-        {/* Project Tag */}
-        <div className="flex items-center gap-2 mb-3 text-xs font-mono text-[#D2531D] tracking-widest uppercase font-semibold">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#D2531D] shadow-[0_0_8px_#D2531D]" />
-          <span>PROJECT {activeProject.num} // 05</span>
-        </div>
-
-        {/* Project Name (Massive JetBrains Mono font) */}
-        <h2
-          style={{ fontFamily: "'JetBrains Mono', monospace, sans-serif" }}
-          className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tighter text-white uppercase mb-4 drop-shadow-[0_4px_30px_rgba(0,0,0,0.85)]"
+        <div
+          style={{
+            background: 'rgba(14, 14, 16, 0.78)',
+            backdropFilter: 'blur(32px)',
+            WebkitBackdropFilter: 'blur(32px)',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
+            borderRadius: '28px',
+            boxShadow: '0 24px 64px rgba(0, 0, 0, 0.8), 0 0 40px rgba(210, 83, 29, 0.15)',
+            padding: '32px 36px',
+          }}
+          className="relative flex flex-col text-left"
         >
-          {activeProject.title}
-        </h2>
+          {/* Top Bar: Project Index Pill + Close Button */}
+          <div className="flex items-center justify-between pb-4 mb-4 border-b border-white/8">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D2531D]/15 border border-[#D2531D]/30 text-[11px] font-mono tracking-widest text-[#E2652B] uppercase font-semibold">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#E2652B] shadow-[0_0_8px_#E2652B] animate-pulse" />
+              <span>PROJECT {activeProject.num} // 05</span>
+            </div>
 
-        {/* Single-sentence description */}
-        <p className="text-sm sm:text-base font-mono text-neutral-300 max-w-lg mb-6 leading-relaxed drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]">
-          {activeProject.desc}
-        </p>
+            <button
+              type="button"
+              onClick={() => setIsFocused(false)}
+              className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/12 border border-white/10 flex items-center justify-center text-neutral-400 hover:text-white transition-all cursor-pointer active:scale-95"
+              title="Close card (or press WASD / Esc)"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
 
-        {/* Compact links (pointer-events: auto) */}
-        <div className="flex items-center gap-3 pointer-events-auto">
-          <a
-            href={activeProject.liveUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-5 py-2.5 rounded-full bg-[#D2531D] text-black text-xs font-mono font-bold tracking-wider hover:bg-[#E2652B] hover:text-white transition-all duration-200 active:scale-95 shadow-[0_0_24px_rgba(210,83,29,0.35)] flex items-center gap-1.5 no-underline"
+          {/* Massive Project Title */}
+          <h2
+            style={{ fontFamily: "'JetBrains Mono', monospace, sans-serif" }}
+            className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white uppercase mb-3 drop-shadow-[0_2px_16px_rgba(0,0,0,0.8)]"
           >
-            <span>[VIEW LIVE ↗]</span>
-            <ArrowUpRight className="w-3.5 h-3.5" strokeWidth={2.5} />
-          </a>
+            {activeProject.title}
+          </h2>
 
-          <a
-            href={activeProject.codeUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-5 py-2.5 rounded-full border border-neutral-700 bg-black/60 backdrop-blur-md text-xs font-mono font-medium tracking-wider text-neutral-300 hover:text-white hover:border-white transition-all duration-200 active:scale-95 flex items-center gap-1.5 no-underline"
-          >
-            <span>[CODEBASE ↗]</span>
-            <ArrowUpRight className="w-3.5 h-3.5 opacity-60" />
-          </a>
+          {/* Concise Single-Sentence Description */}
+          <p className="text-sm sm:text-base font-sans text-neutral-300 leading-relaxed mb-7 font-normal">
+            {activeProject.desc}
+          </p>
+
+          {/* Modern Glassmorphic Blurred Transparent Buttons */}
+          <div className="flex flex-wrap items-center gap-3.5">
+            <a
+              href={activeProject.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                background: 'rgba(226, 101, 43, 0.18)',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+                border: '1px solid rgba(226, 101, 43, 0.5)',
+              }}
+              className="px-6 py-3 rounded-2xl text-xs sm:text-sm font-mono font-bold tracking-wider text-white hover:bg-[#E2652B] hover:text-black hover:border-[#E2652B] hover:shadow-[0_0_30px_rgba(226,101,43,0.55)] transition-all duration-200 active:scale-95 flex items-center gap-2 no-underline cursor-pointer"
+            >
+              <span>VIEW LIVE</span>
+              <ExternalLink className="w-4 h-4" strokeWidth={2.2} />
+            </a>
+
+            <a
+              href={activeProject.codeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                background: 'rgba(255, 255, 255, 0.05)',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+                border: '1px solid rgba(255, 255, 255, 0.14)',
+              }}
+              className="px-6 py-3 rounded-2xl text-xs sm:text-sm font-mono font-medium tracking-wider text-neutral-200 hover:bg-white/12 hover:border-white/35 hover:text-white transition-all duration-200 active:scale-95 flex items-center gap-2 no-underline cursor-pointer"
+            >
+              <GithubIcon className="w-4 h-4 opacity-80" />
+              <span>CODEBASE</span>
+              <ArrowUpRight className="w-3.5 h-3.5 opacity-60" />
+            </a>
+          </div>
+
+          {/* Navigation tip */}
+          <div className="mt-6 pt-3.5 border-t border-white/6 flex items-center justify-between text-[11px] font-mono text-neutral-500">
+            <span>WASD TO DRIVE AWAY</span>
+            <span className="hidden sm:inline">ESC TO DISMISS</span>
+          </div>
         </div>
       </div>
 
       {/* FLOATING BOTTOM DOCK: PAGINATION DOCK (01 - 05) */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 sm:gap-5 px-5 py-2.5 rounded-full bg-black/75 border border-[#222222] backdrop-blur-xl">
+      <div className="absolute bottom-10 sm:bottom-12 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 sm:gap-5 px-5 py-2.5 rounded-full bg-black/75 border border-[#222222] backdrop-blur-xl">
         {PROJECTS.map((p, idx) => {
           const isSelected = activeProject.id === p.id && isFocused
           return (
