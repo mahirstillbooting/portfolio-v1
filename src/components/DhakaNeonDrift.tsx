@@ -451,7 +451,65 @@ export default function DhakaNeonDrift() {
       groundRing: THREE.Mesh
       verticalRing: THREE.Mesh
       light: THREE.PointLight
+      label: THREE.Sprite
     }[] = []
+
+    // Helper to generate crisp floating 3D billboard sprite with project number & title
+    const createLabelSprite = (num: string, title: string) => {
+      const textCanvas = document.createElement('canvas')
+      textCanvas.width = 512
+      textCanvas.height = 128
+      const ctx = textCanvas.getContext('2d')
+      if (ctx) {
+        // Pill background
+        ctx.fillStyle = 'rgba(12, 12, 14, 0.85)'
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.22)'
+        ctx.lineWidth = 4
+        const r = 32
+        const w = 480
+        const h = 88
+        const x = 16
+        const y = 20
+        ctx.beginPath()
+        ctx.moveTo(x + r, y)
+        ctx.lineTo(x + w - r, y)
+        ctx.quadraticCurveTo(x + w, y, x + w, y + r)
+        ctx.lineTo(x + w, y + h - r)
+        ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h)
+        ctx.lineTo(x + r, y + h)
+        ctx.quadraticCurveTo(x, y + h, x, y + h - r)
+        ctx.lineTo(x, y + r)
+        ctx.quadraticCurveTo(x, y, x + r, y)
+        ctx.closePath()
+        ctx.fill()
+        ctx.stroke()
+
+        // Orange dot
+        ctx.fillStyle = '#E2652B'
+        ctx.beginPath()
+        ctx.arc(x + 38, y + h / 2, 9, 0, Math.PI * 2)
+        ctx.fill()
+
+        // Text
+        ctx.font = 'bold 36px "JetBrains Mono", monospace'
+        ctx.fillStyle = '#FFFFFF'
+        ctx.textBaseline = 'middle'
+        ctx.fillText(`${num} // ${title.toUpperCase()}`, x + 62, y + h / 2 + 2)
+      }
+
+      const texture = new THREE.CanvasTexture(textCanvas)
+      texture.minFilter = THREE.LinearFilter
+      const spriteMat = new THREE.SpriteMaterial({
+        map: texture,
+        transparent: true,
+        opacity: 0.9,
+        depthWrite: false,
+      })
+      const sprite = new THREE.Sprite(spriteMat)
+      sprite.scale.set(3.8, 0.95, 1)
+      sprite.position.y = 4.3
+      return sprite
+    }
 
     PROJECTS.forEach((p, idx) => {
       const nGroup = new THREE.Group()
@@ -532,8 +590,12 @@ export default function DhakaNeonDrift() {
       nLight.position.y = 1.5
       nGroup.add(nLight)
 
+      // Floating 3D Billboard Label with Project Number & Name
+      const label = createLabelSprite(p.num, p.title)
+      nGroup.add(label)
+
       scene.add(nGroup)
-      nodeMeshes.push({ group: nGroup, data: p, crystal, groundRing, verticalRing, light: nLight })
+      nodeMeshes.push({ group: nGroup, data: p, crystal, groundRing, verticalRing, light: nLight, label })
     })
 
     // 7. Navigation Motion State & Calibrated Physics
@@ -861,6 +923,7 @@ export default function DhakaNeonDrift() {
         nm.crystal.rotation.x = Math.sin(time * 1.5 + idx) * 0.15
         nm.verticalRing.rotation.y = -time * 1.2
         nm.verticalRing.rotation.x = time * 0.8
+        nm.label.position.y = 4.3 + Math.sin(time * 2.4 + idx * 1.2) * 0.12
 
         const isCurrent = activeProjectIdRef.current === nm.data.id
         nm.light.intensity = isCurrent ? 4.8 : 1.8
