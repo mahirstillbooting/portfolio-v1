@@ -29,7 +29,7 @@ export default function Contact() {
     {
       name: 'Direct Email',
       handle: 'stellaroasis116@gmail.com',
-      url: `mailto:${email}`,
+      isCopy: true,
       icon: Mail,
     },
   ]
@@ -81,6 +81,32 @@ export default function Contact() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-8 border-t border-white/6">
           {socials.map((s) => {
             const Icon = s.icon
+            if (s.isCopy) {
+              return (
+                <button
+                  key={s.name}
+                  type="button"
+                  onClick={copyEmail}
+                  className="group flex items-center justify-between p-4 rounded-xl bg-white/[0.02] hover:bg-white/[0.05] border border-white/6 hover:border-[#E2652B]/40 transition-all font-mono text-xs text-[#EDEDED] cursor-pointer text-left w-full"
+                  title="Click to copy email"
+                >
+                  <div className="flex items-center gap-3">
+                    <Icon className="w-4 h-4 text-[#E2652B] group-hover:scale-110 transition-transform" />
+                    <div className="text-left">
+                      <div className="font-medium font-sans text-sm text-white">{s.name}</div>
+                      <div className="text-[11px] text-[#6B7280] font-mono">{s.handle}</div>
+                    </div>
+                  </div>
+                  {copied ? (
+                    <span className="text-[11px] text-emerald-400 font-mono font-medium flex items-center gap-1">
+                      <Check className="w-3.5 h-3.5" /> COPIED
+                    </span>
+                  ) : (
+                    <Copy className="w-4 h-4 text-[#6B7280] group-hover:text-white transition-colors" />
+                  )}
+                </button>
+              )
+            }
             return (
               <a
                 key={s.name}

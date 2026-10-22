@@ -19,10 +19,7 @@ export default function SoundToggle() {
         className="group relative w-11 h-11 sm:w-12 sm:h-12 rounded-full border border-white/14 flex items-center justify-center text-neutral-300 hover:text-white hover:border-[#E2652B] hover:scale-105 active:scale-90 transition-all duration-200 cursor-pointer shadow-[0_8px_30px_rgba(0,0,0,0.7)]"
       >
         {audioEnabled ? (
-          <>
-            <Volume2 className="w-4 h-4 sm:w-[18px] sm:h-[18px] text-[#E2652B] transition-transform group-hover:scale-110" />
-            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#E2652B] shadow-[0_0_8px_#E2652B] animate-pulse" />
-          </>
+          <Volume2 className="w-4 h-4 sm:w-[18px] sm:h-[18px] text-[#E2652B] animate-pulse transition-transform group-hover:scale-110" />
         ) : (
           <VolumeX className="w-4 h-4 sm:w-[18px] sm:h-[18px] text-neutral-500 group-hover:text-neutral-300 transition-colors" />
         )}

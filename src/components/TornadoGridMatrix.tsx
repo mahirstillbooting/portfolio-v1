@@ -407,30 +407,30 @@ function MatrixCell({ item, audioCtxRef }: MatrixCellProps) {
       style={{
         width: '100%',
         aspectRatio: '1 / 1',
-        minHeight: '150px',
-        background: 'rgba(255, 255, 255, 0.02)',
-        border: '1px solid rgba(255, 255, 255, 0.08)',
-        borderRadius: '18px',
+        minHeight: '175px',
+        background: 'rgba(255, 255, 255, 0.025)',
+        border: '1px solid rgba(255, 255, 255, 0.09)',
+        borderRadius: '22px',
         position: 'relative',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '12px',
+        padding: '18px 16px',
         cursor: 'pointer',
         overflow: 'hidden',
         transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
       }}
-      className="hover:border-[#E2652B]/40 hover:bg-white/[0.04] hover:shadow-[0_12px_30px_rgba(0,0,0,0.8)] select-none group"
+      className="hover:border-[#E2652B]/50 hover:bg-white/[0.05] hover:shadow-[0_16px_36px_rgba(0,0,0,0.85)] hover:-translate-y-1 select-none group"
     >
       {/* Top telemetry: N-01 code and red/orange status dot */}
-      <div className="w-full flex items-center justify-between text-[10px] font-mono text-[#6B7280]">
+      <div className="w-full flex items-center justify-between text-[11px] font-mono text-[#71717A] px-1">
         <span>{item.code}</span>
-        <span className="text-[9px] text-[#E2652B]">●</span>
+        <span className="text-[10px] text-[#E2652B]">●</span>
       </div>
 
       {/* Internal 280x280 Canvas (28x28 pixel matrix) */}
-      <div className="relative w-[84px] h-[84px] flex items-center justify-center">
+      <div className="relative w-[92px] h-[92px] flex items-center justify-center my-1">
         <canvas
           ref={canvasRef}
           width={280}
@@ -440,7 +440,7 @@ function MatrixCell({ item, audioCtxRef }: MatrixCellProps) {
       </div>
 
       {/* Bottom telemetry: Full Tech Name */}
-      <div className="w-full text-center text-[10px] font-mono text-[#9CA3AF] group-hover:text-white transition-colors truncate">
+      <div className="w-full text-center text-xs font-mono font-medium text-[#D4D4D8] group-hover:text-white transition-colors truncate px-1">
         {item.fullName}
       </div>
     </div>
@@ -454,8 +454,8 @@ export default function TornadoGridMatrix() {
     <div
       style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
-        gap: '16px',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(165px, 1fr))',
+        gap: '20px',
         justifyItems: 'center',
       }}
       className="w-full"

@@ -150,8 +150,8 @@ export default function About() {
 
       </div>
 
-      {/* HOBBY CARDS: CLEAN 4-COLUMN ROW (gap: 24px, padding: 28px each) */}
-      <div style={{ gap: '24px' }} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mt-8">
+      {/* HOBBY CARDS: GENEROUSLY SPACED 4-COLUMN ROW */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-7 lg:gap-8 mt-12 sm:mt-14">
         {passions.map((item, idx) => {
           const Icon = item.icon
           return (
@@ -161,17 +161,16 @@ export default function About() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: idx * 0.08 }}
-              style={{ padding: '28px' }}
-              className="bento-card corner-plus flex flex-col justify-between hover:border-[#E2652B]/40 transition-colors"
+              className="bento-card corner-plus flex flex-col justify-between p-7 sm:p-8 hover:border-[#E2652B]/40 transition-colors min-h-[190px]"
             >
               <div>
-                <div className="p-2.5 rounded-xl bg-white/[0.04] border border-white/6 text-[#E2652B] w-fit mb-4">
-                  <Icon className="w-4 h-4" />
+                <div className="p-3 rounded-xl bg-white/[0.04] border border-white/6 text-[#E2652B] w-fit mb-5">
+                  <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
-                <h4 className="text-sm font-sans font-semibold text-white mb-1.5">
+                <h4 className="text-[15px] font-sans font-semibold text-white mb-2 tracking-tight">
                   {item.title}
                 </h4>
-                <p className="text-xs font-sans text-[#9CA3AF] leading-relaxed">
+                <p className="text-xs sm:text-[13px] font-sans text-[#9CA3AF] leading-relaxed">
                   {item.desc}
                 </p>
               </div>

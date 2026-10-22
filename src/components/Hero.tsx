@@ -1,11 +1,19 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowDown, ArrowUpRight } from 'lucide-react'
+import { ArrowDown, Copy, Check } from 'lucide-react'
 import PortraitCanvas from './PortraitCanvas'
 import mahirImg from '../assets/mahir.png'
 
 export default function Hero() {
   const containerRef = useRef<HTMLElement>(null)
+  const [copied, setCopied] = useState(false)
+  const email = 'stellaroasis116@gmail.com'
+
+  const copyEmail = () => {
+    navigator.clipboard.writeText(email)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
 
   return (
     <section
@@ -124,29 +132,44 @@ export default function Hero() {
             <ArrowDown className="w-4 h-4" strokeWidth={1.75} />
           </a>
 
-          {/* Secondary Minimal Button */}
-          <a
-            href="mailto:stellaroasis116@gmail.com"
+          {/* Secondary Copy Email Button */}
+          <button
+            type="button"
+            onClick={copyEmail}
             style={{
               height: '48px',
-              padding: '0 20px',
-              background: 'transparent',
-              border: 'none',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.25)',
-              color: '#D4D4D8',
+              padding: '0 24px',
+              borderRadius: '999px',
+              background: 'rgba(255, 255, 255, 0.04)',
+              border: '1px solid rgba(255, 255, 255, 0.14)',
+              color: '#EDEDED',
+              fontFamily: "'Geist Sans', sans-serif",
               fontSize: '14px',
               fontWeight: 500,
               display: 'inline-flex',
               alignItems: 'center',
+              justifyContent: 'center',
               gap: '10px',
-              textDecoration: 'none',
-              transition: 'all 0.25s ease',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              cursor: 'pointer',
+              transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
             }}
-            className="hover:text-white hover:border-b-[#E2652B]"
+            className="hover:bg-white/[0.08] hover:border-[#E2652B] hover:text-[#E2652B] hover:-translate-y-0.5 active:scale-95"
+            title="Click to copy email address"
           >
-            <span>Start a conversation</span>
-            <ArrowUpRight className="w-4 h-4" strokeWidth={1.75} />
-          </a>
+            {copied ? (
+              <>
+                <Check className="w-4 h-4 text-emerald-400" />
+                <span className="text-emerald-400">Copied to clipboard!</span>
+              </>
+            ) : (
+              <>
+                <Copy className="w-4 h-4 text-neutral-400" />
+                <span>Copy email</span>
+              </>
+            )}
+          </button>
         </motion.div>
       </div>
 

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import * as THREE from 'three'
 import gsap from 'gsap'
-import { ArrowUpRight, ExternalLink, X, ChevronUp, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ArrowUpRight, X, ChevronUp, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react'
 import { GithubIcon } from './Icons'
 import { getAudioEnabled } from '../utils/audioState'
 
@@ -1110,39 +1110,23 @@ export default function DhakaNeonDrift() {
             {activeProject.desc}
           </p>
 
-          {/* Modern Glassmorphic Blurred Transparent Buttons */}
-          <div className="flex flex-wrap items-center gap-3.5">
-            <a
-              href={activeProject.liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                background: 'rgba(226, 101, 43, 0.18)',
-                backdropFilter: 'blur(16px)',
-                WebkitBackdropFilter: 'blur(16px)',
-                border: '1px solid rgba(226, 101, 43, 0.5)',
-              }}
-              className="px-6 py-3 rounded-2xl text-xs sm:text-sm font-mono font-bold tracking-wider text-white hover:bg-[#E2652B] hover:text-black hover:border-[#E2652B] hover:shadow-[0_0_30px_rgba(226,101,43,0.55)] transition-all duration-200 active:scale-95 flex items-center gap-2 no-underline cursor-pointer"
-            >
-              <span>VIEW LIVE</span>
-              <ExternalLink className="w-4 h-4" strokeWidth={2.2} />
-            </a>
-
+          {/* Modern Glassmorphic Blurred Transparent Button */}
+          <div className="flex items-center">
             <a
               href={activeProject.codeUrl}
               target="_blank"
               rel="noopener noreferrer"
               style={{
-                background: 'rgba(255, 255, 255, 0.05)',
-                backdropFilter: 'blur(16px)',
-                WebkitBackdropFilter: 'blur(16px)',
-                border: '1px solid rgba(255, 255, 255, 0.14)',
+                background: 'rgba(255, 255, 255, 0.07)',
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+                border: '1px solid rgba(255, 255, 255, 0.18)',
               }}
-              className="px-6 py-3 rounded-2xl text-xs sm:text-sm font-mono font-medium tracking-wider text-neutral-200 hover:bg-white/12 hover:border-white/35 hover:text-white transition-all duration-200 active:scale-95 flex items-center gap-2 no-underline cursor-pointer"
+              className="px-8 py-3.5 sm:px-10 sm:py-4 rounded-2xl text-xs sm:text-sm font-mono font-semibold tracking-wider text-white hover:bg-white/15 hover:border-white/40 hover:shadow-[0_0_28px_rgba(255,255,255,0.18)] transition-all duration-200 active:scale-95 flex items-center gap-3 no-underline cursor-pointer"
             >
-              <GithubIcon className="w-4 h-4 opacity-80" />
+              <GithubIcon className="w-4 h-4 opacity-90" />
               <span>CODEBASE</span>
-              <ArrowUpRight className="w-3.5 h-3.5 opacity-60" />
+              <ArrowUpRight className="w-4 h-4 opacity-75" />
             </a>
           </div>
 

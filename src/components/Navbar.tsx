@@ -27,15 +27,14 @@ export default function Navbar() {
         initial={{ y: -30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className={`pointer-events-auto flex items-center justify-between w-full max-w-[980px] h-[58px] sm:h-[62px] pl-7 sm:pl-10 md:pl-12 pr-4 sm:pr-6 md:pr-7 rounded-full transition-all duration-300 border ${
+        className={`pointer-events-auto flex items-center justify-between w-full max-w-[980px] h-[60px] sm:h-[66px] pl-8 sm:pl-10 md:pl-12 pr-4 sm:pr-6 md:pr-7 rounded-full transition-all duration-300 border ${
           scrolled
             ? 'bg-[#101012]/85 border-white/12 shadow-[0_16px_40px_rgba(0,0,0,0.85)]'
             : 'bg-[#121214]/75 border-white/8 shadow-[0_12px_30px_rgba(0,0,0,0.6)]'
         } backdrop-blur-[20px]`}
       >
-        {/* Left: Name in Instrument Serif with ample breathing room from the border */}
-        <div className="flex items-center gap-2.5 shrink-0 pl-1 sm:pl-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#E2652B] shadow-[0_0_8px_#E2652B]" />
+        {/* Left: Name in Instrument Serif with generous breathing room from the pill curve */}
+        <div className="flex items-center shrink-0 pl-2 sm:pl-3">
           <a
             href="#hero"
             style={{
@@ -65,7 +64,7 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Right: Full "Let's talk" CTA Button with generous padding + Mobile Menu */}
+        {/* Right: Larger "Let's talk" CTA Button with generous padding + Mobile Menu */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <a
             href="#contact"
@@ -73,10 +72,10 @@ export default function Navbar() {
               background: 'rgba(255, 255, 255, 0.08)',
               border: '1px solid rgba(255, 255, 255, 0.16)',
             }}
-            className="px-4 py-2 sm:px-5 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium font-sans text-white hover:bg-[#E2652B] hover:border-[#E2652B] hover:text-black transition-all duration-200 active:scale-95 no-underline flex items-center gap-2 shadow-sm"
+            className="px-5 py-2.5 sm:px-7 sm:py-3 rounded-full text-sm sm:text-[15px] font-semibold font-sans text-white hover:bg-[#E2652B] hover:border-[#E2652B] hover:text-black transition-all duration-200 active:scale-95 no-underline flex items-center gap-2.5 shadow-sm"
           >
             <span>Let's talk</span>
-            <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" strokeWidth={1.75} />
+            <ArrowUpRight className="w-4 h-4 sm:w-4.5 sm:h-4.5" strokeWidth={2} />
           </a>
 
           {/* Mobile hamburger */}
