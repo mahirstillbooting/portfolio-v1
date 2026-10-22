@@ -455,21 +455,21 @@ export default function DhakaNeonDrift() {
       label: THREE.Sprite
     }[] = []
 
-    // Helper to generate crisp floating 3D billboard sprite with project number & title
+    // Helper to generate clean floating 3D billboard label with number and name simply
     const createLabelSprite = (num: string, title: string) => {
       const textCanvas = document.createElement('canvas')
       textCanvas.width = 512
-      textCanvas.height = 128
+      textCanvas.height = 120
       const ctx = textCanvas.getContext('2d')
       if (ctx) {
-        // Pill background
-        ctx.fillStyle = 'rgba(12, 12, 14, 0.85)'
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.22)'
-        ctx.lineWidth = 4
-        const r = 32
-        const w = 480
-        const h = 88
-        const x = 16
+        // Frosted Pill background
+        ctx.fillStyle = 'rgba(14, 14, 16, 0.88)'
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)'
+        ctx.lineWidth = 3.5
+        const r = 28
+        const w = 460
+        const h = 80
+        const x = 26
         const y = 20
         ctx.beginPath()
         ctx.moveTo(x + r, y)
@@ -485,17 +485,12 @@ export default function DhakaNeonDrift() {
         ctx.fill()
         ctx.stroke()
 
-        // Orange dot
-        ctx.fillStyle = '#E2652B'
-        ctx.beginPath()
-        ctx.arc(x + 38, y + h / 2, 9, 0, Math.PI * 2)
-        ctx.fill()
-
-        // Text
+        // Pure clean text: Number and Name simply (NO DOT)
         ctx.font = 'bold 36px "JetBrains Mono", monospace'
         ctx.fillStyle = '#FFFFFF'
+        ctx.textAlign = 'center'
         ctx.textBaseline = 'middle'
-        ctx.fillText(`${num} // ${title.toUpperCase()}`, x + 62, y + h / 2 + 2)
+        ctx.fillText(`${num}  ${title.toUpperCase()}`, 256, y + h / 2)
       }
 
       const texture = new THREE.CanvasTexture(textCanvas)
@@ -503,12 +498,12 @@ export default function DhakaNeonDrift() {
       const spriteMat = new THREE.SpriteMaterial({
         map: texture,
         transparent: true,
-        opacity: 0.9,
+        opacity: 0.95,
         depthWrite: false,
       })
       const sprite = new THREE.Sprite(spriteMat)
-      sprite.scale.set(3.8, 0.95, 1)
-      sprite.position.y = 4.3
+      sprite.scale.set(3.4, 0.82, 1)
+      sprite.position.y = 2.8
       return sprite
     }
 
@@ -573,18 +568,6 @@ export default function DhakaNeonDrift() {
       const crystalWireGeo = new THREE.EdgesGeometry(artifactGeo)
       const crystalWireMat = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 2 })
       crystal.add(new THREE.LineSegments(crystalWireGeo, crystalWireMat))
-
-      // Vertical holographic light column
-      const beamGeo = new THREE.CylinderGeometry(0.04, 0.35, 6, 16, 1, true)
-      const beamMat = new THREE.MeshBasicMaterial({
-        color: 0xd2531d,
-        transparent: true,
-        opacity: 0.24,
-        side: THREE.DoubleSide,
-      })
-      const beam = new THREE.Mesh(beamGeo, beamMat)
-      beam.position.y = 3.0
-      nGroup.add(beam)
 
       // Red LED PointLight
       const nLight = new THREE.PointLight(0xd2531d, 3.2, 11)
@@ -936,7 +919,7 @@ export default function DhakaNeonDrift() {
         nm.crystal.rotation.x = Math.sin(time * 1.5 + idx) * 0.15
         nm.verticalRing.rotation.y = -time * 1.2
         nm.verticalRing.rotation.x = time * 0.8
-        nm.label.position.y = 4.3 + Math.sin(time * 2.4 + idx * 1.2) * 0.12
+        nm.label.position.y = 2.8 + Math.sin(time * 2.4 + idx * 1.2) * 0.08
 
         const isCurrent = activeProjectIdRef.current === nm.data.id
         nm.light.intensity = isCurrent ? 4.8 : 1.8

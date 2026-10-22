@@ -27,24 +27,27 @@ export default function Navbar() {
         initial={{ y: -30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className={`pointer-events-auto flex items-center justify-between w-full max-w-[980px] h-[58px] sm:h-[62px] px-6 sm:px-8 md:px-9 rounded-full transition-all duration-300 border ${
+        className={`pointer-events-auto flex items-center justify-between w-full max-w-[980px] h-[58px] sm:h-[62px] pl-7 sm:pl-10 md:pl-12 pr-4 sm:pr-6 md:pr-7 rounded-full transition-all duration-300 border ${
           scrolled
             ? 'bg-[#101012]/85 border-white/12 shadow-[0_16px_40px_rgba(0,0,0,0.85)]'
             : 'bg-[#121214]/75 border-white/8 shadow-[0_12px_30px_rgba(0,0,0,0.6)]'
         } backdrop-blur-[20px]`}
       >
-        {/* Left: Name in Instrument Serif, perfectly padded inside the pill */}
-        <a
-          href="#hero"
-          style={{
-            fontFamily: "'Instrument Serif', Georgia, serif",
-            fontSize: 'clamp(20px, 2.4vw, 25px)',
-            lineHeight: 1,
-          }}
-          className="text-white tracking-tight select-none hover:text-[#E2652B] transition-colors no-underline font-normal pl-1 sm:pl-2 whitespace-nowrap shrink-0"
-        >
-          Mahiruddin Chowdhury
-        </a>
+        {/* Left: Name in Instrument Serif with ample breathing room from the border */}
+        <div className="flex items-center gap-2.5 shrink-0 pl-1 sm:pl-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#E2652B] shadow-[0_0_8px_#E2652B]" />
+          <a
+            href="#hero"
+            style={{
+              fontFamily: "'Instrument Serif', Georgia, serif",
+              fontSize: 'clamp(20px, 2.3vw, 24px)',
+              lineHeight: 1,
+            }}
+            className="text-white tracking-tight select-none hover:text-[#E2652B] transition-colors no-underline font-normal whitespace-nowrap"
+          >
+            Mahiruddin Chowdhury
+          </a>
+        </div>
 
         {/* Center: Desktop Navigation Links */}
         <div
