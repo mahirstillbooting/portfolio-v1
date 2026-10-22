@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import * as THREE from 'three'
 import gsap from 'gsap'
-import { ArrowUpRight, ExternalLink, X } from 'lucide-react'
+import { ArrowUpRight, ExternalLink, X, ChevronUp, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react'
 import { GithubIcon } from './Icons'
 import { getAudioEnabled } from '../utils/audioState'
 
@@ -86,6 +86,7 @@ export default function DhakaNeonDrift() {
   } | null>(null)
 
   const jumpToProjectRef = useRef<((idx: number) => void) | null>(null)
+  const virtualKeyRef = useRef<((key: 'w' | 'a' | 's' | 'd', isPressed: boolean) => void) | null>(null)
   const lockUntilRef = useRef<number>(0)
 
   // Ensure AudioContext is ready on user gesture
@@ -705,6 +706,18 @@ export default function DhakaNeonDrift() {
     // 9. Keyboard Controls (WASD & 1-5 Quick Keys)
     const keys: Record<string, boolean> = {}
 
+    // Link mobile on-screen D-Pad directly to vehicle controls
+    virtualKeyRef.current = (key: 'w' | 'a' | 's' | 'd', isPressed: boolean) => {
+      keys[key] = isPressed
+      if (isPressed) {
+        state.isAutoNav = false
+        if (Date.now() > lockUntilRef.current) {
+          state.isHeroCinematic = false
+          setIsFocused(false)
+        }
+      }
+    }
+
     const handleKeyDown = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement)?.tagName
       if (tag === 'INPUT' || tag === 'TEXTAREA') return
@@ -1018,6 +1031,7 @@ export default function DhakaNeonDrift() {
     return () => {
       cancelAnimationFrame(animId)
       observer.disconnect()
+      virtualKeyRef.current = null
       window.removeEventListener('keydown', handleKeyDown)
       window.removeEventListener('keyup', handleKeyUp)
       window.removeEventListener('resize', handleResize)
@@ -1187,6 +1201,79 @@ export default function DhakaNeonDrift() {
             </button>
           )
         })}
+      </div>
+
+      {/* MINIMAL MOBILE D-PAD (Only visible on mobile, auto-hides when project card is open) */}
+      <div
+        className={`sm:hidden absolute bottom-6 left-4 z-30 flex flex-col items-center gap-1 transition-all duration-300 ${
+          isFocused ? 'opacity-0 pointer-events-none scale-90' : 'opacity-100 pointer-events-auto scale-100'
+        }`}
+        style={{ touchAction: 'none' }}
+      >
+        {/* UP */}
+        <button
+          type="button"
+          onPointerDown={(e) => {
+            e.stopPropagation()
+            virtualKeyRef.current?.('w', true)
+          }}
+          onPointerUp={() => virtualKeyRef.current?.('w', false)}
+          onPointerLeave={() => virtualKeyRef.current?.('w', false)}
+          className="w-9 h-9 rounded-xl bg-[#121214]/80 border border-white/14 backdrop-blur-md flex items-center justify-center text-neutral-300 active:bg-[#E2652B] active:text-black active:border-[#E2652B] active:scale-90 transition-all select-none shadow-md"
+          aria-label="Drive Forward"
+        >
+          <ChevronUp className="w-4 h-4" />
+        </button>
+
+        {/* LEFT / CENTER / RIGHT */}
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onPointerDown={(e) => {
+              e.stopPropagation()
+              virtualKeyRef.current?.('a', true)
+            }}
+            onPointerUp={() => virtualKeyRef.current?.('a', false)}
+            onPointerLeave={() => virtualKeyRef.current?.('a', false)}
+            className="w-9 h-9 rounded-xl bg-[#121214]/80 border border-white/14 backdrop-blur-md flex items-center justify-center text-neutral-300 active:bg-[#E2652B] active:text-black active:border-[#E2652B] active:scale-90 transition-all select-none shadow-md"
+            aria-label="Steer Left"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+
+          <div className="w-5 h-5 rounded-full flex items-center justify-center pointer-events-none">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#E2652B]/60" />
+          </div>
+
+          <button
+            type="button"
+            onPointerDown={(e) => {
+              e.stopPropagation()
+              virtualKeyRef.current?.('d', true)
+            }}
+            onPointerUp={() => virtualKeyRef.current?.('d', false)}
+            onPointerLeave={() => virtualKeyRef.current?.('d', false)}
+            className="w-9 h-9 rounded-xl bg-[#121214]/80 border border-white/14 backdrop-blur-md flex items-center justify-center text-neutral-300 active:bg-[#E2652B] active:text-black active:border-[#E2652B] active:scale-90 transition-all select-none shadow-md"
+            aria-label="Steer Right"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* DOWN */}
+        <button
+          type="button"
+          onPointerDown={(e) => {
+            e.stopPropagation()
+            virtualKeyRef.current?.('s', true)
+          }}
+          onPointerUp={() => virtualKeyRef.current?.('s', false)}
+          onPointerLeave={() => virtualKeyRef.current?.('s', false)}
+          className="w-9 h-9 rounded-xl bg-[#121214]/80 border border-white/14 backdrop-blur-md flex items-center justify-center text-neutral-300 active:bg-[#E2652B] active:text-black active:border-[#E2652B] active:scale-90 transition-all select-none shadow-md"
+          aria-label="Drive Reverse"
+        >
+          <ChevronDown className="w-4 h-4" />
+        </button>
       </div>
     </div>
   )
