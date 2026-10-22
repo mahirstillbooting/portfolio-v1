@@ -65,7 +65,7 @@ export default function Navbar() {
         {/* Right: Full "Let's talk" CTA Button with generous padding + Mobile Menu */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <a
-            href="mailto:stellaroasis116@gmail.com"
+            href="#contact"
             style={{
               background: 'rgba(255, 255, 255, 0.08)',
               border: '1px solid rgba(255, 255, 255, 0.16)',
