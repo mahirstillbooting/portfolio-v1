@@ -26,103 +26,97 @@ export default function Contact() {
       url: 'https://instagram.com/pixl.potion',
       icon: InstagramIcon,
     },
-    {
-      name: 'Direct Email',
-      handle: 'stellaroasis116@gmail.com',
-      isCopy: true,
-      icon: Mail,
-    },
   ]
 
   return (
     <section
       id="contact"
-      style={{ padding: '140px 32px' }}
-      className="w-full max-w-[1200px] mx-auto relative flex flex-col items-center justify-center"
+      style={{
+        maxWidth: '800px',
+        margin: '0 auto',
+        padding: '60px 40px',
+      }}
+      className="w-full relative flex flex-col items-center justify-center"
     >
       <motion.div
         initial={{ opacity: 0, scale: 0.98 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
-        style={{ padding: '48px 36px' }}
-        className="bento-card corner-plus text-center relative overflow-hidden w-full max-w-4xl"
+        style={{
+          padding: '48px 40px',
+          borderRadius: '24px',
+          background: 'rgba(20, 20, 22, 0.65)',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+        }}
+        className="text-center relative overflow-hidden w-full shadow-2xl"
       >
         {/* Subtle Ambient Accent */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-36 bg-[#E2652B]/12 blur-3xl pointer-events-none" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-36 bg-[#E2652B]/10 blur-3xl pointer-events-none" />
 
         <div className="inline-flex items-center gap-2 text-xs tracking-widest text-[#E2652B] font-mono mb-4 uppercase">
           <Mail className="w-3.5 h-3.5 text-[#E2652B]" />
           <span>05 // TRANSMISSION CHANNEL</span>
         </div>
 
-        <h2 className="text-3xl sm:text-5xl font-sans font-bold text-white tracking-tight max-w-2xl mx-auto mb-4">
+        {/* Heading with generous vertical breathing room */}
+        <h2
+          style={{ marginBottom: '32px' }}
+          className="text-3xl sm:text-5xl font-sans font-bold text-white tracking-tight max-w-xl mx-auto"
+        >
           Let's build something extraordinary.
         </h2>
 
-        <p className="text-sm sm:text-base text-[#9CA3AF] font-sans max-w-md mx-auto mb-8 leading-relaxed">
+        <p className="text-sm sm:text-base text-[#A1A1AA] font-sans max-w-md mx-auto mb-6 leading-relaxed">
           Open to full-stack engineering roles, software challenges, and technical discussions.
         </p>
 
-        {/* Interactive Copyable Email Pill */}
-        <div className="inline-flex items-center gap-3 p-1.5 sm:p-2 pl-5 sm:pl-6 bg-[#0A0A0C] border border-white/10 rounded-full font-mono text-xs sm:text-sm text-white mb-10 shadow-lg">
-          <span>{email}</span>
+        {/* Sleek inline Copy Email button inside header card */}
+        <div className="flex justify-center mb-10">
           <button
+            type="button"
             onClick={copyEmail}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/[0.08] hover:bg-[#E2652B] hover:text-black transition-colors cursor-pointer text-xs font-mono font-medium"
-            title="Copy to clipboard"
+            className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-white/[0.04] hover:bg-[#E2652B] hover:text-black border border-white/10 hover:border-[#E2652B] text-neutral-300 transition-all font-mono text-xs cursor-pointer shadow-sm active:scale-95"
+            title="Click to copy email address"
           >
-            {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-            <span>{copied ? 'COPIED' : 'COPY'}</span>
+            {copied ? (
+              <>
+                <Check className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="text-white font-medium">{email} — Copied!</span>
+              </>
+            ) : (
+              <>
+                <Copy className="w-3.5 h-3.5 text-neutral-400" />
+                <span>Copy {email}</span>
+              </>
+            )}
           </button>
         </div>
 
-        {/* Social Links Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-8 border-t border-white/6">
+        {/* Exactly 2 Clean Social Transmission Cards (GitHub & Instagram only) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-8 border-t border-white/8">
           {socials.map((s) => {
             const Icon = s.icon
-            if (s.isCopy) {
-              return (
-                <button
-                  key={s.name}
-                  type="button"
-                  onClick={copyEmail}
-                  className="group flex items-center justify-between p-4 rounded-xl bg-white/[0.02] hover:bg-white/[0.05] border border-white/6 hover:border-[#E2652B]/40 transition-all font-mono text-xs text-[#EDEDED] cursor-pointer text-left w-full"
-                  title="Click to copy email"
-                >
-                  <div className="flex items-center gap-3">
-                    <Icon className="w-4 h-4 text-[#E2652B] group-hover:scale-110 transition-transform" />
-                    <div className="text-left">
-                      <div className="font-medium font-sans text-sm text-white">{s.name}</div>
-                      <div className="text-[11px] text-[#6B7280] font-mono">{s.handle}</div>
-                    </div>
-                  </div>
-                  {copied ? (
-                    <span className="text-[11px] text-emerald-400 font-mono font-medium flex items-center gap-1">
-                      <Check className="w-3.5 h-3.5" /> COPIED
-                    </span>
-                  ) : (
-                    <Copy className="w-4 h-4 text-[#6B7280] group-hover:text-white transition-colors" />
-                  )}
-                </button>
-              )
-            }
             return (
               <a
                 key={s.name}
                 href={s.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex items-center justify-between p-4 rounded-xl bg-white/[0.02] hover:bg-white/[0.05] border border-white/6 hover:border-[#E2652B]/40 transition-all no-underline font-mono text-xs text-[#EDEDED]"
+                className="group flex items-center justify-between p-5 rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/8 hover:border-[#E2652B]/40 transition-all no-underline font-mono text-xs text-[#EDEDED]"
               >
-                <div className="flex items-center gap-3">
-                  <Icon className="w-4 h-4 text-[#E2652B] group-hover:scale-110 transition-transform" />
+                <div className="flex items-center gap-3.5">
+                  <div className="p-2.5 rounded-xl bg-white/[0.04] border border-white/8 text-[#E2652B] group-hover:scale-105 transition-transform flex items-center justify-center">
+                    <Icon className="w-5 h-5 text-[#E2652B]" />
+                  </div>
                   <div className="text-left">
-                    <div className="font-medium font-sans text-sm text-white">{s.name}</div>
-                    <div className="text-[11px] text-[#6B7280] font-mono">{s.handle}</div>
+                    <div className="font-semibold font-sans text-sm text-white">{s.name}</div>
+                    <div className="text-[11px] text-[#71717A] font-mono">{s.handle}</div>
                   </div>
                 </div>
-                <ArrowUpRight className="w-4 h-4 text-[#6B7280] group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                <ArrowUpRight className="w-4 h-4 text-[#71717A] group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
               </a>
             )
           })}

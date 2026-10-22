@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion'
-import { Award, Gamepad2, Keyboard, MapPin, Compass } from 'lucide-react'
-import { PerfumeBottleIcon } from './Icons'
+import { Award, Gamepad2, Keyboard, MapPin, Compass, Sparkles, Cpu } from 'lucide-react'
 
 export default function About() {
   const passions = [
@@ -10,7 +9,7 @@ export default function About() {
       desc: 'Custom switches, lubing sound signatures & tactile feedback.',
     },
     {
-      icon: PerfumeBottleIcon,
+      icon: Sparkles,
       title: 'Perfume Notes',
       desc: 'Niche accords, olfactory pyramids & fragrance chemistry.',
     },
@@ -20,11 +19,20 @@ export default function About() {
       desc: 'Formative roots in Metal Slug, GTA San Andreas & Rockstar worlds.',
     },
     {
-      icon: Compass,
+      icon: Cpu,
       title: 'AI Engineering',
       desc: 'High-leverage prompt workflows with Antigravity, Claude & Figma.',
     },
   ]
+
+  const cardStyle = {
+    padding: '40px',
+    borderRadius: '24px',
+    background: 'rgba(20, 20, 22, 0.65)',
+    border: '1px solid rgba(255, 255, 255, 0.08)',
+    backdropFilter: 'blur(20px)',
+    WebkitBackdropFilter: 'blur(20px)',
+  }
 
   return (
     <section
@@ -43,23 +51,34 @@ export default function About() {
         </h2>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-7">
+      {/* 2-Column Asymmetric Layout (Left: 62% width, Right: 38% width stacked vertically) */}
+      <div className="grid grid-cols-1 lg:grid-cols-[1.63fr_1fr] gap-8 items-stretch">
         
-        {/* Main Biography Card (STRICT: 2 short, punchy paragraphs with line-height: 1.8, font-size: 16px) */}
+        {/* Main Biography Card (62% width on desktop) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="lg:col-span-8 bento-card flex flex-col justify-between corner-plus"
+          style={cardStyle}
+          className="flex flex-col justify-between"
         >
           <div>
-            <div className="flex items-center justify-between text-xs font-mono text-[#6B7280] tracking-widest pb-4 mb-6 border-b border-white/6">
+            <div className="flex items-center justify-between text-xs font-mono text-[#71717A] tracking-widest pb-4 mb-6 border-b border-white/8">
               <span>SYSTEM PROFILE // IDENTITY</span>
               <span className="text-[#E2652B]">EAST WEST UNIVERSITY</span>
             </div>
 
-            <div style={{ maxWidth: '65ch' }} className="space-y-6 text-[16px] font-sans text-[#9CA3AF] leading-[1.8]">
+            <div
+              style={{
+                fontFamily: "'Geist Sans', sans-serif",
+                fontSize: '16px',
+                lineHeight: 1.8,
+                color: '#D4D4D8',
+                maxWidth: '65ch',
+              }}
+              className="space-y-6"
+            >
               <p>
                 I am <strong className="text-white font-medium">Mahiruddin Chowdhury</strong>, a 4th-year Computer Science and Engineering student at East West University in Dhaka, Bangladesh. I am not a prodigy or seasoned veteran—I struggle often, learn at my own deliberate pace, and work persistently until every assigned problem is resolved with absolute polish.
               </p>
@@ -70,20 +89,20 @@ export default function About() {
           </div>
 
           {/* Cert & English Pill */}
-          <div className="mt-8 pt-6 border-t border-white/6 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+          <div className="mt-8 pt-6 border-t border-white/8 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
             <div className="flex items-center gap-2 text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3.5 py-1.5 rounded-full">
               <Award className="w-4 h-4 shrink-0" />
               <span className="text-[11px]">freeCodeCamp Certified: Responsive Web Design</span>
             </div>
 
-            <div className="text-[11px] text-[#6B7280]">
+            <div className="text-[11px] text-[#71717A]">
               Native/Professional English Proficiency
             </div>
           </div>
         </motion.div>
 
-        {/* Side Cards: Telemetry & Location */}
-        <div className="lg:col-span-4 flex flex-col gap-7">
+        {/* Right Column: 38% width stacked vertically */}
+        <div className="flex flex-col gap-8 justify-between">
           
           {/* Dot-matrix Location Card */}
           <motion.div
@@ -91,10 +110,11 @@ export default function About() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="bento-card corner-plus flex flex-col justify-between"
+            style={cardStyle}
+            className="flex flex-col justify-between flex-1"
           >
             <div>
-              <div className="flex items-center justify-between text-xs font-mono tracking-widest text-[#6B7280] mb-3">
+              <div className="flex items-center justify-between text-xs font-mono tracking-widest text-[#71717A] mb-3">
                 <span className="flex items-center gap-1.5">
                   <MapPin className="w-3.5 h-3.5 text-[#E2652B]" />
                   LOC // BANGLADESH
@@ -102,16 +122,16 @@ export default function About() {
                 <span className="text-[#E2652B]">23.81° N, 90.41° E</span>
               </div>
 
-              <h3 className="text-lg font-sans font-semibold text-white mb-1">
+              <h3 className="text-xl font-sans font-semibold text-white mb-2">
                 Dhaka City
               </h3>
-              <p className="text-xs font-sans text-[#9CA3AF] leading-relaxed">
+              <p className="text-sm font-sans text-[#A1A1AA] leading-relaxed">
                 Living and engineering in the heart of Dhaka. Fast-paced, resilient, and always active.
               </p>
             </div>
 
             {/* Braille Map snippet */}
-            <div className="mt-5 p-3 rounded-xl bg-black/60 border border-white/6 font-mono text-xs select-none">
+            <div className="mt-6 p-4 rounded-xl bg-black/60 border border-white/8 font-mono text-xs select-none">
               <div className="text-[#8E9298] leading-tight overflow-x-auto whitespace-pre">
                 {`  ⣠⠤⠤⠤⠤⠤⣠⠤⠤⡀     ⣀⠤⠤⠤⡀
 ⢀⠎       ⢸   ⠉⠲⠤⠤⠤⠎   ⢱
@@ -130,18 +150,19 @@ export default function About() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="bento-card corner-plus"
+            style={cardStyle}
+            className="flex flex-col justify-center flex-1"
           >
-            <div className="text-xs font-mono tracking-widest text-[#6B7280] mb-2">
+            <div className="text-xs font-mono tracking-widest text-[#71717A] mb-2">
               ACADEMIC DEGREE
             </div>
-            <div className="text-sm font-sans text-white font-medium mb-1">
+            <div className="text-base font-sans text-white font-semibold mb-1">
               BSc in Computer Science &amp; Engineering
             </div>
-            <div className="text-xs font-mono text-[#E2652B] mb-2">
+            <div className="text-xs font-mono text-[#E2652B] mb-2 font-medium">
               East West University (4th Year Student)
             </div>
-            <p className="text-xs font-sans text-[#9CA3AF] leading-relaxed">
+            <p className="text-sm font-sans text-[#A1A1AA] leading-relaxed">
               Software engineering, database architectures, and QA verification.
             </p>
           </motion.div>
@@ -150,8 +171,11 @@ export default function About() {
 
       </div>
 
-      {/* HOBBY CARDS: GENEROUSLY SPACED 4-COLUMN ROW */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-7 lg:gap-8 mt-12 sm:mt-14">
+      {/* 4 Hobby Cards Row: Uniform 4-column row directly beneath the main grid */}
+      <div
+        style={{ gap: '24px' }}
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mt-8"
+      >
         {passions.map((item, idx) => {
           const Icon = item.icon
           return (
@@ -161,16 +185,24 @@ export default function About() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: idx * 0.08 }}
-              className="bento-card corner-plus flex flex-col justify-between p-7 sm:p-8 hover:border-[#E2652B]/40 transition-colors min-h-[190px]"
+              style={{
+                padding: '32px',
+                borderRadius: '24px',
+                background: 'rgba(20, 20, 22, 0.65)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+              }}
+              className="flex flex-col justify-between hover:border-[#E2652B]/40 transition-colors min-h-[190px]"
             >
               <div>
-                <div className="p-3 rounded-xl bg-white/[0.04] border border-white/6 text-[#E2652B] w-fit mb-5">
-                  <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
+                <div className="p-3 rounded-xl bg-white/[0.04] border border-white/8 text-[#E2652B] w-fit mb-5">
+                  <Icon className="w-5 h-5 text-[#E2652B]" />
                 </div>
                 <h4 className="text-[15px] font-sans font-semibold text-white mb-2 tracking-tight">
                   {item.title}
                 </h4>
-                <p className="text-xs sm:text-[13px] font-sans text-[#9CA3AF] leading-relaxed">
+                <p className="text-xs sm:text-[13px] font-sans text-[#D4D4D8] leading-relaxed">
                   {item.desc}
                 </p>
               </div>
