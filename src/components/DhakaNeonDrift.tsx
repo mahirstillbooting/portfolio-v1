@@ -204,12 +204,10 @@ export default function DhakaNeonDrift() {
     }
   }, [ensureEngineSound, ensureAudioContext])
 
-  // Play mixkit quick win video game notification when selecting or driving to any project
+  // Play only the new notification sound effect when selecting or driving to any project
   const playLockSound = useCallback(() => {
     if (!getAudioEnabled()) return
-    ensureAudioContext()
 
-    // 1. Play real notification sound effect
     try {
       if (!projectSelectAudioRef.current) {
         projectSelectAudioRef.current = new Audio(projectSelectSoundUrl)
@@ -221,27 +219,7 @@ export default function DhakaNeonDrift() {
     } catch {
       // Audio fallback
     }
-
-    // 2. Subtle synth chime layer
-    try {
-      const ctx = ensureAudioContext()
-      const now = ctx.currentTime
-
-      const ping1 = ctx.createOscillator()
-      const pingGain1 = ctx.createGain()
-      ping1.type = 'sine'
-      ping1.frequency.setValueAtTime(587.33, now)
-      ping1.frequency.exponentialRampToValueAtTime(880, now + 0.12)
-      pingGain1.gain.setValueAtTime(0.07, now)
-      pingGain1.gain.exponentialRampToValueAtTime(0.0001, now + 0.35)
-      ping1.connect(pingGain1)
-      pingGain1.connect(ctx.destination)
-      ping1.start(now)
-      ping1.stop(now + 0.38)
-    } catch {
-      // Audio fallback
-    }
-  }, [ensureAudioContext])
+  }, [])
 
   useEffect(() => {
     const container = containerRef.current
