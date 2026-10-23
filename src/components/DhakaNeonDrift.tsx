@@ -92,26 +92,6 @@ export default function DhakaNeonDrift() {
   const engineStartAudioRef = useRef<HTMLAudioElement | null>(null)
   const hasEngineStartedRef = useRef(false)
 
-  // Play mixkit car engine start sound when the car is ignited / driven for the first time
-  const triggerEngineStartSound = useCallback(() => {
-    if (hasEngineStartedRef.current) return
-    hasEngineStartedRef.current = true
-
-    if (!getAudioEnabled()) return
-
-    try {
-      if (!engineStartAudioRef.current) {
-        engineStartAudioRef.current = new Audio(engineStartSoundUrl)
-      }
-      const audio = engineStartAudioRef.current
-      audio.volume = 0.75
-      audio.currentTime = 0
-      audio.play().catch(() => {})
-    } catch {
-      // Audio fallback
-    }
-  }, [])
-
   // Ensure AudioContext is ready on user gesture
   const ensureAudioContext = useCallback(() => {
     if (!audioCtxRef.current) {
@@ -138,14 +118,14 @@ export default function DhakaNeonDrift() {
       const gain = ctx.createGain()
 
       osc1.type = 'sawtooth'
-      osc1.frequency.setValueAtTime(60, ctx.currentTime)
+      osc1.frequency.setValueAtTime(72, ctx.currentTime)
 
       osc2.type = 'triangle'
-      osc2.frequency.setValueAtTime(40, ctx.currentTime)
+      osc2.frequency.setValueAtTime(50, ctx.currentTime)
 
       filter.type = 'lowpass'
-      filter.frequency.setValueAtTime(200, ctx.currentTime)
-      filter.Q.setValueAtTime(3.0, ctx.currentTime)
+      filter.frequency.setValueAtTime(320, ctx.currentTime)
+      filter.Q.setValueAtTime(3.5, ctx.currentTime)
 
       gain.gain.setValueAtTime(0.0001, ctx.currentTime)
 
@@ -165,6 +145,29 @@ export default function DhakaNeonDrift() {
     }
   }, [ensureAudioContext])
 
+  // Play mixkit car engine start sound when the car is ignited / driven for the first time
+  const triggerEngineStartSound = useCallback(() => {
+    ensureAudioContext()
+    ensureEngineSound()
+
+    if (hasEngineStartedRef.current) return
+    hasEngineStartedRef.current = true
+
+    if (!getAudioEnabled()) return
+
+    try {
+      if (!engineStartAudioRef.current) {
+        engineStartAudioRef.current = new Audio(engineStartSoundUrl)
+      }
+      const audio = engineStartAudioRef.current
+      audio.volume = 0.75
+      audio.currentTime = 0
+      audio.play().catch(() => {})
+    } catch {
+      // Audio fallback
+    }
+  }, [ensureAudioContext, ensureEngineSound])
+
   // Dynamic engine sound modulation matching car velocity
   const updateEngineAudio = useCallback((speed: number) => {
     if (!getAudioEnabled()) {
@@ -177,24 +180,27 @@ export default function DhakaNeonDrift() {
     const engine = ensureEngineSound()
     if (!engine || !audioCtxRef.current) return
     const ctx = audioCtxRef.current
+    if (ctx.state === 'suspended') {
+      ctx.resume().catch(() => {})
+    }
     const now = ctx.currentTime
 
     const norm = Math.min(1, Math.max(0, speed / 0.22))
-    if (norm > 0.03) {
+    if (norm > 0.02) {
       // Accelerating cyber engine pitch & resonance
-      const targetFreq = 58 + norm * 82
-      const targetFilter = 220 + norm * 400
-      const targetVol = 0.004 + norm * 0.026
+      const targetFreq = 72 + norm * 115
+      const targetFilter = 320 + norm * 600
+      const targetVol = 0.04 + norm * 0.10 // Audible, responsive cyber engine rumble
 
-      engine.osc1.frequency.setTargetAtTime(targetFreq, now, 0.08)
-      engine.osc2.frequency.setTargetAtTime(targetFreq * 0.66, now, 0.08)
-      engine.filter.frequency.setTargetAtTime(targetFilter, now, 0.08)
-      engine.gain.gain.setTargetAtTime(targetVol, now, 0.06)
+      engine.osc1.frequency.setTargetAtTime(targetFreq, now, 0.05)
+      engine.osc2.frequency.setTargetAtTime(targetFreq * 0.68, now, 0.05)
+      engine.filter.frequency.setTargetAtTime(targetFilter, now, 0.05)
+      engine.gain.gain.setTargetAtTime(targetVol, now, 0.04)
     } else {
       // Idle / stopped
-      engine.gain.gain.setTargetAtTime(0.0001, now, 0.12)
+      engine.gain.gain.setTargetAtTime(0.0001, now, 0.08)
     }
-  }, [ensureEngineSound])
+  }, [ensureEngineSound, ensureAudioContext])
 
   // Futuristic video game lock-on chime
   const playLockSound = useCallback(() => {
@@ -913,6 +919,7 @@ export default function DhakaNeonDrift() {
     virtualKeyRef.current = (key: 'w' | 'a' | 's' | 'd', isPressed: boolean) => {
       keys[key] = isPressed
       if (isPressed) {
+        ensureAudioContext()
         triggerEngineStartSound()
         state.isAutoNav = false
         if (Date.now() > lockUntilRef.current) {
@@ -936,6 +943,7 @@ export default function DhakaNeonDrift() {
 
       // 1-5 Numeric shortcuts to jump instantly
       if (['1', '2', '3', '4', '5'].includes(key)) {
+        ensureAudioContext()
         const idx = parseInt(key, 10) - 1
         jumpToProject(idx)
         return
@@ -943,6 +951,7 @@ export default function DhakaNeonDrift() {
 
       const lk = key.toLowerCase()
       if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(lk)) {
+        ensureAudioContext()
         triggerEngineStartSound()
         keys[lk] = true
         state.isAutoNav = false
@@ -969,6 +978,7 @@ export default function DhakaNeonDrift() {
     let pointerDownPos = { x: 0, y: 0 }
 
     const handlePointerDown = (e: PointerEvent) => {
+      ensureAudioContext()
       pointerDownPos = { x: e.clientX, y: e.clientY }
     }
 
