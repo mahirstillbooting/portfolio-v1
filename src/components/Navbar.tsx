@@ -27,7 +27,7 @@ export default function Navbar() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         style={{
-          height: '60px',
+          height: '66px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -72,7 +72,7 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Right: Redesigned Spacious "Let's talk" Button */}
+        {/* Right: Redesigned Spacious "Let's talk" Button with Generous All-Around Padding */}
         <div className="flex items-center shrink-0">
           <a
             href="#contact"
@@ -80,11 +80,11 @@ export default function Navbar() {
               fontFamily: "'JetBrains Mono', 'Geist Mono', monospace",
               border: '1px solid rgba(255, 255, 255, 0.2)',
             }}
-            className="group px-4 py-1.5 sm:px-6 sm:py-2.5 rounded-xl bg-white/[0.06] hover:bg-white text-white hover:text-black hover:border-white text-xs sm:text-sm font-medium tracking-wide inline-flex items-center gap-2 whitespace-nowrap active:scale-95 transition-all duration-300 shadow-sm no-underline cursor-pointer"
+            className="group px-4 py-2 sm:px-8 sm:py-3.5 rounded-xl bg-white/[0.06] hover:bg-white text-white hover:text-black hover:border-white text-xs sm:text-[14px] font-medium tracking-wide inline-flex items-center gap-2.5 whitespace-nowrap active:scale-95 transition-all duration-300 shadow-sm no-underline cursor-pointer"
           >
             <span className="whitespace-nowrap">Let's talk</span>
             <ArrowUpRight
-              className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              className="w-4 h-4 shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
               strokeWidth={2}
             />
           </a>
