@@ -350,12 +350,12 @@ export default function About() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.25 }}
-          className="lg:col-span-12 rounded-3xl bg-[#0F0F0F] border border-[#222222] hover:border-[#D2531D]/40 transition-colors shadow-2xl p-6 sm:p-8 lg:p-9 overflow-hidden backdrop-blur-xl mt-2"
+          className="lg:col-span-12 rounded-2xl sm:rounded-3xl bg-[#0F0F0F] border border-[#222222] hover:border-[#D2531D]/40 transition-colors shadow-2xl p-4 sm:p-8 lg:p-9 overflow-hidden backdrop-blur-xl mt-2"
         >
           {/* Card Header Status Row */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-5 mb-5 border-b border-white/8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-4 sm:pb-5 mb-4 sm:mb-5 border-b border-white/8">
             <div>
-              <div className="flex items-center gap-2 text-xs font-mono tracking-widest text-[#E2652B] uppercase mb-1">
+              <div className="flex items-center gap-2 text-[11px] sm:text-xs font-mono tracking-widest text-[#E2652B] uppercase mb-1">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>INTERACTIVE DISCOVERY</span>
               </div>
@@ -367,8 +367,8 @@ export default function About() {
               </p>
             </div>
 
-            <div className="flex items-center gap-3 shrink-0">
-              <div className="px-3 py-1.5 rounded-full bg-white/[0.04] border border-[#E2652B]/30 text-xs font-mono font-medium text-[#E2652B] flex items-center gap-2">
+            <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
+              <div className="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-white/[0.04] border border-[#E2652B]/30 text-[11px] sm:text-xs font-mono font-medium text-[#E2652B] flex items-center gap-2">
                 <span
                   className={`w-2 h-2 rounded-full transition-all duration-300 ${
                     allFound
@@ -382,7 +382,7 @@ export default function About() {
               <button
                 type="button"
                 onClick={startFreshHunt}
-                className="flex items-center gap-1.5 text-xs text-[#71717A] hover:text-white transition-colors cursor-pointer active:scale-95 px-2.5 py-1.5 rounded-lg hover:bg-white/5 border border-white/8"
+                className="flex items-center gap-1.5 text-xs text-[#71717A] hover:text-white transition-colors cursor-pointer active:scale-95 px-2.5 py-1 sm:py-1.5 rounded-lg hover:bg-white/5 border border-white/8"
                 aria-label="Start fresh hunt"
                 title="Restart treasure hunt"
               >
@@ -396,7 +396,7 @@ export default function About() {
           <div
             role="grid"
             aria-label="Passion discovery contribution grid"
-            className="grid grid-cols-7 gap-2.5 sm:gap-3.5 max-w-[720px] mx-auto my-3 p-3 sm:p-5 rounded-2xl bg-[#09090b] border border-white/5"
+            className="grid grid-cols-7 gap-1.5 sm:gap-3.5 max-w-[720px] mx-auto my-2 sm:my-3 p-2 sm:p-5 rounded-xl sm:rounded-2xl bg-[#09090b] border border-white/5"
           >
             {GRID_CELL_STYLES.map((cellStyle, idx) => {
               const isFlipped = flippedCells.includes(idx)
@@ -427,7 +427,7 @@ export default function About() {
                       transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
                       transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
                     }}
-                    className={`w-full h-full rounded-xl relative cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#E2652B] active:scale-95 transition-transform ${
+                    className={`w-full h-full rounded-lg sm:rounded-xl relative cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#E2652B] active:scale-95 transition-transform ${
                       cellStyle.isBlack ? 'cursor-default opacity-60' : 'hover:scale-105'
                     }`}
                   >
@@ -439,7 +439,7 @@ export default function About() {
                         backfaceVisibility: 'hidden',
                         WebkitBackfaceVisibility: 'hidden',
                       }}
-                      className={`absolute inset-0 rounded-xl flex items-center justify-center transition-all ${
+                      className={`absolute inset-0 rounded-lg sm:rounded-xl flex items-center justify-center transition-all ${
                         isCheckedInactive && !cellStyle.isBlack ? 'opacity-40' : ''
                       }`}
                     >
@@ -458,9 +458,9 @@ export default function About() {
                         transform: 'rotateY(180deg)',
                         boxShadow: '0 0 16px rgba(226, 101, 43, 0.6)',
                       }}
-                      className="absolute inset-0 rounded-xl flex items-center justify-center text-white"
+                      className="absolute inset-0 rounded-lg sm:rounded-xl flex items-center justify-center text-white"
                     >
-                      <Sparkles className="w-4 h-4 text-white animate-pulse" />
+                      <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white animate-pulse" />
                     </div>
                   </button>
                 </div>
