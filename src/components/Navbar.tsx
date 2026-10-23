@@ -21,46 +21,54 @@ export default function Navbar() {
   ]
 
   return (
-    <header className="fixed top-4 sm:top-6 left-0 right-0 z-50 flex justify-center px-3 sm:px-6 pointer-events-none">
+    <header className="fixed top-3 sm:top-6 left-0 right-0 z-50 flex justify-center px-3 sm:px-6 pointer-events-none">
       <motion.nav
         initial={{ y: -30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         style={{
-          height: '66px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          width: '100%',
-          maxWidth: '1120px',
-          background: scrolled ? 'rgba(16, 16, 18, 0.92)' : 'rgba(20, 20, 22, 0.8)',
+          background: scrolled ? 'rgba(16, 16, 18, 0.95)' : 'rgba(20, 20, 22, 0.88)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
           border: '1px solid rgba(255, 255, 255, 0.12)',
           borderRadius: '24px',
           boxSizing: 'border-box',
         }}
-        className="pointer-events-auto transition-all duration-300 shadow-[0_12px_30px_rgba(0,0,0,0.6)] px-4 sm:px-7"
+        className="pointer-events-auto transition-all duration-300 shadow-[0_12px_30px_rgba(0,0,0,0.6)] px-4 sm:px-7 py-2.5 md:py-0 md:h-[66px] flex flex-col md:flex-row md:items-center justify-between w-full max-w-[1120px] gap-2 md:gap-0"
       >
-        {/* Left: Brand name (Desktop: full serif name / Mobile: MahirChy) */}
-        <div className="flex items-center shrink-0 pl-1 sm:pl-2">
+        {/* Main Bar: Brand Name on Left, Desktop Nav Links in Center, Let's talk on Right */}
+        <div className="flex items-center justify-between w-full md:w-auto md:shrink-0">
+          {/* Brand Name */}
           <a
             href="#hero"
             style={{
               fontFamily: "'Instrument Serif', Georgia, serif",
               lineHeight: 1,
             }}
-            className="text-xl sm:text-2xl text-white tracking-tight select-none hover:text-[#E2652B] transition-colors no-underline font-normal whitespace-nowrap"
+            className="text-xl sm:text-2xl text-white tracking-tight select-none hover:text-[#E2652B] transition-colors no-underline font-normal whitespace-nowrap pl-1"
           >
             <span className="hidden md:inline">Mahiruddin Chowdhury</span>
             <span className="inline md:hidden">MahirChy</span>
           </a>
+
+          {/* Mobile "Let's talk" CTA button (visible in top row on mobile only) */}
+          <div className="flex md:hidden items-center shrink-0">
+            <a
+              href="#contact"
+              style={{
+                fontFamily: "'JetBrains Mono', 'Geist Mono', monospace",
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+              }}
+              className="px-3 py-1.5 rounded-lg bg-white/[0.06] hover:bg-white text-white hover:text-black hover:border-white text-xs font-medium tracking-wide inline-flex items-center gap-1.5 whitespace-nowrap active:scale-95 transition-all duration-200 shadow-sm no-underline cursor-pointer"
+            >
+              <span>Let's talk</span>
+              <ArrowUpRight className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
+            </a>
+          </div>
         </div>
 
-        {/* Center: Desktop Navigation Links (Increased generous spacing, hidden on mobile) */}
-        <div
-          className="hidden md:flex items-center gap-8 lg:gap-10"
-        >
+        {/* Center: Desktop Navigation Links (Projects, About, Skills, Contact) */}
+        <div className="hidden md:flex items-center gap-8 lg:gap-10">
           {navLinks.map((item) => (
             <a
               key={item.label}
@@ -72,15 +80,15 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Right: Redesigned Spacious "Let's talk" Button with Generous All-Around Padding */}
-        <div className="flex items-center shrink-0">
+        {/* Right: Desktop "Let's talk" Button */}
+        <div className="hidden md:flex items-center shrink-0">
           <a
             href="#contact"
             style={{
               fontFamily: "'JetBrains Mono', 'Geist Mono', monospace",
               border: '1px solid rgba(255, 255, 255, 0.2)',
             }}
-            className="group px-4 py-2 sm:px-8 sm:py-3.5 rounded-xl bg-white/[0.06] hover:bg-white text-white hover:text-black hover:border-white text-xs sm:text-[14px] font-medium tracking-wide inline-flex items-center gap-2.5 whitespace-nowrap active:scale-95 transition-all duration-300 shadow-sm no-underline cursor-pointer"
+            className="group px-6 lg:px-8 py-3 rounded-xl bg-white/[0.06] hover:bg-white text-white hover:text-black hover:border-white text-xs sm:text-[14px] font-medium tracking-wide inline-flex items-center gap-2.5 whitespace-nowrap active:scale-95 transition-all duration-300 shadow-sm no-underline cursor-pointer"
           >
             <span className="whitespace-nowrap">Let's talk</span>
             <ArrowUpRight
@@ -88,6 +96,23 @@ export default function Navbar() {
               strokeWidth={2}
             />
           </a>
+        </div>
+
+        {/* Mobile Navigation Links Row: Projects, About, Skills, Contact */}
+        <div className="flex md:hidden items-center justify-around w-full pt-2 border-t border-white/[0.08] text-xs font-mono font-medium text-[#A1A1AA] px-1">
+          {navLinks.map((item, idx) => (
+            <div key={item.label} className="flex items-center gap-2.5">
+              <a
+                href={item.href}
+                className="hover:text-white active:text-[#E2652B] transition-colors py-0.5"
+              >
+                {item.label}
+              </a>
+              {idx < navLinks.length - 1 && (
+                <span className="text-white/20 select-none text-[10px]">·</span>
+              )}
+            </div>
+          ))}
         </div>
       </motion.nav>
     </header>
