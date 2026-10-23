@@ -1393,14 +1393,8 @@ export default function DhakaNeonDrift() {
         className="w-full h-full block cursor-crosshair select-none z-0"
       />
 
-      {/* Clean Minimal Header at Top Left */}
-      <div className="absolute top-8 left-6 sm:top-10 sm:left-12 z-20 flex items-center gap-2.5 text-xs font-mono tracking-widest text-[#D2531D] uppercase font-semibold pointer-events-none">
-        <span className="w-2 h-2 rounded-full bg-[#D2531D] shadow-[0_0_8px_#D2531D]" />
-        <span>// SELECTED WORKS</span>
-      </div>
-
-      {/* FLOATING TOP DOCK: PAGINATION DOCK (01 - 05) FOR DESKTOP & MOBILE */}
-      <div className="absolute top-20 sm:top-24 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 sm:gap-4 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full bg-black/85 border border-[#222222] backdrop-blur-xl shadow-2xl pointer-events-auto">
+      {/* FLOATING PAGINATION DOCK (01 - 05): Top on phone screens, bottom on desktop screens */}
+      <div className="absolute top-20 sm:top-auto sm:bottom-12 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 sm:gap-4 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full bg-black/85 border border-[#222222] backdrop-blur-xl shadow-2xl pointer-events-auto">
         {PROJECTS.map((p, idx) => {
           const isSelected = activeProject.id === p.id && isFocused
           return (
@@ -1429,19 +1423,6 @@ export default function DhakaNeonDrift() {
             </button>
           )
         })}
-      </div>
-
-      {/* Floating Driving Guide (visible when free roaming beneath top dock) */}
-      <div
-        className={`absolute top-32 sm:top-36 left-1/2 -translate-x-1/2 z-20 pointer-events-none transition-all duration-300 ${
-          isFocused ? 'opacity-0 -translate-y-2' : 'opacity-100 translate-y-0'
-        }`}
-      >
-        <div className="flex items-center gap-2 px-3.5 py-1.5 sm:px-5 sm:py-2 rounded-full bg-black/70 border border-white/12 backdrop-blur-md text-[10px] sm:text-xs font-mono text-neutral-300 uppercase tracking-widest shadow-xl">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#E2652B] animate-ping" />
-          <span className="hidden sm:inline">DRIVE TO ANY PROJECT BEACON TO VIEW DETAILS</span>
-          <span className="sm:hidden">DRIVE TO ANY BEACON TO VIEW DETAILS</span>
-        </div>
       </div>
 
       {/* SPATIAL PROJECT DETAIL MODAL / CARD (ULTRA-CLEAN GLASSMORPHIC HUD) */}
@@ -1523,9 +1504,9 @@ export default function DhakaNeonDrift() {
         </div>
       </div>
 
-      {/* TACTILE LARGER MOBILE D-PAD (Dedicated bottom corner for phone screens) */}
+      {/* TACTILE LARGER MOBILE D-PAD (Centered at bottom on phone screens) */}
       <div
-        className={`sm:hidden absolute bottom-6 left-4 z-20 flex flex-col items-center gap-1.5 transition-all duration-300 pointer-events-auto ${
+        className={`sm:hidden absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-1.5 transition-all duration-300 pointer-events-auto ${
           isFocused ? 'opacity-0 pointer-events-none scale-90' : 'opacity-100 scale-100'
         }`}
         style={{ touchAction: 'none' }}
