@@ -245,10 +245,9 @@ export default function DhakaNeonDrift() {
       140
     )
 
-    // Initial camera position framed on first project
-    const p0 = PROJECTS[0]
-    const camPos = new THREE.Vector3(p0.pos[0] * 0.45, 14, p0.pos[2] + 18)
-    const camLookAt = new THREE.Vector3(p0.pos[0], 0.6, p0.pos[2])
+    // Initial camera position positioned nicely for overview of the central car
+    const camPos = new THREE.Vector3(0, isMobile ? 15 : 13, isMobile ? 22 : 18)
+    const camLookAt = new THREE.Vector3(0, 0.6, 0)
     camera.position.copy(camPos)
     camera.lookAt(camLookAt)
 
@@ -295,6 +294,29 @@ export default function DhakaNeonDrift() {
     })
     scene.add(ringGroup)
 
+    // Center Spawn Hub / Launch Pad at (0, 0, 0)
+    const hubGroup = new THREE.Group()
+    const hubRingGeo = new THREE.RingGeometry(2.2, 2.26, 64)
+    const hubRingMat = new THREE.MeshBasicMaterial({
+      color: 0xd2531d,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.65,
+    })
+    const hubRing = new THREE.Mesh(hubRingGeo, hubRingMat)
+    hubRing.rotation.x = -Math.PI / 2
+    hubRing.position.y = 0.012
+    hubGroup.add(hubRing)
+
+    const hubInnerRing = new THREE.Mesh(
+      new THREE.RingGeometry(0.8, 0.84, 48),
+      new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, transparent: true, opacity: 0.35 })
+    )
+    hubInnerRing.rotation.x = -Math.PI / 2
+    hubInnerRing.position.y = 0.013
+    hubGroup.add(hubInnerRing)
+    scene.add(hubGroup)
+
     // 600 Floating dot-matrix starfield particles
     const starCount = 600
     const starGeo = new THREE.BufferGeometry()
@@ -314,42 +336,215 @@ export default function DhakaNeonDrift() {
     const starMesh = new THREE.Points(starGeo, starMat)
     scene.add(starMesh)
 
-    // 4. Low-Poly Mechanical Reticle/Drone (Player Vehicle)
+    // 4. Procedural 3D Cyber Sports Car (Player Vehicle)
     const droneGroup = new THREE.Group()
 
-    // Sleek triangular wireframe body
-    const bodyGeo = new THREE.BoxGeometry(1.6, 0.5, 2.3)
-    const bodyMat = new THREE.MeshStandardMaterial({
-      color: 0x111111,
+    // Materials
+    const darkBodyMat = new THREE.MeshStandardMaterial({
+      color: 0x141416,
       roughness: 0.25,
-      metalness: 0.9,
+      metalness: 0.85,
     })
-    const bodyMesh = new THREE.Mesh(bodyGeo, bodyMat)
-    bodyMesh.position.y = 0.45
-    droneGroup.add(bodyMesh)
+    const carbonMat = new THREE.MeshStandardMaterial({
+      color: 0x0d0d0e,
+      roughness: 0.45,
+      metalness: 0.6,
+    })
+    const canopyGlassMat = new THREE.MeshStandardMaterial({
+      color: 0x1f2226,
+      roughness: 0.08,
+      metalness: 0.95,
+      transparent: true,
+      opacity: 0.92,
+    })
+    const neonOrangeMat = new THREE.MeshBasicMaterial({ color: 0xd2531d })
+    const neonHeadlightMat = new THREE.MeshBasicMaterial({ color: 0xffffff })
+    const rimMat = new THREE.MeshStandardMaterial({
+      color: 0xa0a0a5,
+      roughness: 0.2,
+      metalness: 0.95,
+    })
+    const tireMat = new THREE.MeshStandardMaterial({
+      color: 0x18181a,
+      roughness: 0.8,
+      metalness: 0.1,
+    })
+    const wireMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.35 })
 
-    // Stark white wireframe outline
-    const wireGeo = new THREE.EdgesGeometry(bodyGeo)
-    const wireMat = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 2 })
-    const wireMesh = new THREE.LineSegments(wireGeo, wireMat)
-    wireMesh.position.copy(bodyMesh.position)
-    droneGroup.add(wireMesh)
+    // A. Main Lower Chassis Wedge (Aerodynamic belly pan)
+    const lowerChassisGeo = new THREE.BoxGeometry(1.42, 0.22, 2.5)
+    const lowerChassis = new THREE.Mesh(lowerChassisGeo, carbonMat)
+    lowerChassis.position.y = 0.24
+    droneGroup.add(lowerChassis)
 
-    // Glowing cockpit visor
-    const canopyGeo = new THREE.BoxGeometry(1.0, 0.3, 1.1)
-    const canopyMat = new THREE.MeshBasicMaterial({ color: 0xd2531d, wireframe: true })
-    const canopy = new THREE.Mesh(canopyGeo, canopyMat)
-    canopy.position.set(0, 0.75, -0.2)
+    // B. Sculpted Upper Body (Tapered sleek sports car hood and rear deck)
+    const upperBodyGeo = new THREE.BoxGeometry(1.28, 0.24, 2.3)
+    const upperBody = new THREE.Mesh(upperBodyGeo, darkBodyMat)
+    upperBody.position.set(0, 0.4, 0.05)
+    droneGroup.add(upperBody)
+
+    const bodyEdges = new THREE.LineSegments(new THREE.EdgesGeometry(upperBodyGeo), wireMat)
+    bodyEdges.position.copy(upperBody.position)
+    droneGroup.add(bodyEdges)
+
+    // C. Low-Slung Front Hood Wedge & Splitter
+    const hoodGeo = new THREE.BoxGeometry(1.22, 0.12, 0.85)
+    const hood = new THREE.Mesh(hoodGeo, darkBodyMat)
+    hood.position.set(0, 0.32, -0.9)
+    hood.rotation.x = 0.1
+    droneGroup.add(hood)
+
+    const splitterGeo = new THREE.BoxGeometry(1.48, 0.04, 0.45)
+    const splitter = new THREE.Mesh(splitterGeo, carbonMat)
+    splitter.position.set(0, 0.13, -1.35)
+    droneGroup.add(splitter)
+
+    // Splitter neon edge accent
+    const splitterLipGeo = new THREE.BoxGeometry(1.48, 0.02, 0.04)
+    const splitterLip = new THREE.Mesh(splitterLipGeo, neonOrangeMat)
+    splitterLip.position.set(0, 0.13, -1.57)
+    droneGroup.add(splitterLip)
+
+    // D. Sleek Aerodynamic Canopy (Fastback Windshield & Roof)
+    const canopyGeo = new THREE.BoxGeometry(0.96, 0.28, 1.15)
+    const canopy = new THREE.Mesh(canopyGeo, canopyGlassMat)
+    canopy.position.set(0, 0.62, -0.1)
+    canopy.rotation.x = -0.06
     droneGroup.add(canopy)
 
-    // Dual front headlights
-    const lightL = new THREE.PointLight(0xffffff, 2.0, 10)
-    lightL.position.set(-0.55, 0.5, -1.3)
+    const canopyEdges = new THREE.LineSegments(
+      new THREE.EdgesGeometry(canopyGeo),
+      new THREE.LineBasicMaterial({ color: 0xd2531d, transparent: true, opacity: 0.6 })
+    )
+    canopyEdges.position.copy(canopy.position)
+    canopyEdges.rotation.copy(canopy.rotation)
+    droneGroup.add(canopyEdges)
+
+    // E. GT Rear Wing & Diffuser
+    const wingPylonL = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.3, 0.14), carbonMat)
+    wingPylonL.position.set(-0.45, 0.62, 1.05)
+    wingPylonL.rotation.x = -0.2
+    droneGroup.add(wingPylonL)
+
+    const wingPylonR = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.3, 0.14), carbonMat)
+    wingPylonR.position.set(0.45, 0.62, 1.05)
+    wingPylonR.rotation.x = -0.2
+    droneGroup.add(wingPylonR)
+
+    const wingBlade = new THREE.Mesh(new THREE.BoxGeometry(1.46, 0.04, 0.28), carbonMat)
+    wingBlade.position.set(0, 0.76, 1.1)
+    droneGroup.add(wingBlade)
+
+    const wingFinL = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.16, 0.32), neonOrangeMat)
+    wingFinL.position.set(-0.73, 0.76, 1.1)
+    droneGroup.add(wingFinL)
+
+    const wingFinR = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.16, 0.32), neonOrangeMat)
+    wingFinR.position.set(0.73, 0.76, 1.1)
+    droneGroup.add(wingFinR)
+
+    // Rear diffuser
+    const diffuserGeo = new THREE.BoxGeometry(1.36, 0.08, 0.35)
+    const diffuser = new THREE.Mesh(diffuserGeo, carbonMat)
+    diffuser.position.set(0, 0.18, 1.3)
+    diffuser.rotation.x = 0.25
+    droneGroup.add(diffuser)
+
+    // F. Lights: Twin Angular Headlights & Tail-light Bar
+    const headL = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.04, 0.06), neonHeadlightMat)
+    headL.position.set(-0.5, 0.36, -1.32)
+    droneGroup.add(headL)
+
+    const headR = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.04, 0.06), neonHeadlightMat)
+    headR.position.set(0.5, 0.36, -1.32)
+    droneGroup.add(headR)
+
+    const lightL = new THREE.PointLight(0xffffff, 2.2, 12)
+    lightL.position.set(-0.5, 0.38, -1.45)
     droneGroup.add(lightL)
 
-    const lightR = new THREE.PointLight(0xffffff, 2.0, 10)
-    lightR.position.set(0.55, 0.5, -1.3)
+    const lightR = new THREE.PointLight(0xffffff, 2.2, 12)
+    lightR.position.set(0.5, 0.38, -1.45)
     droneGroup.add(lightR)
+
+    // Full-width Cyber Red Taillight Bar
+    const taillightBar = new THREE.Mesh(new THREE.BoxGeometry(1.24, 0.04, 0.04), neonOrangeMat)
+    taillightBar.position.set(0, 0.44, 1.25)
+    droneGroup.add(taillightBar)
+
+    const tailLightPoint = new THREE.PointLight(0xd2531d, 1.8, 6)
+    tailLightPoint.position.set(0, 0.44, 1.4)
+    droneGroup.add(tailLightPoint)
+
+    // G. Neon Ground Underglow (Red/Orange glow under car chassis)
+    const underglowLight = new THREE.PointLight(0xd2531d, 3.8, 4.5)
+    underglowLight.position.set(0, 0.08, 0)
+    droneGroup.add(underglowLight)
+
+    // H. 4 Realistic Wheels with Rims and Front Steering
+    const frontSteeringL = new THREE.Group()
+    frontSteeringL.position.set(-0.76, 0.26, -0.82)
+    droneGroup.add(frontSteeringL)
+
+    const frontSteeringR = new THREE.Group()
+    frontSteeringR.position.set(0.76, 0.26, -0.82)
+    droneGroup.add(frontSteeringR)
+
+    const rearWheelGroupL = new THREE.Group()
+    rearWheelGroupL.position.set(-0.78, 0.27, 0.85)
+    droneGroup.add(rearWheelGroupL)
+
+    const rearWheelGroupR = new THREE.Group()
+    rearWheelGroupR.position.set(0.78, 0.27, 0.85)
+    droneGroup.add(rearWheelGroupR)
+
+    const rotatingWheels: THREE.Group[] = []
+
+    const buildWheel = (radius = 0.26, width = 0.15) => {
+      const wGroup = new THREE.Group()
+      // Outer rubber tire
+      const tireGeo = new THREE.CylinderGeometry(radius, radius, width, 24)
+      tireGeo.rotateZ(Math.PI / 2)
+      const tireMesh = new THREE.Mesh(tireGeo, tireMat)
+      wGroup.add(tireMesh)
+
+      // Inner alloy rim
+      const rimGeo = new THREE.CylinderGeometry(radius * 0.72, radius * 0.72, width + 0.005, 16)
+      rimGeo.rotateZ(Math.PI / 2)
+      const rimMesh = new THREE.Mesh(rimGeo, rimMat)
+      wGroup.add(rimMesh)
+
+      // Rim Center Cap (Red accent)
+      const capGeo = new THREE.CylinderGeometry(radius * 0.25, radius * 0.25, width + 0.015, 12)
+      capGeo.rotateZ(Math.PI / 2)
+      const capMesh = new THREE.Mesh(capGeo, neonOrangeMat)
+      wGroup.add(capMesh)
+
+      // Rim Spoke wires
+      const spokeLines = new THREE.LineSegments(
+        new THREE.EdgesGeometry(rimGeo),
+        new THREE.LineBasicMaterial({ color: 0x333333 })
+      )
+      wGroup.add(spokeLines)
+
+      return wGroup
+    }
+
+    const wheelFL = buildWheel(0.26, 0.15)
+    frontSteeringL.add(wheelFL)
+    rotatingWheels.push(wheelFL)
+
+    const wheelFR = buildWheel(0.26, 0.15)
+    frontSteeringR.add(wheelFR)
+    rotatingWheels.push(wheelFR)
+
+    const wheelRL = buildWheel(0.27, 0.18)
+    rearWheelGroupL.add(wheelRL)
+    rotatingWheels.push(wheelRL)
+
+    const wheelRR = buildWheel(0.27, 0.18)
+    rearWheelGroupR.add(wheelRR)
+    rotatingWheels.push(wheelRR)
 
     scene.add(droneGroup)
 
@@ -582,10 +777,10 @@ export default function DhakaNeonDrift() {
       nodeMeshes.push({ group: nGroup, data: p, crystal, groundRing, verticalRing, light: nLight, label })
     })
 
-    // 7. Navigation Motion State & Calibrated Physics
+    // 7. Navigation Motion State & Calibrated Physics (Free-roam spawn at center hub)
     const state = {
-      x: p0.pos[0],
-      z: p0.pos[2] + 1.2,
+      x: 0,
+      z: 0,
       vx: 0,
       vz: 0,
       heading: 0,
@@ -826,11 +1021,12 @@ export default function DhakaNeonDrift() {
 
       const time = clock.getElapsedTime()
 
-      // Clear parked beacon lock once drone drives safely away
+      // Clear parked beacon lock once car drives safely away
       if (state.parkedBeaconId) {
         const curProj = PROJECTS.find((p) => p.id === state.parkedBeaconId)
-        if (curProj && Math.hypot(state.x - curProj.pos[0], state.z - curProj.pos[2]) > 4.2) {
+        if (curProj && Math.hypot(state.x - curProj.pos[0], state.z - curProj.pos[2]) > 3.6) {
           state.parkedBeaconId = null
+          setIsFocused(false)
         }
       }
 
@@ -880,11 +1076,11 @@ export default function DhakaNeonDrift() {
           state.heading += THREE.MathUtils.clamp(diff, -0.09, 0.09)
         }
 
-        // In free-flight mode, camera smoothly tracks drone
+        // In free-flight mode, camera smoothly tracks car
         if (!state.isHeroCinematic) {
           const targetCamX = state.x * 0.45
-          const targetCamY = 14
-          const targetCamZ = state.z + 18
+          const targetCamY = isMobile ? 15 : 13
+          const targetCamZ = state.z + (isMobile ? 21 : 18)
 
           camera.position.x += (targetCamX - camera.position.x) * 0.045
           camera.position.y += (targetCamY - camera.position.y) * 0.045
@@ -904,7 +1100,22 @@ export default function DhakaNeonDrift() {
       const liveSpeed = Math.hypot(state.vx, state.vz)
       updateEngineAudio(state.isAutoNav ? 0.16 : liveSpeed)
 
-      // Update Drone mesh
+      // Animate 3D wheels rotation with velocity
+      if (liveSpeed > 0.001 || state.isAutoNav) {
+        const rotDelta = state.isAutoNav ? 0.14 : liveSpeed * 3.4
+        rotatingWheels.forEach((w) => {
+          w.rotation.x -= rotDelta
+        })
+      }
+
+      // Front wheel dynamic steering response
+      let steerInput = 0
+      if (keys['a'] || keys['arrowleft']) steerInput += 0.36
+      if (keys['d'] || keys['arrowright']) steerInput -= 0.36
+      frontSteeringL.rotation.y = THREE.MathUtils.lerp(frontSteeringL.rotation.y, steerInput, 0.2)
+      frontSteeringR.rotation.y = THREE.MathUtils.lerp(frontSteeringR.rotation.y, steerInput, 0.2)
+
+      // Update car mesh position and orientation
       droneGroup.position.set(state.x, 0, state.z)
       droneGroup.rotation.y = state.heading
 
@@ -913,7 +1124,7 @@ export default function DhakaNeonDrift() {
         addTrailPoint(state.x, 0, state.z)
       }
 
-      // Animate Nodes & Detect Proximity to other projects
+      // Animate Nodes & Detect Proximity to projects
       nodeMeshes.forEach((nm, idx) => {
         nm.crystal.rotation.y = time * 0.85 + idx * 0.5
         nm.crystal.rotation.x = Math.sin(time * 1.5 + idx) * 0.15
@@ -925,11 +1136,11 @@ export default function DhakaNeonDrift() {
         nm.light.intensity = isCurrent ? 4.8 : 1.8
         nm.groundRing.scale.setScalar(1 + Math.sin(time * 3 + idx) * 0.06)
 
-        // When drone enters another beacon pad (free flight or ground nav)
+        // When car enters a beacon pad (free drive or ground nav)
         if (!state.isHeroCinematic) {
           const dist = Math.hypot(state.x - nm.data.pos[0], state.z - nm.data.pos[2])
-          // Robust trigger radius (3.2 units) to prevent missing nodes
-          if (dist < 3.2 && state.parkedBeaconId !== nm.data.id) {
+          // Precise trigger radius (2.8 units) so car drives up to the beacon
+          if (dist < 2.8 && state.parkedBeaconId !== nm.data.id) {
             selectProject(nm.data)
             setIsFocused(true)
             state.isHeroCinematic = true
@@ -1058,6 +1269,19 @@ export default function DhakaNeonDrift() {
         <span>// SELECTED WORKS</span>
       </div>
 
+      {/* Floating Driving Guide (visible when free roaming) */}
+      <div
+        className={`absolute top-7 sm:top-9 left-1/2 -translate-x-1/2 z-20 pointer-events-none transition-all duration-300 ${
+          isFocused ? 'opacity-0 -translate-y-2' : 'opacity-100 translate-y-0'
+        }`}
+      >
+        <div className="flex items-center gap-2 px-3.5 py-1.5 sm:px-5 sm:py-2 rounded-full bg-black/70 border border-white/12 backdrop-blur-md text-[10px] sm:text-xs font-mono text-neutral-300 uppercase tracking-widest shadow-xl">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#E2652B] animate-ping" />
+          <span className="hidden sm:inline">DRIVE TO ANY PROJECT BEACON TO VIEW DETAILS</span>
+          <span className="sm:hidden">DRIVE TO ANY BEACON TO VIEW DETAILS</span>
+        </div>
+      </div>
+
       {/* SPATIAL PROJECT DETAIL MODAL / CARD (ULTRA-CLEAN GLASSMORPHIC HUD) */}
       <div
         style={{
@@ -1066,23 +1290,22 @@ export default function DhakaNeonDrift() {
           transform: isFocused ? 'translateY(0) scale(1)' : 'translateY(16px) scale(0.97)',
           pointerEvents: isFocused ? 'auto' : 'none',
         }}
-        className="absolute top-1/2 -translate-y-1/2 left-4 sm:left-10 lg:left-14 w-[calc(100%-32px)] sm:w-auto max-w-xl z-20 select-text"
+        className="absolute top-1/2 -translate-y-1/2 left-3 sm:left-10 lg:left-14 w-[calc(100%-24px)] sm:w-auto max-w-xl z-20 select-text"
       >
         <div
           style={{
-            background: 'rgba(14, 14, 16, 0.78)',
+            background: 'rgba(14, 14, 16, 0.82)',
             backdropFilter: 'blur(32px)',
             WebkitBackdropFilter: 'blur(32px)',
             border: '1px solid rgba(255, 255, 255, 0.12)',
-            borderRadius: '28px',
+            borderRadius: '24px',
             boxShadow: '0 24px 64px rgba(0, 0, 0, 0.8), 0 0 40px rgba(210, 83, 29, 0.15)',
-            padding: '32px 36px',
           }}
-          className="relative flex flex-col text-left"
+          className="relative flex flex-col text-left p-6 sm:p-9"
         >
           {/* Top Bar: Project Index Pill + Close Button */}
-          <div className="flex items-center justify-between pb-4 mb-4 border-b border-white/8">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D2531D]/15 border border-[#D2531D]/30 text-[11px] font-mono tracking-widest text-[#E2652B] uppercase font-semibold">
+          <div className="flex items-center justify-between pb-3 sm:pb-4 mb-3 sm:mb-4 border-b border-white/8">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D2531D]/15 border border-[#D2531D]/30 text-[10px] sm:text-[11px] font-mono tracking-widest text-[#E2652B] uppercase font-semibold">
               <span className="w-1.5 h-1.5 rounded-full bg-[#E2652B] shadow-[0_0_8px_#E2652B] animate-pulse" />
               <span>PROJECT {activeProject.num} // 05</span>
             </div>
@@ -1091,7 +1314,7 @@ export default function DhakaNeonDrift() {
               type="button"
               onClick={() => setIsFocused(false)}
               className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/12 border border-white/10 flex items-center justify-center text-neutral-400 hover:text-white transition-all cursor-pointer active:scale-95"
-              title="Close card (or press WASD / Esc)"
+              title="Close card (or drive away / Esc)"
             >
               <X className="w-4 h-4" />
             </button>
@@ -1100,13 +1323,13 @@ export default function DhakaNeonDrift() {
           {/* Massive Project Title */}
           <h2
             style={{ fontFamily: "'JetBrains Mono', monospace, sans-serif" }}
-            className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white uppercase mb-3 drop-shadow-[0_2px_16px_rgba(0,0,0,0.8)]"
+            className="text-xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white uppercase mb-2.5 drop-shadow-[0_2px_16px_rgba(0,0,0,0.8)]"
           >
             {activeProject.title}
           </h2>
 
           {/* Concise Single-Sentence Description */}
-          <p className="text-sm sm:text-base font-sans text-neutral-300 leading-relaxed mb-7 font-normal">
+          <p className="text-xs sm:text-sm font-sans text-neutral-300 leading-relaxed mb-6 font-normal">
             {activeProject.desc}
           </p>
 
@@ -1122,7 +1345,7 @@ export default function DhakaNeonDrift() {
                 WebkitBackdropFilter: 'blur(20px)',
                 border: '1px solid rgba(255, 255, 255, 0.18)',
               }}
-              className="px-8 py-3.5 sm:px-10 sm:py-4 rounded-2xl text-xs sm:text-sm font-mono font-semibold tracking-wider text-white hover:bg-white/15 hover:border-white/40 hover:shadow-[0_0_28px_rgba(255,255,255,0.18)] transition-all duration-200 active:scale-95 flex items-center gap-3 no-underline cursor-pointer"
+              className="px-6 py-3 sm:px-8 sm:py-3.5 rounded-2xl text-xs sm:text-sm font-mono font-semibold tracking-wider text-white hover:bg-white/15 hover:border-white/40 hover:shadow-[0_0_28px_rgba(255,255,255,0.18)] transition-all duration-200 active:scale-95 flex items-center gap-2.5 sm:gap-3 no-underline cursor-pointer"
             >
               <GithubIcon className="w-4 h-4 opacity-90" />
               <span>CODEBASE</span>

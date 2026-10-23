@@ -34,9 +34,8 @@ export default function Contact() {
       style={{
         maxWidth: '800px',
         margin: '0 auto',
-        padding: '60px 40px',
       }}
-      className="w-full relative flex flex-col items-center justify-center"
+      className="w-full relative flex flex-col items-center justify-center px-4 sm:px-8 py-16 sm:py-24"
     >
       <motion.div
         initial={{ opacity: 0, scale: 0.98 }}
@@ -44,14 +43,13 @@ export default function Contact() {
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
         style={{
-          padding: '48px 40px',
           borderRadius: '24px',
           background: 'rgba(20, 20, 22, 0.65)',
           border: '1px solid rgba(255, 255, 255, 0.08)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
         }}
-        className="text-center relative overflow-hidden w-full shadow-2xl"
+        className="text-center relative overflow-hidden w-full shadow-2xl p-6 sm:p-12"
       >
         {/* Subtle Ambient Accent */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-36 bg-[#E2652B]/10 blur-3xl pointer-events-none" />

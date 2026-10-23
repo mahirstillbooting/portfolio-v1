@@ -71,10 +71,10 @@ export default function Hero() {
           transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
           style={{
             fontFamily: "'Instrument Serif', Georgia, serif",
-            fontSize: 'clamp(3.2rem, 6.5vw, 5.8rem)',
+            fontSize: 'clamp(2.2rem, 6.5vw, 5.8rem)',
             fontWeight: 400,
             letterSpacing: '-0.03em',
-            lineHeight: 1.02,
+            lineHeight: 1.05,
             whiteSpace: 'normal',
           }}
           className="italic text-white select-none drop-shadow-[0_16px_48px_rgba(0,0,0,0.95)]"

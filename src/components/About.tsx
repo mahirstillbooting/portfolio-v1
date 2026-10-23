@@ -26,7 +26,6 @@ export default function About() {
   ]
 
   const cardStyle = {
-    padding: '40px',
     borderRadius: '24px',
     background: 'rgba(20, 20, 22, 0.65)',
     border: '1px solid rgba(255, 255, 255, 0.08)',
@@ -37,11 +36,10 @@ export default function About() {
   return (
     <section
       id="about"
-      style={{ padding: '140px 32px' }}
-      className="w-full max-w-[1200px] mx-auto relative flex flex-col justify-center"
+      className="w-full max-w-[1200px] mx-auto relative flex flex-col justify-center px-4 sm:px-8 py-20 sm:py-32"
     >
       {/* Section Heading */}
-      <div className="mb-14 space-y-2">
+      <div className="mb-10 sm:mb-14 space-y-2">
         <div className="flex items-center gap-2 text-[11px] tracking-widest text-[#E2652B] font-mono uppercase">
           <Compass className="w-3.5 h-3.5 text-[#E2652B]" />
           <span>03 // ABOUT &amp; MINDSET</span>
@@ -52,7 +50,7 @@ export default function About() {
       </div>
 
       {/* 2-Column Asymmetric Layout (Left: 62% width, Right: 38% width stacked vertically) */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1.63fr_1fr] gap-8 items-stretch">
+      <div className="grid grid-cols-1 lg:grid-cols-[1.63fr_1fr] gap-6 sm:gap-8 items-stretch">
         
         {/* Main Biography Card (62% width on desktop) */}
         <motion.div
@@ -61,7 +59,7 @@ export default function About() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
           style={cardStyle}
-          className="flex flex-col justify-between"
+          className="flex flex-col justify-between p-6 sm:p-10"
         >
           <div>
             <div className="flex items-center justify-between text-xs font-mono text-[#71717A] tracking-widest pb-4 mb-6 border-b border-white/8">
@@ -102,7 +100,7 @@ export default function About() {
         </motion.div>
 
         {/* Right Column: 38% width stacked vertically */}
-        <div className="flex flex-col gap-8 justify-between">
+        <div className="flex flex-col gap-6 sm:gap-8 justify-between">
           
           {/* Dot-matrix Location Card */}
           <motion.div
@@ -111,7 +109,7 @@ export default function About() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
             style={cardStyle}
-            className="flex flex-col justify-between flex-1"
+            className="flex flex-col justify-between flex-1 p-6 sm:p-10"
           >
             <div>
               <div className="flex items-center justify-between text-xs font-mono tracking-widest text-[#71717A] mb-3">
@@ -144,14 +142,14 @@ export default function About() {
             </div>
           </motion.div>
 
-          {/* Education Status Card */}
+          {/* Academic Degree Card */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
             style={cardStyle}
-            className="flex flex-col justify-center flex-1"
+            className="flex flex-col justify-center flex-1 p-6 sm:p-10"
           >
             <div className="text-xs font-mono tracking-widest text-[#71717A] mb-2">
               ACADEMIC DEGREE
@@ -173,8 +171,7 @@ export default function About() {
 
       {/* 4 Hobby Cards Row: Uniform 4-column row directly beneath the main grid */}
       <div
-        style={{ gap: '24px' }}
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mt-8"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-8 sm:mt-12"
       >
         {passions.map((item, idx) => {
           const Icon = item.icon
@@ -185,15 +182,8 @@ export default function About() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: idx * 0.08 }}
-              style={{
-                padding: '32px',
-                borderRadius: '24px',
-                background: 'rgba(20, 20, 22, 0.65)',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                backdropFilter: 'blur(20px)',
-                WebkitBackdropFilter: 'blur(20px)',
-              }}
-              className="flex flex-col justify-between hover:border-[#E2652B]/40 transition-colors min-h-[190px]"
+              style={cardStyle}
+              className="flex flex-col justify-between p-5 sm:p-7 hover:border-[#E2652B]/40 transition-colors min-h-[170px]"
             >
               <div>
                 <div className="p-3 rounded-xl bg-white/[0.04] border border-white/8 text-[#E2652B] w-fit mb-5">

@@ -5,11 +5,10 @@ export default function Skills() {
   return (
     <section
       id="skills"
-      style={{ padding: '140px 32px' }}
-      className="w-full max-w-[1200px] mx-auto relative flex flex-col justify-center"
+      className="w-full max-w-[1200px] mx-auto relative flex flex-col justify-center px-4 sm:px-8 py-20 sm:py-32"
     >
       {/* Section Heading */}
-      <div className="mb-12">
+      <div className="mb-8 sm:mb-12">
         <div className="flex items-center gap-2 text-[11px] tracking-widest text-[#E2652B] font-mono mb-2 uppercase">
           <Cpu className="w-3.5 h-3.5 text-[#E2652B]" />
           <span>04 // CAPABILITIES</span>
