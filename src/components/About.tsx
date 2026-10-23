@@ -180,11 +180,16 @@ export default function About() {
     <section
       id="about"
       style={{
+        minHeight: '100vh',
+        padding: '120px 24px 160px 24px',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        boxSizing: 'border-box',
+        position: 'relative',
         scrollMarginTop: '110px',
-        paddingTop: 'clamp(90px, 14vw, 160px)',
-        paddingBottom: '160px',
       }}
-      className="w-full max-w-[1200px] mx-auto relative flex flex-col justify-center px-4 sm:px-6 scroll-mt-[110px] select-none"
+      className="w-full max-w-[1200px] mx-auto relative select-none scroll-mt-[110px]"
     >
       {/* Section Heading */}
       <div className="mb-10 sm:mb-14 space-y-2">

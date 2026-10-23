@@ -4,7 +4,12 @@ export default function Projects() {
   return (
     <section
       id="projects"
-      style={{ scrollMarginTop: '110px' }}
+      style={{
+        minHeight: '100vh',
+        boxSizing: 'border-box',
+        position: 'relative',
+        scrollMarginTop: '110px',
+      }}
       className="w-full relative min-h-screen bg-[#0b0b0c] overflow-hidden select-none scroll-mt-[110px]"
     >
       {/* Top Transition Fade from Hero */}

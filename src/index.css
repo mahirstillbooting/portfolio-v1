@@ -22,8 +22,9 @@
 
 html {
   scroll-behavior: smooth;
+  background-color: #080808;
+  color: #F3F4F6;
   color-scheme: dark;
-  background-color: var(--bg);
 }
 
 body {
