@@ -32,7 +32,7 @@ export default function Navbar() {
           alignItems: 'center',
           justifyContent: 'space-between',
           width: '100%',
-          maxWidth: '1080px',
+          maxWidth: '1120px',
           background: scrolled ? 'rgba(16, 16, 18, 0.92)' : 'rgba(20, 20, 22, 0.8)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
@@ -42,7 +42,7 @@ export default function Navbar() {
         }}
         className="pointer-events-auto transition-all duration-300 shadow-[0_12px_30px_rgba(0,0,0,0.6)] px-4 sm:px-7"
       >
-        {/* Left: Brand name (Desktop: full name / Mobile: MahirChy) */}
+        {/* Left: Brand name (Desktop: full serif name / Mobile: MahirChy) */}
         <div className="flex items-center shrink-0 pl-1 sm:pl-2">
           <a
             href="#hero"
@@ -57,35 +57,36 @@ export default function Navbar() {
           </a>
         </div>
 
-        {/* Center: Desktop Navigation Links (hidden on mobile) */}
+        {/* Center: Desktop Navigation Links (Increased generous spacing, hidden on mobile) */}
         <div
-          style={{ display: 'flex', alignItems: 'center', gap: '32px' }}
-          className="hidden md:flex"
+          className="hidden md:flex items-center gap-8 lg:gap-10"
         >
           {navLinks.map((item) => (
             <a
               key={item.label}
               href={item.href}
-              className="text-[13px] text-[#A1A1AA] hover:text-[#FFFFFF] transition-colors font-sans font-medium no-underline"
+              className="text-sm text-[#A1A1AA] hover:text-white transition-colors font-sans font-medium no-underline tracking-wide"
             >
               {item.label}
             </a>
           ))}
         </div>
 
-        {/* Right: Glassmorphic "Let's talk" CTA Button */}
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        {/* Right: Redesigned Spacious "Let's talk" Button */}
+        <div className="flex items-center shrink-0">
           <a
             href="#contact"
             style={{
-              fontFamily: "'Geist Sans', sans-serif",
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
+              fontFamily: "'JetBrains Mono', 'Geist Mono', monospace",
+              border: '1px solid rgba(255, 255, 255, 0.2)',
             }}
-            className="px-3.5 py-1.5 sm:px-5 sm:py-2.5 rounded-xl bg-white/[0.08] hover:bg-white/[0.15] border border-white/16 hover:border-white/30 text-white text-xs sm:text-[13px] font-medium inline-flex items-center gap-1.5 sm:gap-2 whitespace-nowrap active:scale-95 transition-all duration-200 shadow-sm no-underline cursor-pointer"
+            className="group px-4 py-1.5 sm:px-6 sm:py-2.5 rounded-xl bg-white/[0.06] hover:bg-white text-white hover:text-black hover:border-white text-xs sm:text-sm font-medium tracking-wide inline-flex items-center gap-2 whitespace-nowrap active:scale-95 transition-all duration-300 shadow-sm no-underline cursor-pointer"
           >
             <span className="whitespace-nowrap">Let's talk</span>
-            <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 opacity-80" strokeWidth={1.75} />
+            <ArrowUpRight
+              className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              strokeWidth={2}
+            />
           </a>
         </div>
       </motion.nav>

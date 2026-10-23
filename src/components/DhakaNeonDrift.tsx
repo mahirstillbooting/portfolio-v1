@@ -5,6 +5,7 @@ import { ArrowUpRight, X, ChevronUp, ChevronDown, ChevronLeft, ChevronRight } fr
 import { GithubIcon } from './Icons'
 import { getAudioEnabled } from '../utils/audioState'
 import engineStartSoundUrl from '../assets/mixkit-car-engine-start-1566.wav'
+import projectSelectSoundUrl from '../assets/mixkit-quick-win-video-game-notification-269.wav'
 
 export interface ProjectItem {
   id: string
@@ -90,6 +91,7 @@ export default function DhakaNeonDrift() {
   const virtualKeyRef = useRef<((key: 'w' | 'a' | 's' | 'd', isPressed: boolean) => void) | null>(null)
   const lockUntilRef = useRef<number>(0)
   const engineStartAudioRef = useRef<HTMLAudioElement | null>(null)
+  const projectSelectAudioRef = useRef<HTMLAudioElement | null>(null)
   const hasEngineStartedRef = useRef(false)
 
   // Ensure AudioContext is ready on user gesture
@@ -118,14 +120,14 @@ export default function DhakaNeonDrift() {
       const gain = ctx.createGain()
 
       osc1.type = 'sawtooth'
-      osc1.frequency.setValueAtTime(72, ctx.currentTime)
+      osc1.frequency.setValueAtTime(68, ctx.currentTime)
 
       osc2.type = 'triangle'
-      osc2.frequency.setValueAtTime(50, ctx.currentTime)
+      osc2.frequency.setValueAtTime(46, ctx.currentTime)
 
       filter.type = 'lowpass'
-      filter.frequency.setValueAtTime(320, ctx.currentTime)
-      filter.Q.setValueAtTime(3.5, ctx.currentTime)
+      filter.frequency.setValueAtTime(260, ctx.currentTime)
+      filter.Q.setValueAtTime(2.8, ctx.currentTime)
 
       gain.gain.setValueAtTime(0.0001, ctx.currentTime)
 
@@ -160,7 +162,7 @@ export default function DhakaNeonDrift() {
         engineStartAudioRef.current = new Audio(engineStartSoundUrl)
       }
       const audio = engineStartAudioRef.current
-      audio.volume = 0.75
+      audio.volume = 0.45 // Gently calibrated engine ignition volume
       audio.currentTime = 0
       audio.play().catch(() => {})
     } catch {
@@ -187,10 +189,10 @@ export default function DhakaNeonDrift() {
 
     const norm = Math.min(1, Math.max(0, speed / 0.22))
     if (norm > 0.02) {
-      // Accelerating cyber engine pitch & resonance
-      const targetFreq = 72 + norm * 115
-      const targetFilter = 320 + norm * 600
-      const targetVol = 0.04 + norm * 0.10 // Audible, responsive cyber engine rumble
+      // Accelerating cyber engine pitch & resonance (refined subtle driving sound)
+      const targetFreq = 68 + norm * 105
+      const targetFilter = 260 + norm * 450
+      const targetVol = 0.015 + norm * 0.045 // Smooth ambient driving volume
 
       engine.osc1.frequency.setTargetAtTime(targetFreq, now, 0.05)
       engine.osc2.frequency.setTargetAtTime(targetFreq * 0.68, now, 0.05)
@@ -202,52 +204,40 @@ export default function DhakaNeonDrift() {
     }
   }, [ensureEngineSound, ensureAudioContext])
 
-  // Futuristic video game lock-on chime
+  // Play mixkit quick win video game notification when selecting or driving to any project
   const playLockSound = useCallback(() => {
     if (!getAudioEnabled()) return
+    ensureAudioContext()
+
+    // 1. Play real notification sound effect
+    try {
+      if (!projectSelectAudioRef.current) {
+        projectSelectAudioRef.current = new Audio(projectSelectSoundUrl)
+      }
+      const audio = projectSelectAudioRef.current
+      audio.volume = 0.65
+      audio.currentTime = 0
+      audio.play().catch(() => {})
+    } catch {
+      // Audio fallback
+    }
+
+    // 2. Subtle synth chime layer
     try {
       const ctx = ensureAudioContext()
       const now = ctx.currentTime
 
-      // 1. Primary high harmonic crystal ping
       const ping1 = ctx.createOscillator()
       const pingGain1 = ctx.createGain()
       ping1.type = 'sine'
-      ping1.frequency.setValueAtTime(587.33, now) // D5
-      ping1.frequency.exponentialRampToValueAtTime(880, now + 0.12) // A5
-      pingGain1.gain.setValueAtTime(0.14, now)
-      pingGain1.gain.exponentialRampToValueAtTime(0.0001, now + 0.42)
+      ping1.frequency.setValueAtTime(587.33, now)
+      ping1.frequency.exponentialRampToValueAtTime(880, now + 0.12)
+      pingGain1.gain.setValueAtTime(0.07, now)
+      pingGain1.gain.exponentialRampToValueAtTime(0.0001, now + 0.35)
       ping1.connect(pingGain1)
       pingGain1.connect(ctx.destination)
       ping1.start(now)
-      ping1.stop(now + 0.45)
-
-      // 2. Secondary chime overtone
-      const ping2 = ctx.createOscillator()
-      const pingGain2 = ctx.createGain()
-      ping2.type = 'triangle'
-      ping2.frequency.setValueAtTime(880, now + 0.06)
-      ping2.frequency.exponentialRampToValueAtTime(1760, now + 0.22)
-      pingGain2.gain.setValueAtTime(0.001, now)
-      pingGain2.gain.setValueAtTime(0.08, now + 0.06)
-      pingGain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.5)
-      ping2.connect(pingGain2)
-      pingGain2.connect(ctx.destination)
-      ping2.start(now + 0.06)
-      ping2.stop(now + 0.52)
-
-      // 3. Tactile sub lock thud
-      const sub = ctx.createOscillator()
-      const subGain = ctx.createGain()
-      sub.type = 'sine'
-      sub.frequency.setValueAtTime(95, now)
-      sub.frequency.exponentialRampToValueAtTime(38, now + 0.18)
-      subGain.gain.setValueAtTime(0.09, now)
-      subGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.22)
-      sub.connect(subGain)
-      subGain.connect(ctx.destination)
-      sub.start(now)
-      sub.stop(now + 0.24)
+      ping1.stop(now + 0.38)
     } catch {
       // Audio fallback
     }
@@ -1368,6 +1358,12 @@ export default function DhakaNeonDrift() {
       if (engineStartAudioRef.current) {
         try {
           engineStartAudioRef.current.pause()
+        } catch {}
+      }
+
+      if (projectSelectAudioRef.current) {
+        try {
+          projectSelectAudioRef.current.pause()
         } catch {}
       }
     }
