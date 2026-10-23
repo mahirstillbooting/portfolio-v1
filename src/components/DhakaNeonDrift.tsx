@@ -1380,26 +1380,60 @@ export default function DhakaNeonDrift() {
       className="relative w-full h-[85vh] min-h-[580px] sm:h-screen sm:min-h-[640px] bg-[#0b0b0c] overflow-hidden select-none outline-none"
       style={{
         touchAction: 'pan-y',
-        maskImage: 'linear-gradient(to bottom, transparent 0%, #000000 12%, #000000 88%, transparent 100%)',
-        WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, #000000 12%, #000000 88%, transparent 100%)',
       }}
     >
-      {/* 3D WebGL Canvas (Full-bleed) */}
+      {/* 3D WebGL Canvas (Full-bleed with subtle top/bottom ambient fade) */}
       <canvas
         ref={canvasRef}
-        style={{ touchAction: 'pan-y' }}
-        className="w-full h-full block cursor-crosshair select-none"
+        style={{
+          touchAction: 'pan-y',
+          maskImage: 'linear-gradient(to bottom, transparent 0%, #000000 8%, #000000 92%, transparent 100%)',
+          WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, #000000 8%, #000000 92%, transparent 100%)',
+        }}
+        className="w-full h-full block cursor-crosshair select-none z-0"
       />
 
       {/* Clean Minimal Header at Top Left */}
-      <div className="absolute top-8 left-8 sm:top-10 sm:left-12 z-20 flex items-center gap-2.5 text-xs font-mono tracking-widest text-[#D2531D] uppercase font-semibold pointer-events-none">
+      <div className="absolute top-8 left-6 sm:top-10 sm:left-12 z-20 flex items-center gap-2.5 text-xs font-mono tracking-widest text-[#D2531D] uppercase font-semibold pointer-events-none">
         <span className="w-2 h-2 rounded-full bg-[#D2531D] shadow-[0_0_8px_#D2531D]" />
         <span>// SELECTED WORKS</span>
       </div>
 
-      {/* Floating Driving Guide (visible when free roaming) */}
+      {/* FLOATING TOP DOCK: PAGINATION DOCK (01 - 05) FOR DESKTOP & MOBILE */}
+      <div className="absolute top-20 sm:top-24 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 sm:gap-4 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full bg-black/85 border border-[#222222] backdrop-blur-xl shadow-2xl pointer-events-auto">
+        {PROJECTS.map((p, idx) => {
+          const isSelected = activeProject.id === p.id && isFocused
+          return (
+            <button
+              key={p.id}
+              onClick={() => {
+                if (jumpToProjectRef.current) jumpToProjectRef.current(idx)
+              }}
+              className="group flex items-center gap-1.5 sm:gap-2 cursor-pointer transition-all active:scale-90 px-1 py-0.5"
+              aria-label={`Select ${p.num}: ${p.title}`}
+            >
+              <span
+                className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                  isSelected
+                    ? 'bg-[#D2531D] scale-125 shadow-[0_0_8px_#D2531D]'
+                    : 'bg-[#444444] group-hover:bg-neutral-300'
+                }`}
+              />
+              <span
+                className={`text-[11px] sm:text-xs font-mono font-medium transition-colors ${
+                  isSelected ? 'text-white' : 'text-neutral-500 group-hover:text-neutral-300'
+                }`}
+              >
+                {p.num}
+              </span>
+            </button>
+          )
+        })}
+      </div>
+
+      {/* Floating Driving Guide (visible when free roaming beneath top dock) */}
       <div
-        className={`absolute top-7 sm:top-9 left-1/2 -translate-x-1/2 z-20 pointer-events-none transition-all duration-300 ${
+        className={`absolute top-32 sm:top-36 left-1/2 -translate-x-1/2 z-20 pointer-events-none transition-all duration-300 ${
           isFocused ? 'opacity-0 -translate-y-2' : 'opacity-100 translate-y-0'
         }`}
       >
@@ -1489,41 +1523,9 @@ export default function DhakaNeonDrift() {
         </div>
       </div>
 
-      {/* FLOATING BOTTOM DOCK: PAGINATION DOCK (01 - 05) */}
-      <div className="absolute bottom-3 sm:bottom-12 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 sm:gap-4 px-3 sm:px-5 py-2 sm:py-2.5 rounded-full bg-black/80 border border-[#222222] backdrop-blur-xl shadow-2xl pointer-events-auto">
-        {PROJECTS.map((p, idx) => {
-          const isSelected = activeProject.id === p.id && isFocused
-          return (
-            <button
-              key={p.id}
-              onClick={() => {
-                if (jumpToProjectRef.current) jumpToProjectRef.current(idx)
-              }}
-              className="group flex items-center gap-1.5 sm:gap-2 cursor-pointer transition-all active:scale-90 px-1 py-0.5"
-              aria-label={`Select ${p.num}: ${p.title}`}
-            >
-              <span
-                className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                  isSelected
-                    ? 'bg-[#D2531D] scale-125 shadow-[0_0_8px_#D2531D]'
-                    : 'bg-[#444444] group-hover:bg-neutral-300'
-                }`}
-              />
-              <span
-                className={`text-[11px] sm:text-xs font-mono font-medium transition-colors ${
-                  isSelected ? 'text-white' : 'text-neutral-500 group-hover:text-neutral-300'
-                }`}
-              >
-                {p.num}
-              </span>
-            </button>
-          )
-        })}
-      </div>
-
-      {/* MINIMAL MOBILE D-PAD (Dedicated bottom corner away from center pagination bar) */}
+      {/* TACTILE LARGER MOBILE D-PAD (Dedicated bottom corner for phone screens) */}
       <div
-        className={`sm:hidden absolute bottom-6 left-4 z-20 flex flex-col items-center gap-1 transition-all duration-300 pointer-events-auto ${
+        className={`sm:hidden absolute bottom-6 left-4 z-20 flex flex-col items-center gap-1.5 transition-all duration-300 pointer-events-auto ${
           isFocused ? 'opacity-0 pointer-events-none scale-90' : 'opacity-100 scale-100'
         }`}
         style={{ touchAction: 'none' }}
@@ -1537,14 +1539,14 @@ export default function DhakaNeonDrift() {
           }}
           onPointerUp={() => virtualKeyRef.current?.('w', false)}
           onPointerLeave={() => virtualKeyRef.current?.('w', false)}
-          className="w-8 h-8 rounded-lg bg-[#121214]/85 border border-white/14 backdrop-blur-md flex items-center justify-center text-neutral-300 active:bg-[#E2652B] active:text-black active:border-[#E2652B] active:scale-90 transition-all select-none shadow-md cursor-pointer"
+          className="w-11 h-11 rounded-xl bg-[#121214]/90 border border-white/16 backdrop-blur-md flex items-center justify-center text-neutral-200 active:bg-[#E2652B] active:text-black active:border-[#E2652B] active:scale-95 transition-all select-none shadow-lg cursor-pointer"
           aria-label="Drive Forward"
         >
-          <ChevronUp className="w-3.5 h-3.5" />
+          <ChevronUp className="w-5 h-5" />
         </button>
 
         {/* LEFT / CENTER / RIGHT */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1.5">
           <button
             type="button"
             onPointerDown={(e) => {
@@ -1553,14 +1555,14 @@ export default function DhakaNeonDrift() {
             }}
             onPointerUp={() => virtualKeyRef.current?.('a', false)}
             onPointerLeave={() => virtualKeyRef.current?.('a', false)}
-            className="w-8 h-8 rounded-lg bg-[#121214]/85 border border-white/14 backdrop-blur-md flex items-center justify-center text-neutral-300 active:bg-[#E2652B] active:text-black active:border-[#E2652B] active:scale-90 transition-all select-none shadow-md cursor-pointer"
+            className="w-11 h-11 rounded-xl bg-[#121214]/90 border border-white/16 backdrop-blur-md flex items-center justify-center text-neutral-200 active:bg-[#E2652B] active:text-black active:border-[#E2652B] active:scale-95 transition-all select-none shadow-lg cursor-pointer"
             aria-label="Steer Left"
           >
-            <ChevronLeft className="w-3.5 h-3.5" />
+            <ChevronLeft className="w-5 h-5" />
           </button>
 
-          <div className="w-4 h-4 rounded-full flex items-center justify-center pointer-events-none">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#E2652B]/60" />
+          <div className="w-5 h-5 rounded-full flex items-center justify-center pointer-events-none">
+            <span className="w-2 h-2 rounded-full bg-[#E2652B] shadow-[0_0_8px_#E2652B]" />
           </div>
 
           <button
@@ -1571,10 +1573,10 @@ export default function DhakaNeonDrift() {
             }}
             onPointerUp={() => virtualKeyRef.current?.('d', false)}
             onPointerLeave={() => virtualKeyRef.current?.('d', false)}
-            className="w-8 h-8 rounded-lg bg-[#121214]/85 border border-white/14 backdrop-blur-md flex items-center justify-center text-neutral-300 active:bg-[#E2652B] active:text-black active:border-[#E2652B] active:scale-90 transition-all select-none shadow-md cursor-pointer"
+            className="w-11 h-11 rounded-xl bg-[#121214]/90 border border-white/16 backdrop-blur-md flex items-center justify-center text-neutral-200 active:bg-[#E2652B] active:text-black active:border-[#E2652B] active:scale-95 transition-all select-none shadow-lg cursor-pointer"
             aria-label="Steer Right"
           >
-            <ChevronRight className="w-3.5 h-3.5" />
+            <ChevronRight className="w-5 h-5" />
           </button>
         </div>
 
@@ -1587,10 +1589,10 @@ export default function DhakaNeonDrift() {
           }}
           onPointerUp={() => virtualKeyRef.current?.('s', false)}
           onPointerLeave={() => virtualKeyRef.current?.('s', false)}
-          className="w-8 h-8 rounded-lg bg-[#121214]/85 border border-white/14 backdrop-blur-md flex items-center justify-center text-neutral-300 active:bg-[#E2652B] active:text-black active:border-[#E2652B] active:scale-90 transition-all select-none shadow-md cursor-pointer"
+          className="w-11 h-11 rounded-xl bg-[#121214]/90 border border-white/16 backdrop-blur-md flex items-center justify-center text-neutral-200 active:bg-[#E2652B] active:text-black active:border-[#E2652B] active:scale-95 transition-all select-none shadow-lg cursor-pointer"
           aria-label="Drive Reverse"
         >
-          <ChevronDown className="w-3.5 h-3.5" />
+          <ChevronDown className="w-5 h-5" />
         </button>
       </div>
     </div>

@@ -173,9 +173,9 @@ export default function About() {
 
       </div>
 
-      {/* 4 Hobby Cards Row: Uniform 4-column row directly beneath the main grid */}
+      {/* 4 Hobby Cards Grid: 2x2 on mobile screens, 4-column row on desktop */}
       <div
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-8 sm:mt-12"
+        className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mt-8 sm:mt-12"
       >
         {passions.map((item, idx) => {
           const Icon = item.icon
@@ -187,16 +187,16 @@ export default function About() {
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: idx * 0.08 }}
               style={cardStyle}
-              className="flex flex-col justify-between p-5 sm:p-7 hover:border-[#E2652B]/40 transition-colors min-h-[170px]"
+              className="flex flex-col justify-between p-4 sm:p-7 hover:border-[#E2652B]/40 transition-colors min-h-[140px] sm:min-h-[170px]"
             >
               <div>
-                <div className="p-3 rounded-xl bg-white/[0.04] border border-white/8 text-[#E2652B] w-fit mb-5">
-                  <Icon className="w-5 h-5 text-[#E2652B]" />
+                <div className="p-2.5 sm:p-3 rounded-xl bg-white/[0.04] border border-white/8 text-[#E2652B] w-fit mb-3 sm:mb-5">
+                  <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-[#E2652B]" />
                 </div>
-                <h4 className="text-[15px] font-sans font-semibold text-white mb-2 tracking-tight">
+                <h4 className="text-sm sm:text-[15px] font-sans font-semibold text-white mb-1.5 sm:mb-2 tracking-tight">
                   {item.title}
                 </h4>
-                <p className="text-xs sm:text-[13px] font-sans text-[#D4D4D8] leading-relaxed">
+                <p className="text-[11px] sm:text-[13px] font-sans text-[#D4D4D8] leading-relaxed">
                   {item.desc}
                 </p>
               </div>
