@@ -36,7 +36,7 @@ export default function About() {
   return (
     <section
       id="about"
-      className="w-full max-w-[1200px] mx-auto relative flex flex-col justify-center px-4 sm:px-8 py-20 sm:py-32"
+      className="w-full max-w-[1200px] mx-auto relative flex flex-col justify-center px-4 sm:px-8 py-20 sm:py-32 lg:py-36 scroll-mt-24"
     >
       {/* Section Heading */}
       <div className="mb-10 sm:mb-14 space-y-2">
