@@ -125,7 +125,7 @@ export default function About() {
         audioRef.current = new Audio(discoverySoundUrl)
       }
       const audio = audioRef.current
-      audio.volume = 0.6
+      audio.volume = 0.25
       audio.currentTime = 0
       audio.play().catch(() => {})
     } catch {
@@ -181,18 +181,18 @@ export default function About() {
       id="about"
       style={{
         minHeight: '100vh',
-        padding: '120px 24px 160px 24px',
+        padding: '28px 24px 120px 24px',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         boxSizing: 'border-box',
         position: 'relative',
-        scrollMarginTop: '110px',
+        scrollMarginTop: '96px',
       }}
-      className="w-full max-w-[1200px] mx-auto relative select-none scroll-mt-[110px]"
+      className="w-full max-w-[1200px] mx-auto relative select-none scroll-mt-[96px]"
     >
       {/* Section Heading: Player Details & The Honest Journey */}
-      <div className="pt-2 sm:pt-4 mb-12 sm:mb-16 space-y-3">
+      <div className="pt-1 sm:pt-2 mb-10 sm:mb-14 space-y-2.5">
         <div className="flex items-center gap-2 text-xs tracking-widest text-[#E2652B] font-mono uppercase">
           <Compass className="w-3.5 h-3.5 text-[#E2652B]" />
           <span>03 · PLAYER DETAILS</span>
@@ -399,12 +399,18 @@ export default function About() {
           {/* Side-Stack Interactive Area: Grid on Left, Discovered Cards Accumulating on Right */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mt-4">
             
-            {/* Left Side: 21-Cell Contribution Grid */}
+            {/* Left Side: 21-Cell Contribution Grid Scaled Down to 44px x 44px with gap: 10px */}
             <div className="lg:col-span-7 flex flex-col items-center w-full">
               <div
                 role="grid"
                 aria-label="Passion discovery contribution grid"
-                className="grid grid-cols-7 gap-2 sm:gap-3.5 w-full max-w-[520px] mx-auto p-3 sm:p-5 rounded-2xl bg-[#070709] border border-white/5"
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(7, minmax(0, 44px))',
+                  gap: '10px',
+                  justifyContent: 'center',
+                }}
+                className="w-full max-w-[420px] mx-auto p-3 sm:p-4 rounded-2xl bg-[#070709] border border-white/5"
               >
                 {GRID_CELL_STYLES.map((cellStyle, idx) => {
                   const isFlipped = flippedCells.includes(idx)
@@ -414,8 +420,12 @@ export default function About() {
                   return (
                     <div
                       key={idx}
-                      style={{ perspective: '1000px' }}
-                      className="w-full aspect-square max-w-[80px] mx-auto relative"
+                      style={{
+                        width: '44px',
+                        height: '44px',
+                        perspective: '1000px',
+                      }}
+                      className="aspect-square relative mx-auto"
                     >
                       <button
                         ref={(el) => {
@@ -513,7 +523,7 @@ export default function About() {
               </div>
             </div>
 
-            {/* Right Side: Dedicated Clean Side-Stack Panel for Discovered Items */}
+            {/* Right Side: Streamlined Discovered Cards (Strictly 2 Text Elements, Zero Blinking Dots) */}
             <div className="lg:col-span-5 flex flex-col w-full">
               <div className="flex items-center justify-between text-xs font-mono tracking-wider text-[#71717A] pb-3 mb-3.5 border-b border-white/[0.08]">
                 <span className="text-[#F3F4F6]/90 font-medium">DISCOVERED PASSIONS</span>
@@ -528,28 +538,35 @@ export default function About() {
                   </div>
                 ) : (
                   <AnimatePresence mode="popLayout">
-                    {discoveredHobbies.map((hobby, index) => (
+                    {discoveredHobbies.map((hobby) => (
                       <motion.div
                         key={hobby.id}
                         initial={{ opacity: 0, x: 24, y: 8 }}
                         animate={{ opacity: 1, x: 0, y: 0 }}
                         exit={{ opacity: 0, x: -20, scale: 0.95 }}
                         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                        className="p-4 sm:p-5 rounded-2xl bg-[#141418] border border-white/[0.08] hover:border-[#E2652B]/40 transition-all shadow-md text-left"
+                        style={{ padding: '20px 24px' }}
+                        className="rounded-2xl bg-[#141418] border border-white/[0.08] hover:border-[#E2652B]/40 transition-all shadow-md text-left"
                       >
-                        <div className="flex items-center justify-between mb-1.5">
-                          <span className="text-[11px] font-mono font-medium text-[#E2652B] tracking-wider uppercase flex items-center gap-1.5">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#E2652B] animate-pulse" />
-                            {hobby.tag}
-                          </span>
-                          <span className="text-[10px] font-mono text-[#71717A]">
-                            #{index + 1}
-                          </span>
-                        </div>
-                        <h4 className="text-base sm:text-lg font-sans font-bold text-[#F3F4F6] tracking-tight">
+                        <h4
+                          style={{
+                            fontSize: '17px',
+                            fontWeight: 600,
+                            color: '#FFFFFF',
+                            marginBottom: '6px',
+                          }}
+                          className="font-sans tracking-tight"
+                        >
                           {hobby.title}
                         </h4>
-                        <p className="text-xs sm:text-sm text-[#D4D4D8] leading-relaxed mt-1 font-sans">
+                        <p
+                          style={{
+                            fontSize: '13px',
+                            lineHeight: 1.5,
+                            color: '#9CA3AF',
+                          }}
+                          className="font-sans"
+                        >
                           {hobby.desc}
                         </p>
                       </motion.div>

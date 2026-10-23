@@ -117,7 +117,7 @@ function MatrixCell({ item, audioCtxRef }: MatrixCellProps) {
         pageTurnAudioRef.current = new Audio(pageTurnSoundUrl)
       }
       const audio = pageTurnAudioRef.current.cloneNode(true) as HTMLAudioElement
-      audio.volume = 0.55
+      audio.volume = 0.2
       audio.play().catch(() => {})
     } catch {
       // Audio fallback
