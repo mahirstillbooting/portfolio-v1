@@ -14,27 +14,27 @@ export interface Hobby {
 export const HOBBIES: Hobby[] = [
   {
     id: 'keyboards',
-    title: 'Mechanical Keyboards',
+    title: 'Mechanical Keyboard',
     desc: 'Custom switches, satisfying sound signatures, and tactile feedback.',
-    tag: 'Hardware & Tactile',
+    tag: 'Mechanical Keyboard',
   },
   {
     id: 'perfume',
-    title: 'Perfume Notes',
+    title: 'Perfumes',
     desc: 'Niche accords, olfactory pyramids, and fragrance chemistry.',
-    tag: 'Fragrance Chemistry',
+    tag: 'Perfumes',
   },
   {
     id: 'gaming',
-    title: 'Retro PC Gaming',
-    desc: 'Metal Slug, GTA San Andreas, retro PC gaming, and Rockstar worlds.',
-    tag: 'Formative Roots',
+    title: 'Gaming',
+    desc: 'Retro PC gaming, arcade classics, and games from Rockstar.',
+    tag: 'Gaming',
   },
   {
-    id: 'ai',
-    title: 'AI Engineering',
+    id: 'prompting',
+    title: 'Prompting',
     desc: 'Creative AI workflows using tools such as Antigravity, Claude, and Figma.',
-    tag: 'Prompt Workflows',
+    tag: 'Prompting',
   },
 ]
 
@@ -191,11 +191,11 @@ export default function About() {
       }}
       className="w-full max-w-[1200px] mx-auto relative select-none scroll-mt-[110px]"
     >
-      {/* Section Heading */}
-      <div className="mb-10 sm:mb-14 space-y-2">
-        <div className="flex items-center gap-2 text-[11px] tracking-widest text-[#E2652B] font-mono uppercase">
+      {/* Section Heading: Player Details & The Honest Journey */}
+      <div className="pt-2 sm:pt-4 mb-12 sm:mb-16 space-y-3">
+        <div className="flex items-center gap-2 text-xs tracking-widest text-[#E2652B] font-mono uppercase">
           <Compass className="w-3.5 h-3.5 text-[#E2652B]" />
-          <span>03 · ABOUT &amp; MINDSET</span>
+          <span>03 · PLAYER DETAILS</span>
         </div>
         <h2 className="text-3xl sm:text-5xl font-sans font-bold text-[#F3F4F6] tracking-tight">
           The Honest Journey
@@ -225,9 +225,9 @@ export default function About() {
           }}
           className="lg:col-span-7 flex flex-col p-6 sm:p-8 lg:p-[40px] hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl"
         >
-          {/* Header Divider */}
+          {/* Header Divider: DETAILS */}
           <div className="flex items-center justify-between text-xs font-mono text-[#71717A] tracking-wider pb-4 mb-6 border-b border-white/[0.08]">
-            <span className="text-[#F3F4F6]/90 font-medium">SYSTEM PROFILE · IDENTITY</span>
+            <span className="text-[#F3F4F6]/90 font-medium">DETAILS</span>
             <span className="text-[#E2652B] font-semibold">EAST WEST UNIVERSITY</span>
           </div>
 
@@ -303,11 +303,11 @@ export default function About() {
           {/* Clean Integrated Divider */}
           <div className="border-t border-white/[0.08] my-6" />
 
-          {/* Bottom Section: Integrated Academic Degree & Education Details */}
+          {/* Bottom Section: Integrated Academic Degree & Education Details (Completely cleaned of "4th Year") */}
           <div>
             <div className="flex items-center justify-between text-xs font-mono tracking-wider text-[#71717A] pb-3 mb-4 border-b border-white/[0.08]">
               <span className="text-[#F3F4F6]/90 font-medium">ACADEMIC DEGREE</span>
-              <span className="text-[#E2652B] font-semibold">4TH YEAR</span>
+              <span className="text-[#E2652B] font-semibold">CSE</span>
             </div>
 
             <h3
@@ -319,7 +319,7 @@ export default function About() {
             <p
               style={{ color: '#E2652B', fontSize: '13px', fontFamily: 'monospace', fontWeight: 600, marginBottom: '8px' }}
             >
-              East West University · 4th Year
+              East West University
             </p>
             <p
               style={{ color: '#A1A1AA', fontSize: '14px', lineHeight: '1.6' }}
@@ -345,29 +345,33 @@ export default function About() {
           }}
           className="lg:col-span-12 w-full p-6 sm:p-8 lg:p-[36px] hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl"
         >
-          {/* Card Header Status Row */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-5 mb-5 border-b border-white/[0.08]">
+          {/* Card Header Status Row: Generous Spacing & Balanced Padding */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 mb-7 border-b border-white/[0.08]">
             <div>
-              <div className="flex items-center gap-2 text-[11px] sm:text-xs font-mono tracking-widest text-[#E2652B] uppercase mb-1">
+              <div className="flex items-center gap-2 text-[11px] sm:text-xs font-mono tracking-widest text-[#E2652B] uppercase mb-1.5">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>INTERACTIVE DISCOVERY</span>
               </div>
               <h3
                 style={{ color: '#F3F4F6' }}
-                className="text-xl sm:text-2xl font-sans font-bold tracking-tight"
+                className="text-2xl sm:text-3xl font-sans font-bold tracking-tight"
               >
                 Hidden Passions
               </h3>
               <p
                 style={{ color: '#A1A1AA' }}
-                className="text-xs sm:text-sm mt-1 font-sans"
+                className="text-xs sm:text-sm mt-1.5 font-sans leading-relaxed"
               >
                 Four little things that keep me curious. Find them in the grid.
               </p>
             </div>
 
-            <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
-              <div className="px-3 py-1.5 rounded-full bg-white/[0.04] border border-[#E2652B]/30 text-xs font-mono font-medium text-[#E2652B] flex items-center gap-2">
+            {/* Indicator & Refresh Buttons with Proper 8px 14px Padding */}
+            <div className="flex items-center gap-3 shrink-0">
+              <div
+                style={{ padding: '8px 14px' }}
+                className="rounded-full bg-white/[0.04] border border-[#E2652B]/30 text-xs font-mono font-medium text-[#E2652B] flex items-center gap-2 whitespace-nowrap shadow-sm"
+              >
                 <span
                   className={`w-2 h-2 rounded-full transition-all duration-300 ${
                     allFound
@@ -381,7 +385,8 @@ export default function About() {
               <button
                 type="button"
                 onClick={startFreshHunt}
-                className="flex items-center gap-1.5 text-xs text-[#71717A] hover:text-[#F3F4F6] transition-colors cursor-pointer active:scale-95 px-2.5 py-1.5 rounded-lg hover:bg-white/5 border border-white/8"
+                style={{ padding: '8px 14px' }}
+                className="flex items-center gap-2 text-xs font-mono text-[#A1A1AA] hover:text-[#F3F4F6] transition-colors cursor-pointer active:scale-95 rounded-full hover:bg-white/5 border border-white/10 whitespace-nowrap shadow-sm"
                 aria-label="Start fresh hunt"
                 title="Restart treasure hunt"
               >
@@ -508,7 +513,7 @@ export default function About() {
               </div>
             </div>
 
-            {/* Right Side: Dedicated Smooth Side-Stack Panel for Discovered Items */}
+            {/* Right Side: Dedicated Clean Side-Stack Panel for Discovered Items */}
             <div className="lg:col-span-5 flex flex-col w-full">
               <div className="flex items-center justify-between text-xs font-mono tracking-wider text-[#71717A] pb-3 mb-3.5 border-b border-white/[0.08]">
                 <span className="text-[#F3F4F6]/90 font-medium">DISCOVERED PASSIONS</span>

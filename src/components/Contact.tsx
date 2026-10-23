@@ -64,7 +64,7 @@ export default function Contact() {
 
         <div className="inline-flex items-center gap-2 text-xs tracking-widest text-[#E2652B] font-mono mb-4 uppercase">
           <Mail className="w-3.5 h-3.5 text-[#E2652B]" />
-          <span>05 // TRANSMISSION CHANNEL</span>
+          <span>05 · TRANSMISSION CHANNEL</span>
         </div>
 
         {/* Heading with generous vertical breathing room */}

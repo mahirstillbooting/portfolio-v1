@@ -21,7 +21,8 @@ export default function Navbar() {
   ]
 
   return (
-    <header className="fixed top-3 sm:top-6 left-0 right-0 z-50 flex justify-center px-3 sm:px-6 pointer-events-none">
+    <header className="fixed top-3 sm:top-6 left-0 right-0 z-50 flex flex-col items-center px-3 sm:px-6 pointer-events-none gap-2">
+      {/* Main Navbar Floating Bar */}
       <motion.nav
         initial={{ y: -30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -41,12 +42,12 @@ export default function Navbar() {
           borderRadius: '24px',
           boxSizing: 'border-box',
         }}
-        className="pointer-events-auto transition-all duration-300 shadow-[0_12px_30px_rgba(0,0,0,0.6)] !h-auto md:!h-[68px] py-2.5 md:py-0 px-4 md:pl-[28px] md:pr-[12px] flex-col md:flex-row"
+        className="pointer-events-auto transition-all duration-300 shadow-[0_12px_30px_rgba(0,0,0,0.6)] !h-[56px] md:!h-[68px] px-4 md:pl-[28px] md:pr-[12px]"
       >
-        {/* Left Brand: Mahiruddin Chowdhury sitting comfortably on far left with padding-left: 4px */}
+        {/* Left Brand: Mahiruddin Chowdhury on desktop / MahirChy on mobile */}
         <div
           style={{ paddingLeft: '4px' }}
-          className="flex items-center justify-between w-full md:w-auto md:shrink-0 shrink-0"
+          className="flex items-center shrink-0"
         >
           <a
             href="#hero"
@@ -59,24 +60,9 @@ export default function Navbar() {
             <span className="hidden md:inline">Mahiruddin Chowdhury</span>
             <span className="inline md:hidden">MahirChy</span>
           </a>
-
-          {/* Mobile Right CTA button (visible in top row on mobile only) */}
-          <div className="flex md:hidden items-center shrink-0 ml-auto">
-            <a
-              href="#contact"
-              style={{
-                fontFamily: "'Geist Sans', sans-serif",
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-              }}
-              className="px-3 py-1.5 rounded-lg bg-white/[0.06] hover:bg-white text-white hover:text-black hover:border-white text-xs font-medium tracking-wide inline-flex items-center gap-1.5 whitespace-nowrap active:scale-95 transition-all duration-200 shadow-sm no-underline cursor-pointer"
-            >
-              <span>Let's talk</span>
-              <ArrowUpRight className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
-            </a>
-          </div>
         </div>
 
-        {/* Center: Desktop Navigation Links sitting neatly balanced with gap: 32px */}
+        {/* Center: Desktop Navigation Links (hidden on mobile) */}
         <div
           style={{
             gap: '32px',
@@ -95,11 +81,8 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Right CTA: Pinned to the far right with margin-left: auto and exact desktop specifications */}
-        <div
-          style={{ marginLeft: 'auto' }}
-          className="hidden md:flex items-center shrink-0"
-        >
+        {/* Right CTA: Let's talk ↗ Button */}
+        <div className="flex items-center shrink-0 ml-auto md:ml-auto">
           <a
             href="#contact"
             style={{
@@ -121,33 +104,41 @@ export default function Navbar() {
               boxSizing: 'border-box',
               transition: 'all 0.2s ease',
             }}
-            className="group hover:!bg-white hover:!text-black hover:!border-white active:scale-95 no-underline cursor-pointer shadow-sm"
+            className="group hover:!bg-white hover:!text-black hover:!border-white active:scale-95 no-underline cursor-pointer shadow-sm !py-2 !px-3.5 md:!py-[12px] md:!px-[22px] text-xs md:text-sm"
           >
             <span>Let's talk</span>
             <ArrowUpRight
-              className="w-4 h-4 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              className="w-3.5 h-3.5 md:w-4 md:h-4 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
               strokeWidth={2}
             />
           </a>
         </div>
-
-        {/* Mobile Navigation Links Row */}
-        <div className="flex md:hidden items-center justify-around w-full pt-2 mt-1 border-t border-white/[0.08] text-xs font-mono font-medium text-[#A1A1AA] px-1">
-          {navLinks.map((item, idx) => (
-            <div key={item.label} className="flex items-center gap-2.5">
-              <a
-                href={item.href}
-                className="hover:text-white active:text-[#E2652B] transition-colors py-0.5"
-              >
-                {item.label}
-              </a>
-              {idx < navLinks.length - 1 && (
-                <span className="text-white/20 select-none text-[10px]">·</span>
-              )}
-            </div>
-          ))}
-        </div>
       </motion.nav>
+
+      {/* Mobile Floating Action Chips Tray */}
+      <motion.div
+        initial={{ y: -15, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+        className="flex md:hidden items-center justify-center gap-2 w-full max-w-[380px] pointer-events-auto px-1"
+      >
+        {navLinks.map((item) => (
+          <a
+            key={item.label}
+            href={item.href}
+            style={{
+              background: scrolled ? 'rgba(18, 18, 22, 0.92)' : 'rgba(22, 22, 26, 0.85)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+            }}
+            className="flex-1 py-1.5 px-2.5 rounded-full text-[11px] font-mono font-medium text-[#D4D4D8] hover:text-[#E2652B] hover:border-[#E2652B]/60 active:scale-95 transition-all duration-200 shadow-[0_4px_16px_rgba(0,0,0,0.45)] no-underline flex items-center justify-center gap-1.5 whitespace-nowrap"
+          >
+            <span className="w-1 h-1 rounded-full bg-[#E2652B]" />
+            <span>{item.label}</span>
+          </a>
+        ))}
+      </motion.div>
     </header>
   )
 }
