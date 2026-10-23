@@ -73,17 +73,19 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Right: Full "Let's talk" CTA Button + Mobile Menu */}
-        <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+        {/* Right: Reverted Rectangular Glassmorphic "Let's talk" CTA Button on Desktop + Mobile Menu */}
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <a
             href="#contact"
             style={{
               fontFamily: "'Geist Sans', sans-serif",
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
             }}
-            className="px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-xl bg-white/[0.08] hover:bg-[#E2652B] border border-white/16 hover:border-[#E2652B] text-white hover:text-black text-xs sm:text-[13px] font-medium flex items-center gap-1.5 sm:gap-2 whitespace-nowrap active:scale-95 transition-all shadow-sm no-underline"
+            className="px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-xl bg-white/[0.08] hover:bg-white/[0.15] border border-white/16 hover:border-white/30 text-white text-xs sm:text-[13px] font-medium inline-flex items-center gap-1.5 sm:gap-2 whitespace-nowrap active:scale-95 transition-all duration-200 shadow-sm no-underline cursor-pointer"
           >
             <span className="whitespace-nowrap">Let's talk</span>
-            <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" strokeWidth={1.75} />
+            <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 opacity-80" strokeWidth={1.75} />
           </a>
 
           {/* Mobile hamburger */}

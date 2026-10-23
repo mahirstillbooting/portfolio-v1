@@ -901,7 +901,7 @@ export default function DhakaNeonDrift() {
           const dx = tx - state.x
           const dz = tz - state.z
           if (Math.hypot(dx, dz) > 0.2) {
-            state.heading = Math.atan2(dx, dz)
+            state.heading = Math.atan2(-dx, -dz)
           }
         },
         onComplete: () => {
@@ -1031,17 +1031,49 @@ export default function DhakaNeonDrift() {
     const clock = new THREE.Clock()
     let isVisible = true
 
-    // Pause physics & mute audio when scrolled outside Projects section
+    // Reset car and camera to the center hub
+    const resetCarToHub = () => {
+      gsap.killTweensOf(state)
+      gsap.killTweensOf(camera.position)
+      gsap.killTweensOf(camLookAt)
+
+      state.x = 0
+      state.z = 0
+      state.vx = 0
+      state.vz = 0
+      state.heading = 0
+      state.targetHeading = 0
+      state.isAutoNav = false
+      state.isHeroCinematic = false
+      state.parkedBeaconId = null
+      setIsFocused(false)
+
+      camera.position.set(0, isMobile ? 15 : 13, isMobile ? 22 : 18)
+      camLookAt.set(0, 0.6, 0)
+      camera.lookAt(camLookAt)
+
+      droneGroup.position.set(0, 0, 0)
+      droneGroup.rotation.y = 0
+
+      if (engineSoundRef.current && audioCtxRef.current) {
+        engineSoundRef.current.gain.gain.setTargetAtTime(0.0001, audioCtxRef.current.currentTime, 0.05)
+      }
+    }
+
+    // Pause physics, mute audio, and reset car position when scrolled outside Projects section
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          isVisible = entry.isIntersecting && entry.intersectionRatio > 0.05
-          if (!isVisible && engineSoundRef.current && audioCtxRef.current) {
-            engineSoundRef.current.gain.gain.setTargetAtTime(0.0001, audioCtxRef.current.currentTime, 0.05)
+          const inView = entry.isIntersecting && entry.intersectionRatio > 0.08
+          if (!inView) {
+            isVisible = false
+            resetCarToHub()
+          } else {
+            isVisible = true
           }
         })
       },
-      { threshold: [0, 0.05, 0.2] }
+      { threshold: [0, 0.08, 0.25] }
     )
     observer.observe(container)
 
@@ -1082,7 +1114,8 @@ export default function DhakaNeonDrift() {
         if (ax !== 0 || az !== 0) {
           state.vx += ax
           state.vz += az
-          state.targetHeading = Math.atan2(ax, az)
+          // Orient car so front is at the front (towards movement direction)
+          state.targetHeading = Math.atan2(-ax, -az)
           if (Date.now() > lockUntilRef.current) {
             state.isHeroCinematic = false
             setIsFocused(false)
@@ -1107,10 +1140,12 @@ export default function DhakaNeonDrift() {
         state.x = Math.max(-25, Math.min(25, state.x))
         state.z = Math.max(-25, Math.min(25, state.z))
 
-        // Smooth realistic heading banking
+        // Smooth realistic heading banking with angle wrap-around protection
         if (Math.hypot(state.vx, state.vz) > 0.01) {
-          const diff = state.targetHeading - state.heading
-          state.heading += THREE.MathUtils.clamp(diff, -0.09, 0.09)
+          let diff = (state.targetHeading - state.heading) % (Math.PI * 2)
+          if (diff > Math.PI) diff -= Math.PI * 2
+          if (diff < -Math.PI) diff += Math.PI * 2
+          state.heading += THREE.MathUtils.clamp(diff, -0.12, 0.12)
         }
 
         // In free-flight mode, camera smoothly tracks car
@@ -1405,7 +1440,7 @@ export default function DhakaNeonDrift() {
       </div>
 
       {/* FLOATING BOTTOM DOCK: PAGINATION DOCK (01 - 05) */}
-      <div className="absolute bottom-10 sm:bottom-12 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 sm:gap-5 px-5 py-2.5 rounded-full bg-black/75 border border-[#222222] backdrop-blur-xl">
+      <div className="absolute bottom-32 sm:bottom-12 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2.5 sm:gap-5 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-black/75 border border-[#222222] backdrop-blur-xl">
         {PROJECTS.map((p, idx) => {
           const isSelected = activeProject.id === p.id && isFocused
           return (
@@ -1436,9 +1471,9 @@ export default function DhakaNeonDrift() {
         })}
       </div>
 
-      {/* MINIMAL MOBILE D-PAD (Only visible on mobile, auto-hides when project card is open) */}
+      {/* MINIMAL MOBILE D-PAD (Centered at the bottom on mobile screens) */}
       <div
-        className={`sm:hidden absolute bottom-6 left-4 z-30 flex flex-col items-center gap-1 transition-all duration-300 ${
+        className={`sm:hidden absolute bottom-5 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-1 transition-all duration-300 ${
           isFocused ? 'opacity-0 pointer-events-none scale-90' : 'opacity-100 pointer-events-auto scale-100'
         }`}
         style={{ touchAction: 'none' }}

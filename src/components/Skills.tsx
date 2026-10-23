@@ -11,9 +11,9 @@ export default function Skills() {
       }}
       className="w-full max-w-[1200px] mx-auto relative flex flex-col justify-center px-4 sm:px-8 scroll-mt-24"
     >
-      {/* Section Heading */}
-      <div className="mb-10 sm:mb-14">
-        <div className="flex items-center gap-2 text-[11px] tracking-widest text-[#E2652B] font-mono mb-2 uppercase">
+      {/* Section Heading with generous breathing room above and below */}
+      <div className="pt-2 sm:pt-6 mb-12 sm:mb-16 lg:mb-20">
+        <div className="flex items-center gap-2 text-[11px] tracking-widest text-[#E2652B] font-mono mb-3 sm:mb-4 uppercase">
           <Cpu className="w-3.5 h-3.5 text-[#E2652B]" />
           <span>04 // CAPABILITIES</span>
         </div>
