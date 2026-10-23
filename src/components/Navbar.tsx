@@ -22,41 +22,36 @@ export default function Navbar() {
   ]
 
   return (
-    <header className="fixed top-5 sm:top-6 left-0 right-0 z-50 flex justify-center px-4 sm:px-6 pointer-events-none">
+    <header className="fixed top-4 sm:top-6 left-0 right-0 z-50 flex justify-center px-3 sm:px-6 pointer-events-none">
       <motion.nav
         initial={{ y: -30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         style={{
-          height: '64px',
-          padding: '0 24px 0 32px',
+          height: '60px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           width: '100%',
           maxWidth: '1080px',
-          background: scrolled ? 'rgba(16, 16, 18, 0.88)' : 'rgba(20, 20, 22, 0.75)',
+          background: scrolled ? 'rgba(16, 16, 18, 0.92)' : 'rgba(20, 20, 22, 0.8)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
           border: '1px solid rgba(255, 255, 255, 0.12)',
           borderRadius: '24px',
           boxSizing: 'border-box',
         }}
-        className="pointer-events-auto transition-all duration-300 shadow-[0_12px_30px_rgba(0,0,0,0.6)]"
+        className="pointer-events-auto transition-all duration-300 shadow-[0_12px_30px_rgba(0,0,0,0.6)] px-3.5 sm:px-7"
       >
-        {/* Left: Brand name container with strict 8px left breathing room */}
-        <div
-          style={{ paddingLeft: '8px', flexShrink: 0 }}
-          className="flex items-center"
-        >
+        {/* Left: Brand name */}
+        <div className="flex items-center shrink-0 pl-1 sm:pl-2">
           <a
             href="#hero"
             style={{
               fontFamily: "'Instrument Serif', Georgia, serif",
-              fontSize: 'clamp(20px, 2.3vw, 24px)',
               lineHeight: 1,
             }}
-            className="text-white tracking-tight select-none hover:text-[#E2652B] transition-colors no-underline font-normal whitespace-nowrap"
+            className="text-lg sm:text-2xl text-white tracking-tight select-none hover:text-[#E2652B] transition-colors no-underline font-normal whitespace-nowrap"
           >
             Mahiruddin Chowdhury
           </a>
@@ -78,37 +73,23 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Right: Full "Let's talk" CTA Button with strict non-wrapping styles + Mobile Menu */}
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        {/* Right: Full "Let's talk" CTA Button + Mobile Menu */}
+        <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
           <a
             href="#contact"
             style={{
-              whiteSpace: 'nowrap',
-              flexShrink: 0,
-              padding: '10px 20px',
-              borderRadius: '12px',
-              background: 'rgba(255, 255, 255, 0.08)',
-              border: '1px solid rgba(255, 255, 255, 0.16)',
-              color: '#FFFFFF',
               fontFamily: "'Geist Sans', sans-serif",
-              fontSize: '13px',
-              fontWeight: 500,
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
             }}
-            className="hover:bg-[#E2652B] hover:border-[#E2652B] hover:text-black active:scale-95 no-underline shadow-sm"
+            className="px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-xl bg-white/[0.08] hover:bg-[#E2652B] border border-white/16 hover:border-[#E2652B] text-white hover:text-black text-xs sm:text-[13px] font-medium flex items-center gap-1.5 sm:gap-2 whitespace-nowrap active:scale-95 transition-all shadow-sm no-underline"
           >
             <span className="whitespace-nowrap">Let's talk</span>
-            <ArrowUpRight className="w-4 h-4 shrink-0" strokeWidth={1.75} />
+            <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" strokeWidth={1.75} />
           </a>
 
           {/* Mobile hamburger */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-2 text-[#9CA3AF] hover:text-white rounded-lg transition-colors cursor-pointer"
+            className="md:hidden p-1.5 sm:p-2 text-[#9CA3AF] hover:text-white rounded-lg transition-colors cursor-pointer"
             aria-label="Toggle navigation menu"
           >
             {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -124,7 +105,7 @@ export default function Navbar() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="pointer-events-auto absolute top-20 left-4 right-4 bg-[#121214]/95 border border-white/10 rounded-2xl p-5 shadow-2xl backdrop-blur-2xl flex flex-col gap-2 font-sans text-sm md:hidden"
+            className="pointer-events-auto absolute top-18 left-3 right-3 bg-[#121214]/95 border border-white/10 rounded-2xl p-4 shadow-2xl backdrop-blur-2xl flex flex-col gap-2 font-sans text-sm md:hidden"
           >
             {navLinks.map((item) => (
               <a

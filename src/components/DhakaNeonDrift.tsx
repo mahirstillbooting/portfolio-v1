@@ -4,6 +4,7 @@ import gsap from 'gsap'
 import { ArrowUpRight, X, ChevronUp, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react'
 import { GithubIcon } from './Icons'
 import { getAudioEnabled } from '../utils/audioState'
+import engineStartSoundUrl from '../assets/mixkit-car-engine-start-1566.wav'
 
 export interface ProjectItem {
   id: string
@@ -88,6 +89,28 @@ export default function DhakaNeonDrift() {
   const jumpToProjectRef = useRef<((idx: number) => void) | null>(null)
   const virtualKeyRef = useRef<((key: 'w' | 'a' | 's' | 'd', isPressed: boolean) => void) | null>(null)
   const lockUntilRef = useRef<number>(0)
+  const engineStartAudioRef = useRef<HTMLAudioElement | null>(null)
+  const hasEngineStartedRef = useRef(false)
+
+  // Play mixkit car engine start sound when the car is ignited / driven for the first time
+  const triggerEngineStartSound = useCallback(() => {
+    if (hasEngineStartedRef.current) return
+    hasEngineStartedRef.current = true
+
+    if (!getAudioEnabled()) return
+
+    try {
+      if (!engineStartAudioRef.current) {
+        engineStartAudioRef.current = new Audio(engineStartSoundUrl)
+      }
+      const audio = engineStartAudioRef.current
+      audio.volume = 0.75
+      audio.currentTime = 0
+      audio.play().catch(() => {})
+    } catch {
+      // Audio fallback
+    }
+  }, [])
 
   // Ensure AudioContext is ready on user gesture
   const ensureAudioContext = useCallback(() => {
@@ -792,6 +815,7 @@ export default function DhakaNeonDrift() {
 
     // 8. Instant GSAP Transition to Project Node
     const jumpToProject = (idx: number) => {
+      triggerEngineStartSound()
       const p = PROJECTS[idx]
       if (!p) return
 
@@ -843,6 +867,7 @@ export default function DhakaNeonDrift() {
 
     // Drive drone smoothly to coordinate on ground click/tap
     const driveToCoord = (tx: number, tz: number, targetProject?: ProjectItem) => {
+      triggerEngineStartSound()
       showClickReticle(tx, tz)
 
       if (targetProject) {
@@ -888,6 +913,7 @@ export default function DhakaNeonDrift() {
     virtualKeyRef.current = (key: 'w' | 'a' | 's' | 'd', isPressed: boolean) => {
       keys[key] = isPressed
       if (isPressed) {
+        triggerEngineStartSound()
         state.isAutoNav = false
         if (Date.now() > lockUntilRef.current) {
           state.isHeroCinematic = false
@@ -917,6 +943,7 @@ export default function DhakaNeonDrift() {
 
       const lk = key.toLowerCase()
       if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(lk)) {
+        triggerEngineStartSound()
         keys[lk] = true
         state.isAutoNav = false
         // Only break cinematic lock if grace period has passed
@@ -1242,8 +1269,14 @@ export default function DhakaNeonDrift() {
         }
         engineSoundRef.current = null
       }
+
+      if (engineStartAudioRef.current) {
+        try {
+          engineStartAudioRef.current.pause()
+        } catch {}
+      }
     }
-  }, [playLockSound, selectProject, updateEngineAudio])
+  }, [playLockSound, selectProject, updateEngineAudio, triggerEngineStartSound])
 
   return (
     <div

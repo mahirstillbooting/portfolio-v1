@@ -5,7 +5,11 @@ export default function Skills() {
   return (
     <section
       id="skills"
-      className="w-full max-w-[1200px] mx-auto relative flex flex-col justify-center px-4 sm:px-8 py-20 sm:py-32 lg:py-36 scroll-mt-24"
+      style={{
+        paddingTop: 'clamp(90px, 14vw, 160px)',
+        paddingBottom: 'clamp(90px, 14vw, 160px)',
+      }}
+      className="w-full max-w-[1200px] mx-auto relative flex flex-col justify-center px-4 sm:px-8 scroll-mt-24"
     >
       {/* Section Heading */}
       <div className="mb-10 sm:mb-14">
