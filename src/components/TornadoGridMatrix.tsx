@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useCallback } from 'react'
 import { getAudioEnabled } from '../utils/audioState'
+import pageTurnSoundUrl from '../assets/mixkit-page-turn-single-1104.wav'
 
 export interface TechItem {
   id: string
@@ -96,8 +97,10 @@ function MatrixCell({ item, audioCtxRef }: MatrixCellProps) {
   const cellSize = size / grid
   const center = size / 2
 
-  // Web Audio Sine Frequency Sweep
-  const playSweepSound = useCallback((isEntering: boolean) => {
+  // Play real page turn sound effect on card interaction
+  const pageTurnAudioRef = useRef<HTMLAudioElement | null>(null)
+
+  const playCardSound = useCallback(() => {
     if (!getAudioEnabled()) return
     try {
       if (!audioCtxRef.current) {
@@ -106,31 +109,16 @@ function MatrixCell({ item, audioCtxRef }: MatrixCellProps) {
           (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
         )()
       }
-      const ctx = audioCtxRef.current
-      if (ctx.state === 'suspended') ctx.resume()
-      const now = ctx.currentTime
-
-      const osc = ctx.createOscillator()
-      const gain = ctx.createGain()
-      osc.type = 'sine'
-
-      if (isEntering) {
-        osc.frequency.setValueAtTime(320, now)
-        osc.frequency.exponentialRampToValueAtTime(840, now + 0.18)
-        osc.frequency.exponentialRampToValueAtTime(280, now + 0.42)
-        gain.gain.setValueAtTime(0.08, now)
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45)
-      } else {
-        osc.frequency.setValueAtTime(620, now)
-        osc.frequency.exponentialRampToValueAtTime(240, now + 0.3)
-        gain.gain.setValueAtTime(0.06, now)
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.32)
+      if (audioCtxRef.current.state === 'suspended') {
+        audioCtxRef.current.resume().catch(() => {})
       }
 
-      osc.connect(gain)
-      gain.connect(ctx.destination)
-      osc.start(now)
-      osc.stop(now + 0.46)
+      if (!pageTurnAudioRef.current) {
+        pageTurnAudioRef.current = new Audio(pageTurnSoundUrl)
+      }
+      const audio = pageTurnAudioRef.current.cloneNode(true) as HTMLAudioElement
+      audio.volume = 0.55
+      audio.play().catch(() => {})
     } catch {
       // Audio fallback
     }
@@ -382,7 +370,7 @@ function MatrixCell({ item, audioCtxRef }: MatrixCellProps) {
 
   const handleMouseEnter = () => {
     isHoveredRef.current = true
-    playSweepSound(true)
+    playCardSound()
     const a = animRef.current
     a.active = true
     a.startTime = performance.now()
@@ -392,7 +380,6 @@ function MatrixCell({ item, audioCtxRef }: MatrixCellProps) {
 
   const handleMouseLeave = () => {
     isHoveredRef.current = false
-    playSweepSound(false)
     const a = animRef.current
     a.active = true
     a.startTime = performance.now()
