@@ -970,22 +970,63 @@ export default function DhakaNeonDrift() {
     window.addEventListener('keydown', handleKeyDown)
     window.addEventListener('keyup', handleKeyUp)
 
-    // 10. Pointer Raycasting (Ground Click / Beacon Click)
+    // 10. Pointer Raycasting (Ground Click / Beacon Click & Native Touch Drag)
     const raycaster = new THREE.Raycaster()
     const mouse = new THREE.Vector2()
     const groundPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0)
 
     let pointerDownPos = { x: 0, y: 0 }
+    let isPointerDown = false
+    let isDraggingTouch = false
 
     const handlePointerDown = (e: PointerEvent) => {
       ensureAudioContext()
+      isPointerDown = true
+      isDraggingTouch = false
       pointerDownPos = { x: e.clientX, y: e.clientY }
     }
 
-    const handlePointerUp = (e: PointerEvent) => {
+    const handlePointerMove = (e: PointerEvent) => {
+      if (!isPointerDown) return
       const dist = Math.hypot(e.clientX - pointerDownPos.x, e.clientY - pointerDownPos.y)
-      // Ignore if user was scrolling/swiping on mobile or dragging
-      if (dist > 8) return
+      // If moved more than 10px, treat as touch drag / steer
+      if (dist > 10) {
+        isDraggingTouch = true
+        const rect = canvas.getBoundingClientRect()
+        mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1
+        mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1
+
+        raycaster.setFromCamera(mouse, camera)
+        const intersectPoint = new THREE.Vector3()
+        if (raycaster.ray.intersectPlane(groundPlane, intersectPoint)) {
+          triggerEngineStartSound()
+          state.isAutoNav = false
+          if (Date.now() > lockUntilRef.current) {
+            state.isHeroCinematic = false
+            setIsFocused(false)
+          }
+
+          const dx = intersectPoint.x - state.x
+          const dz = intersectPoint.z - state.z
+          const len = Math.hypot(dx, dz)
+          if (len > 0.3) {
+            const dragSpeed = 0.16
+            state.vx = (dx / len) * dragSpeed
+            state.vz = (dz / len) * dragSpeed
+            state.targetHeading = Math.atan2(-dx, -dz)
+          }
+        }
+      }
+    }
+
+    const handlePointerUp = (e: PointerEvent) => {
+      const wasDragging = isDraggingTouch
+      isPointerDown = false
+      isDraggingTouch = false
+
+      const dist = Math.hypot(e.clientX - pointerDownPos.x, e.clientY - pointerDownPos.y)
+      // Ignore click if user was dragging or swiping
+      if (wasDragging || dist > 8) return
 
       const rect = canvas.getBoundingClientRect()
       mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1
@@ -1023,8 +1064,15 @@ export default function DhakaNeonDrift() {
       }
     }
 
+    const handlePointerCancel = () => {
+      isPointerDown = false
+      isDraggingTouch = false
+    }
+
     canvas.addEventListener('pointerdown', handlePointerDown)
+    canvas.addEventListener('pointermove', handlePointerMove)
     canvas.addEventListener('pointerup', handlePointerUp)
+    canvas.addEventListener('pointercancel', handlePointerCancel)
 
     // 11. Main Animation Loop
     let animId: number
@@ -1302,7 +1350,9 @@ export default function DhakaNeonDrift() {
       window.removeEventListener('keyup', handleKeyUp)
       window.removeEventListener('resize', handleResize)
       canvas.removeEventListener('pointerdown', handlePointerDown)
+      canvas.removeEventListener('pointermove', handlePointerMove)
       canvas.removeEventListener('pointerup', handlePointerUp)
+      canvas.removeEventListener('pointercancel', handlePointerCancel)
       renderer.dispose()
 
       if (engineSoundRef.current) {
@@ -1368,7 +1418,7 @@ export default function DhakaNeonDrift() {
           transform: isFocused ? 'translateY(0) scale(1)' : 'translateY(16px) scale(0.97)',
           pointerEvents: isFocused ? 'auto' : 'none',
         }}
-        className="absolute top-1/2 -translate-y-1/2 left-3 sm:left-10 lg:left-14 w-[calc(100%-24px)] sm:w-auto max-w-xl z-20 select-text"
+        className="absolute top-1/2 -translate-y-1/2 left-3 sm:left-10 lg:left-14 w-[calc(100%-24px)] sm:w-auto max-w-xl z-40 select-text"
       >
         <div
           style={{
@@ -1440,7 +1490,7 @@ export default function DhakaNeonDrift() {
       </div>
 
       {/* FLOATING BOTTOM DOCK: PAGINATION DOCK (01 - 05) */}
-      <div className="absolute bottom-32 sm:bottom-12 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2.5 sm:gap-5 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-black/75 border border-[#222222] backdrop-blur-xl">
+      <div className="absolute bottom-3 sm:bottom-12 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 sm:gap-4 px-3 sm:px-5 py-2 sm:py-2.5 rounded-full bg-black/80 border border-[#222222] backdrop-blur-xl shadow-2xl pointer-events-auto">
         {PROJECTS.map((p, idx) => {
           const isSelected = activeProject.id === p.id && isFocused
           return (
@@ -1449,18 +1499,18 @@ export default function DhakaNeonDrift() {
               onClick={() => {
                 if (jumpToProjectRef.current) jumpToProjectRef.current(idx)
               }}
-              className="group flex items-center gap-2 cursor-pointer transition-all active:scale-90"
+              className="group flex items-center gap-1.5 sm:gap-2 cursor-pointer transition-all active:scale-90 px-1 py-0.5"
               aria-label={`Select ${p.num}: ${p.title}`}
             >
               <span
                 className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
                   isSelected
                     ? 'bg-[#D2531D] scale-125 shadow-[0_0_8px_#D2531D]'
-                    : 'bg-[#333333] group-hover:bg-neutral-400'
+                    : 'bg-[#444444] group-hover:bg-neutral-300'
                 }`}
               />
               <span
-                className={`text-xs font-mono font-medium transition-colors ${
+                className={`text-[11px] sm:text-xs font-mono font-medium transition-colors ${
                   isSelected ? 'text-white' : 'text-neutral-500 group-hover:text-neutral-300'
                 }`}
               >
@@ -1471,10 +1521,10 @@ export default function DhakaNeonDrift() {
         })}
       </div>
 
-      {/* MINIMAL MOBILE D-PAD (Centered at the bottom on mobile screens) */}
+      {/* MINIMAL MOBILE D-PAD (Dedicated bottom corner away from center pagination bar) */}
       <div
-        className={`sm:hidden absolute bottom-5 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-1 transition-all duration-300 ${
-          isFocused ? 'opacity-0 pointer-events-none scale-90' : 'opacity-100 pointer-events-auto scale-100'
+        className={`sm:hidden absolute bottom-6 left-4 z-20 flex flex-col items-center gap-1 transition-all duration-300 pointer-events-auto ${
+          isFocused ? 'opacity-0 pointer-events-none scale-90' : 'opacity-100 scale-100'
         }`}
         style={{ touchAction: 'none' }}
       >
@@ -1487,10 +1537,10 @@ export default function DhakaNeonDrift() {
           }}
           onPointerUp={() => virtualKeyRef.current?.('w', false)}
           onPointerLeave={() => virtualKeyRef.current?.('w', false)}
-          className="w-9 h-9 rounded-xl bg-[#121214]/80 border border-white/14 backdrop-blur-md flex items-center justify-center text-neutral-300 active:bg-[#E2652B] active:text-black active:border-[#E2652B] active:scale-90 transition-all select-none shadow-md"
+          className="w-8 h-8 rounded-lg bg-[#121214]/85 border border-white/14 backdrop-blur-md flex items-center justify-center text-neutral-300 active:bg-[#E2652B] active:text-black active:border-[#E2652B] active:scale-90 transition-all select-none shadow-md cursor-pointer"
           aria-label="Drive Forward"
         >
-          <ChevronUp className="w-4 h-4" />
+          <ChevronUp className="w-3.5 h-3.5" />
         </button>
 
         {/* LEFT / CENTER / RIGHT */}
@@ -1503,13 +1553,13 @@ export default function DhakaNeonDrift() {
             }}
             onPointerUp={() => virtualKeyRef.current?.('a', false)}
             onPointerLeave={() => virtualKeyRef.current?.('a', false)}
-            className="w-9 h-9 rounded-xl bg-[#121214]/80 border border-white/14 backdrop-blur-md flex items-center justify-center text-neutral-300 active:bg-[#E2652B] active:text-black active:border-[#E2652B] active:scale-90 transition-all select-none shadow-md"
+            className="w-8 h-8 rounded-lg bg-[#121214]/85 border border-white/14 backdrop-blur-md flex items-center justify-center text-neutral-300 active:bg-[#E2652B] active:text-black active:border-[#E2652B] active:scale-90 transition-all select-none shadow-md cursor-pointer"
             aria-label="Steer Left"
           >
-            <ChevronLeft className="w-4 h-4" />
+            <ChevronLeft className="w-3.5 h-3.5" />
           </button>
 
-          <div className="w-5 h-5 rounded-full flex items-center justify-center pointer-events-none">
+          <div className="w-4 h-4 rounded-full flex items-center justify-center pointer-events-none">
             <span className="w-1.5 h-1.5 rounded-full bg-[#E2652B]/60" />
           </div>
 
@@ -1521,10 +1571,10 @@ export default function DhakaNeonDrift() {
             }}
             onPointerUp={() => virtualKeyRef.current?.('d', false)}
             onPointerLeave={() => virtualKeyRef.current?.('d', false)}
-            className="w-9 h-9 rounded-xl bg-[#121214]/80 border border-white/14 backdrop-blur-md flex items-center justify-center text-neutral-300 active:bg-[#E2652B] active:text-black active:border-[#E2652B] active:scale-90 transition-all select-none shadow-md"
+            className="w-8 h-8 rounded-lg bg-[#121214]/85 border border-white/14 backdrop-blur-md flex items-center justify-center text-neutral-300 active:bg-[#E2652B] active:text-black active:border-[#E2652B] active:scale-90 transition-all select-none shadow-md cursor-pointer"
             aria-label="Steer Right"
           >
-            <ChevronRight className="w-4 h-4" />
+            <ChevronRight className="w-3.5 h-3.5" />
           </button>
         </div>
 
@@ -1537,10 +1587,10 @@ export default function DhakaNeonDrift() {
           }}
           onPointerUp={() => virtualKeyRef.current?.('s', false)}
           onPointerLeave={() => virtualKeyRef.current?.('s', false)}
-          className="w-9 h-9 rounded-xl bg-[#121214]/80 border border-white/14 backdrop-blur-md flex items-center justify-center text-neutral-300 active:bg-[#E2652B] active:text-black active:border-[#E2652B] active:scale-90 transition-all select-none shadow-md"
+          className="w-8 h-8 rounded-lg bg-[#121214]/85 border border-white/14 backdrop-blur-md flex items-center justify-center text-neutral-300 active:bg-[#E2652B] active:text-black active:border-[#E2652B] active:scale-90 transition-all select-none shadow-md cursor-pointer"
           aria-label="Drive Reverse"
         >
-          <ChevronDown className="w-4 h-4" />
+          <ChevronDown className="w-3.5 h-3.5" />
         </button>
       </div>
     </div>
