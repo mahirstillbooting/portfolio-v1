@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { RotateCcw, X, Sparkles, Award, MapPin, Compass } from 'lucide-react'
+import { RotateCcw, Sparkles, Award, MapPin, Compass } from 'lucide-react'
 import { getAudioEnabled } from '../utils/audioState'
 import discoverySoundUrl from '../assets/mixkit-quick-win-video-game-notification-269.wav'
 
@@ -8,6 +8,7 @@ export interface Hobby {
   id: string
   title: string
   desc: string
+  tag: string
 }
 
 export const HOBBIES: Hobby[] = [
@@ -15,25 +16,29 @@ export const HOBBIES: Hobby[] = [
     id: 'keyboards',
     title: 'Mechanical Keyboards',
     desc: 'Custom switches, satisfying sound signatures, and tactile feedback.',
+    tag: 'Hardware & Tactile',
   },
   {
     id: 'perfume',
     title: 'Perfume Notes',
     desc: 'Niche accords, olfactory pyramids, and fragrance chemistry.',
+    tag: 'Fragrance Chemistry',
   },
   {
     id: 'gaming',
     title: 'Retro PC Gaming',
     desc: 'Metal Slug, GTA San Andreas, retro PC gaming, and Rockstar worlds.',
+    tag: 'Formative Roots',
   },
   {
     id: 'ai',
     title: 'AI Engineering',
     desc: 'Creative AI workflows using tools such as Antigravity, Claude, and Figma.',
+    tag: 'Prompt Workflows',
   },
 ]
 
-// 21-cell contribution matrix layout (7 columns x 3 rows) matching the reference design
+// 21-cell contribution matrix layout (7 columns x 3 rows)
 interface CellConfig {
   id: number
   colorClass: string
@@ -74,9 +79,9 @@ const GRID_CELL_STYLES: Omit<CellConfig, 'id'>[] = [
 export default function About() {
   const [winningCellMap, setWinningCellMap] = useState<Record<number, Hobby>>({})
   const [discoveredCells, setDiscoveredCells] = useState<number[]>([])
+  const [discoveredHobbies, setDiscoveredHobbies] = useState<Hobby[]>([])
   const [flippedCells, setFlippedCells] = useState<number[]>([])
   const [checkedInactiveCells, setCheckedInactiveCells] = useState<number[]>([])
-  const [activeModalHobby, setActiveModalHobby] = useState<Hobby | null>(null)
   const [animatingCellId, setAnimatingCellId] = useState<number | null>(null)
   const [feedbackNotice, setFeedbackNotice] = useState<string>('')
 
@@ -102,9 +107,9 @@ export default function About() {
 
     setWinningCellMap(map)
     setDiscoveredCells([])
+    setDiscoveredHobbies([])
     setFlippedCells([])
     setCheckedInactiveCells([])
-    setActiveModalHobby(null)
     setAnimatingCellId(null)
     setFeedbackNotice('')
   }, [])
@@ -112,27 +117,6 @@ export default function About() {
   useEffect(() => {
     startFreshHunt()
   }, [startFreshHunt])
-
-  useEffect(() => {
-    if (activeModalHobby) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
-    }
-    return () => {
-      document.body.style.overflow = ''
-    }
-  }, [activeModalHobby])
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && activeModalHobby) {
-        closeModal()
-      }
-    }
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [activeModalHobby])
 
   const playDiscoverySound = () => {
     if (!getAudioEnabled()) return
@@ -150,7 +134,7 @@ export default function About() {
   }
 
   const handleCellClick = (cellIndex: number) => {
-    if (animatingCellId !== null || activeModalHobby !== null) return
+    if (animatingCellId !== null) return
 
     lastInteractedCellRef.current = cellIndex
     const cellConfig = GRID_CELL_STYLES[cellIndex]
@@ -162,10 +146,6 @@ export default function About() {
     }
 
     if (discoveredCells.includes(cellIndex)) {
-      const alreadyFound = winningCellMap[cellIndex]
-      if (alreadyFound) {
-        setActiveModalHobby(alreadyFound)
-      }
       return
     }
 
@@ -176,6 +156,7 @@ export default function About() {
       return
     }
 
+    // Winning cell discovered: 3D flip + sound effect + side-stack accumulation
     setAnimatingCellId(cellIndex)
     setFeedbackNotice('')
     playDiscoverySound()
@@ -184,17 +165,12 @@ export default function About() {
 
     setTimeout(() => {
       setDiscoveredCells((prev) => [...prev, cellIndex])
-      setActiveModalHobby(winningHobby)
+      setDiscoveredHobbies((prev) => {
+        if (prev.some((h) => h.id === winningHobby.id)) return prev
+        return [...prev, winningHobby]
+      })
       setAnimatingCellId(null)
-    }, 650)
-  }
-
-  const closeModal = () => {
-    setActiveModalHobby(null)
-    if (lastInteractedCellRef.current !== null) {
-      const btn = cellRefs.current[lastInteractedCellRef.current]
-      if (btn) btn.focus()
-    }
+    }, 450)
   }
 
   const discoveredCount = discoveredCells.length
@@ -250,7 +226,7 @@ export default function About() {
             <span className="text-[#E2652B] font-semibold">EAST WEST UNIVERSITY</span>
           </div>
 
-          {/* Clean Geist Sans Typography (font-size: 15px; line-height: 1.8; color: #D4D4D8;) */}
+          {/* Clean Geist Sans Typography */}
           <div
             style={{
               fontFamily: "'Geist Sans', sans-serif",
@@ -281,30 +257,22 @@ export default function About() {
           </div>
         </motion.div>
 
-        {/* Right Stack (grid-column: span 5; display: flex; flex-direction: column; gap: 24px;) */}
-        <div
+        {/* Right Column: Combined Location & Academic Education Card (grid-column: span 5;) */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.1 }}
           style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '24px',
+            padding: '32px',
+            background: '#0e0e11',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            borderRadius: '24px',
           }}
-          className="lg:col-span-5 flex flex-col gap-6"
+          className="lg:col-span-5 flex flex-col p-6 sm:p-[32px] hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl"
         >
-          
-          {/* Top Card: Dhaka City Location Card (padding: 32px;) */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            style={{
-              padding: '32px',
-              background: '#0e0e11',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              borderRadius: '24px',
-            }}
-            className="flex flex-col p-6 sm:p-[32px] hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl"
-          >
+          {/* Top Section: Dhaka City Telemetry */}
+          <div>
             <div className="flex items-center justify-between text-xs font-mono tracking-wider text-[#71717A] pb-3 mb-4 border-b border-white/[0.08]">
               <span className="flex items-center gap-1.5 text-[#F3F4F6]/90 font-medium">
                 <MapPin className="w-3.5 h-3.5 text-[#E2652B]" />
@@ -314,7 +282,7 @@ export default function About() {
             </div>
 
             <h3
-              style={{ color: '#F3F4F6', fontSize: '20px', fontWeight: 700, marginBottom: '8px' }}
+              style={{ color: '#F3F4F6', fontSize: '20px', fontWeight: 700, marginBottom: '6px' }}
               className="font-sans tracking-tight"
             >
               Dhaka City
@@ -325,48 +293,18 @@ export default function About() {
             >
               Living and engineering in the heart of Dhaka. Fast-paced, resilient, and always active.
             </p>
+          </div>
 
-            {/* Clean ASCII Dot Map Snippet */}
-            <div
-              style={{
-                marginTop: '18px',
-                padding: '14px',
-                borderRadius: '14px',
-                background: 'rgba(0, 0, 0, 0.65)',
-                border: '1px solid rgba(255, 255, 255, 0.06)',
-              }}
-              className="font-mono text-xs select-none overflow-x-auto"
-            >
-              <div className="text-[#8E9298] leading-tight whitespace-pre font-mono">
-                {`  ⣠⠤⠤⠤⠤⠤⣠⠤⠤⡀     ⣀⠤⠤⠤⡀
-⢀⠎       ⢸   ⠉⠲⠤⠤⠤⠎   ⢱
-⡰⠁  `}
-                <span className="text-[#F1FA8C] font-bold">Dhaka</span>
-                <span className="text-[#4D7CFE]">∷∷</span>
-                {` ⠣⠤⠤⠤⠤⠤⠤⠤⠤⠤⠴⠁
-⠣⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤`}
-              </div>
-            </div>
-          </motion.div>
+          {/* Clean Integrated Divider */}
+          <div className="border-t border-white/[0.08] my-6" />
 
-          {/* Bottom Card: Academic Degree (padding: 32px;) */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            style={{
-              padding: '32px',
-              background: '#0e0e11',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              borderRadius: '24px',
-            }}
-            className="flex flex-col p-6 sm:p-[32px] hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl"
-          >
+          {/* Bottom Section: Integrated Academic Degree & Education Details */}
+          <div>
             <div className="flex items-center justify-between text-xs font-mono tracking-wider text-[#71717A] pb-3 mb-4 border-b border-white/[0.08]">
               <span className="text-[#F3F4F6]/90 font-medium">ACADEMIC DEGREE</span>
               <span className="text-[#E2652B] font-semibold">4TH YEAR</span>
             </div>
+
             <h3
               style={{ color: '#F3F4F6', fontSize: '18px', fontWeight: 700, marginBottom: '4px' }}
               className="font-sans tracking-tight"
@@ -384,19 +322,18 @@ export default function About() {
             >
               Software engineering, database architectures, and QA verification.
             </p>
-          </motion.div>
+          </div>
+        </motion.div>
 
-        </div>
-
-        {/* Hidden Passions Grid (padding: 36px; margin-top: 32px;) */}
+        {/* Hidden Passions Grid with Smooth Side-Stack Disclosure (grid-column: span 12;) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.25 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
           style={{
             padding: '36px',
-            marginTop: '32px',
+            marginTop: '8px',
             background: '#0e0e11',
             border: '1px solid rgba(255, 255, 255, 0.08)',
             borderRadius: '24px',
@@ -449,212 +386,173 @@ export default function About() {
             </div>
           </div>
 
-          {/* 21-Cell Contribution Grid (7 columns x 3 rows) */}
-          <div
-            role="grid"
-            aria-label="Passion discovery contribution grid"
-            className="grid grid-cols-7 gap-2 sm:gap-3.5 max-w-[720px] mx-auto my-3 sm:my-4 p-3 sm:p-5 rounded-2xl bg-[#070709] border border-white/5"
-          >
-            {GRID_CELL_STYLES.map((cellStyle, idx) => {
-              const isFlipped = flippedCells.includes(idx)
-              const isDiscovered = discoveredCells.includes(idx)
-              const isCheckedInactive = checkedInactiveCells.includes(idx)
+          {/* Side-Stack Interactive Area: Grid on Left, Discovered Cards Accumulating on Right */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mt-4">
+            
+            {/* Left Side: 21-Cell Contribution Grid */}
+            <div className="lg:col-span-7 flex flex-col items-center w-full">
+              <div
+                role="grid"
+                aria-label="Passion discovery contribution grid"
+                className="grid grid-cols-7 gap-2 sm:gap-3.5 w-full max-w-[520px] mx-auto p-3 sm:p-5 rounded-2xl bg-[#070709] border border-white/5"
+              >
+                {GRID_CELL_STYLES.map((cellStyle, idx) => {
+                  const isFlipped = flippedCells.includes(idx)
+                  const isDiscovered = discoveredCells.includes(idx)
+                  const isCheckedInactive = checkedInactiveCells.includes(idx)
 
-              return (
-                <div
-                  key={idx}
-                  style={{ perspective: '1000px' }}
-                  className="w-full aspect-square max-w-[84px] mx-auto relative"
-                >
-                  <button
-                    ref={(el) => {
-                      cellRefs.current[idx] = el
-                    }}
-                    type="button"
-                    onClick={() => handleCellClick(idx)}
-                    aria-label={
-                      isDiscovered
-                        ? `Discovered cell ${idx + 1}: ${winningCellMap[idx]?.title}`
-                        : cellStyle.isBlack
-                        ? `Inactive day ${idx + 1}`
-                        : `Contribution cell ${idx + 1}`
-                    }
-                    style={{
-                      transformStyle: 'preserve-3d',
-                      transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
-                      transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
-                    }}
-                    className={`w-full h-full rounded-lg sm:rounded-xl relative cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#E2652B] active:scale-95 transition-transform ${
-                      cellStyle.isBlack ? 'cursor-default opacity-60' : 'hover:scale-105'
-                    }`}
-                  >
-                    {/* FRONT FACE (Default Contribution Grid State) */}
+                  return (
                     <div
-                      style={{
-                        backgroundColor: cellStyle.bgStyle,
-                        border: `1px solid ${cellStyle.borderStyle}`,
-                        backfaceVisibility: 'hidden',
-                        WebkitBackfaceVisibility: 'hidden',
-                      }}
-                      className={`absolute inset-0 rounded-lg sm:rounded-xl flex items-center justify-center transition-all ${
-                        isCheckedInactive && !cellStyle.isBlack ? 'opacity-40' : ''
-                      }`}
+                      key={idx}
+                      style={{ perspective: '1000px' }}
+                      className="w-full aspect-square max-w-[80px] mx-auto relative"
                     >
-                      {isCheckedInactive && !cellStyle.isBlack && (
-                        <span className="w-1.5 h-1.5 rounded-full bg-neutral-600" />
-                      )}
-                    </div>
+                      <button
+                        ref={(el) => {
+                          cellRefs.current[idx] = el
+                        }}
+                        type="button"
+                        onClick={() => handleCellClick(idx)}
+                        aria-label={
+                          isDiscovered
+                            ? `Discovered cell ${idx + 1}: ${winningCellMap[idx]?.title}`
+                            : cellStyle.isBlack
+                            ? `Inactive day ${idx + 1}`
+                            : `Contribution cell ${idx + 1}`
+                        }
+                        style={{
+                          transformStyle: 'preserve-3d',
+                          transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+                          transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+                        }}
+                        className={`w-full h-full rounded-lg sm:rounded-xl relative cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#E2652B] active:scale-95 transition-transform ${
+                          cellStyle.isBlack ? 'cursor-default opacity-60' : 'hover:scale-105'
+                        }`}
+                      >
+                        {/* FRONT FACE (Default Contribution Grid State) */}
+                        <div
+                          style={{
+                            backgroundColor: cellStyle.bgStyle,
+                            border: `1px solid ${cellStyle.borderStyle}`,
+                            backfaceVisibility: 'hidden',
+                            WebkitBackfaceVisibility: 'hidden',
+                          }}
+                          className={`absolute inset-0 rounded-lg sm:rounded-xl flex items-center justify-center transition-all ${
+                            isCheckedInactive && !cellStyle.isBlack ? 'opacity-40' : ''
+                          }`}
+                        >
+                          {isCheckedInactive && !cellStyle.isBlack && (
+                            <span className="w-1.5 h-1.5 rounded-full bg-neutral-600" />
+                          )}
+                        </div>
 
-                    {/* REVERSE FACE (Realistic 3D Orange Accented Discovery Face) */}
-                    <div
-                      style={{
-                        backgroundColor: '#E2652B',
-                        border: '1px solid rgba(255, 255, 255, 0.4)',
-                        backfaceVisibility: 'hidden',
-                        WebkitBackfaceVisibility: 'hidden',
-                        transform: 'rotateY(180deg)',
-                        boxShadow: '0 0 16px rgba(226, 101, 43, 0.6)',
-                      }}
-                      className="absolute inset-0 rounded-lg sm:rounded-xl flex items-center justify-center text-white"
+                        {/* REVERSE FACE (Realistic 3D Orange Accented Discovery Face) */}
+                        <div
+                          style={{
+                            backgroundColor: '#E2652B',
+                            border: '1px solid rgba(255, 255, 255, 0.4)',
+                            backfaceVisibility: 'hidden',
+                            WebkitBackfaceVisibility: 'hidden',
+                            transform: 'rotateY(180deg)',
+                            boxShadow: '0 0 16px rgba(226, 101, 43, 0.6)',
+                          }}
+                          className="absolute inset-0 rounded-lg sm:rounded-xl flex items-center justify-center text-white"
+                        >
+                          <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white animate-pulse" />
+                        </div>
+                      </button>
+                    </div>
+                  )
+                })}
+              </div>
+
+              {/* Dynamic Feedback Text (Zero Cut-Off / High Contrast) */}
+              <div className="min-h-[28px] mt-4 flex items-center justify-center text-xs font-mono text-center">
+                <AnimatePresence mode="wait">
+                  {allFound ? (
+                    <motion.div
+                      key="completed"
+                      initial={{ opacity: 0, y: 4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -4 }}
+                      className="text-emerald-400 font-medium"
                     >
-                      <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white animate-pulse" />
-                    </div>
-                  </button>
-                </div>
-              )
-            })}
-          </div>
-
-          {/* Dynamic Restrained Feedback or Completion Banner (Zero Cut-Off / High Contrast) */}
-          <div className="min-h-[32px] mt-4 flex items-center justify-center text-xs font-mono">
-            <AnimatePresence mode="wait">
-              {allFound ? (
-                <motion.div
-                  key="completed"
-                  initial={{ opacity: 0, y: 4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -4 }}
-                  className="text-emerald-400 font-medium"
-                >
-                  All four passions discovered. Thanks for exploring.
-                </motion.div>
-              ) : feedbackNotice ? (
-                <motion.div
-                  key={feedbackNotice}
-                  initial={{ opacity: 0, y: 4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -4 }}
-                  style={{ color: '#A1A1AA' }}
-                >
-                  {feedbackNotice}
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="default-hint"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  style={{ color: '#A1A1AA' }}
-                >
-                  Discover a highlighted cell to reveal a passion.
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Clean Discovered Badges Row */}
-          {discoveredCells.length > 0 && (
-            <div className="w-full mt-4 pt-4 border-t border-white/[0.08] flex flex-wrap items-center justify-center gap-2">
-              {discoveredCells.map((idx) => {
-                const hobby = winningCellMap[idx]
-                if (!hobby) return null
-                return (
-                  <button
-                    key={hobby.id}
-                    type="button"
-                    onClick={() => setActiveModalHobby(hobby)}
-                    className="px-3.5 py-1.5 rounded-full bg-white/[0.04] hover:bg-white/[0.09] border border-[#E2652B]/40 hover:border-[#E2652B] text-xs font-sans text-neutral-200 hover:text-white transition-all cursor-pointer flex items-center gap-2 active:scale-95"
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#E2652B]" />
-                    <span>{hobby.title}</span>
-                  </button>
-                )
-              })}
+                      All four passions discovered.
+                    </motion.div>
+                  ) : feedbackNotice ? (
+                    <motion.div
+                      key={feedbackNotice}
+                      initial={{ opacity: 0, y: 4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -4 }}
+                      style={{ color: '#A1A1AA' }}
+                    >
+                      {feedbackNotice}
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="default-hint"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      style={{ color: '#A1A1AA' }}
+                    >
+                      Discover a highlighted cell to reveal a passion.
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
-          )}
+
+            {/* Right Side: Dedicated Smooth Side-Stack Panel for Discovered Items */}
+            <div className="lg:col-span-5 flex flex-col w-full">
+              <div className="flex items-center justify-between text-xs font-mono tracking-wider text-[#71717A] pb-3 mb-3.5 border-b border-white/[0.08]">
+                <span className="text-[#F3F4F6]/90 font-medium">DISCOVERED PASSIONS</span>
+                <span className="text-[#E2652B] font-semibold">{discoveredHobbies.length} / 4</span>
+              </div>
+
+              <div className="flex flex-col gap-3 min-h-[220px]">
+                {discoveredHobbies.length === 0 ? (
+                  <div className="flex-1 flex flex-col items-center justify-center p-6 rounded-2xl border border-dashed border-white/10 text-center text-xs font-mono text-[#71717A] min-h-[200px] select-none">
+                    <Sparkles className="w-5 h-5 text-white/20 mb-2" />
+                    <span>Uncover active cells in the grid to reveal passions here.</span>
+                  </div>
+                ) : (
+                  <AnimatePresence mode="popLayout">
+                    {discoveredHobbies.map((hobby, index) => (
+                      <motion.div
+                        key={hobby.id}
+                        initial={{ opacity: 0, x: 24, y: 8 }}
+                        animate={{ opacity: 1, x: 0, y: 0 }}
+                        exit={{ opacity: 0, x: -20, scale: 0.95 }}
+                        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                        className="p-4 sm:p-5 rounded-2xl bg-[#141418] border border-white/[0.08] hover:border-[#E2652B]/40 transition-all shadow-md text-left"
+                      >
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="text-[11px] font-mono font-medium text-[#E2652B] tracking-wider uppercase flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#E2652B] animate-pulse" />
+                            {hobby.tag}
+                          </span>
+                          <span className="text-[10px] font-mono text-[#71717A]">
+                            #{index + 1}
+                          </span>
+                        </div>
+                        <h4 className="text-base sm:text-lg font-sans font-bold text-[#F3F4F6] tracking-tight">
+                          {hobby.title}
+                        </h4>
+                        <p className="text-xs sm:text-sm text-[#D4D4D8] leading-relaxed mt-1 font-sans">
+                          {hobby.desc}
+                        </p>
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                )}
+              </div>
+            </div>
+
+          </div>
         </motion.div>
 
       </div>
-
-      {/* Glassmorphism Discovery Modal */}
-      <AnimatePresence>
-        {activeModalHobby && (
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="hobby-modal-title"
-            onClick={closeModal}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md"
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.94, y: 14 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.94, y: 14 }}
-              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-              onClick={(e) => e.stopPropagation()}
-              style={{
-                background: 'rgba(18, 18, 20, 0.96)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
-                backdropFilter: 'blur(32px)',
-                WebkitBackdropFilter: 'blur(32px)',
-                boxShadow: '0 24px 64px rgba(0, 0, 0, 0.8), 0 0 32px rgba(226, 101, 43, 0.15)',
-              }}
-              className="w-full max-w-md rounded-3xl p-6 sm:p-8 relative text-left select-text"
-            >
-              {/* Modal Top Header with Close Icon */}
-              <div className="flex items-center justify-between pb-3.5 mb-4 border-b border-white/8">
-                <div className="inline-flex items-center gap-2 text-xs font-mono tracking-wider text-[#E2652B] font-medium uppercase">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#E2652B] animate-pulse" />
-                  <span>Discovered Passion</span>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={closeModal}
-                  className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/12 border border-white/10 flex items-center justify-center text-neutral-400 hover:text-white transition-all cursor-pointer active:scale-95"
-                  aria-label="Close modal"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-
-              {/* Discovered Hobby Title */}
-              <h3
-                id="hobby-modal-title"
-                style={{ fontFamily: "'Geist Sans', sans-serif" }}
-                className="text-xl sm:text-2xl font-bold text-[#F3F4F6] tracking-tight"
-              >
-                {activeModalHobby.title}
-              </h3>
-
-              {/* Discovered Hobby Description */}
-              <p className="mt-3 text-sm sm:text-base text-[#D4D4D8] leading-relaxed font-normal">
-                {activeModalHobby.desc}
-              </p>
-
-              {/* Close Button Action */}
-              <div className="mt-6 pt-4 border-t border-white/8">
-                <button
-                  type="button"
-                  onClick={closeModal}
-                  className="w-full py-2.5 sm:py-3 rounded-xl bg-white/[0.08] hover:bg-white text-white hover:text-black font-medium text-xs sm:text-sm tracking-wide transition-all duration-200 active:scale-98 cursor-pointer"
-                >
-                  Continue exploring
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </section>
   )
 }
