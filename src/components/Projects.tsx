@@ -8,9 +8,9 @@ export default function Projects() {
         minHeight: '100vh',
         boxSizing: 'border-box',
         position: 'relative',
-        scrollMarginTop: '96px',
+        scrollMarginTop: '80px',
       }}
-      className="w-full relative min-h-screen bg-[#0b0b0c] overflow-hidden select-none scroll-mt-[96px]"
+      className="w-full relative min-h-screen bg-[#0b0b0c] overflow-hidden select-none scroll-mt-[80px]"
     >
       {/* Top Transition Fade from Hero */}
       <div

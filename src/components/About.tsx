@@ -180,19 +180,18 @@ export default function About() {
     <section
       id="about"
       style={{
-        minHeight: '100vh',
-        padding: '28px 24px 120px 24px',
+        padding: '60px 24px',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         boxSizing: 'border-box',
         position: 'relative',
-        scrollMarginTop: '96px',
+        scrollMarginTop: '80px',
       }}
-      className="w-full max-w-[1200px] mx-auto relative select-none scroll-mt-[96px]"
+      className="w-full max-w-[1200px] mx-auto relative select-none scroll-mt-[80px]"
     >
       {/* Section Heading: Player Details & The Honest Journey */}
-      <div className="pt-1 sm:pt-2 mb-10 sm:mb-14 space-y-2.5">
+      <div className="mb-8 sm:mb-10 space-y-2.5">
         <div className="flex items-center gap-2 text-xs tracking-widest text-[#E2652B] font-mono uppercase">
           <Compass className="w-3.5 h-3.5 text-[#E2652B]" />
           <span>03 · PLAYER DETAILS</span>
@@ -397,10 +396,17 @@ export default function About() {
           </div>
 
           {/* Side-Stack Interactive Area: Grid on Left, Discovered Cards Accumulating on Right */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mt-4">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mt-4">
             
             {/* Left Side: 21-Cell Contribution Grid Scaled Down to 44px x 44px with gap: 10px */}
-            <div className="lg:col-span-7 flex flex-col items-center w-full">
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+              }}
+              className="lg:col-span-7 flex flex-col items-center justify-center w-full h-full my-auto"
+            >
               <div
                 role="grid"
                 aria-label="Passion discovery contribution grid"
@@ -545,7 +551,7 @@ export default function About() {
                         animate={{ opacity: 1, x: 0, y: 0 }}
                         exit={{ opacity: 0, x: -20, scale: 0.95 }}
                         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                        style={{ padding: '20px 24px' }}
+                        style={{ padding: '14px 20px' }}
                         className="rounded-2xl bg-[#141418] border border-white/[0.08] hover:border-[#E2652B]/40 transition-all shadow-md text-left"
                       >
                         <h4
@@ -553,7 +559,7 @@ export default function About() {
                             fontSize: '17px',
                             fontWeight: 600,
                             color: '#FFFFFF',
-                            marginBottom: '6px',
+                            marginBottom: '4px',
                           }}
                           className="font-sans tracking-tight"
                         >
@@ -562,7 +568,7 @@ export default function About() {
                         <p
                           style={{
                             fontSize: '13px',
-                            lineHeight: 1.5,
+                            lineHeight: 1.45,
                             color: '#9CA3AF',
                           }}
                           className="font-sans"

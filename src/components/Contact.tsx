@@ -34,16 +34,15 @@ export default function Contact() {
       style={{
         maxWidth: '860px',
         margin: '0 auto',
-        minHeight: '100vh',
-        padding: '36px 24px 80px 24px',
+        padding: '60px 24px',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         boxSizing: 'border-box',
         position: 'relative',
-        scrollMarginTop: '96px',
+        scrollMarginTop: '80px',
       }}
-      className="w-full scroll-mt-[96px]"
+      className="w-full scroll-mt-[80px]"
     >
       <motion.div
         initial={{ opacity: 0, scale: 0.98 }}

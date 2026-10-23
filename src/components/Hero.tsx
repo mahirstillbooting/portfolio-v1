@@ -21,18 +21,18 @@ export default function Hero() {
       id="hero"
       style={{
         minHeight: '100vh',
-        padding: '96px 24px 64px 24px',
+        padding: '80px 24px 64px 24px',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'flex-end',
         alignItems: 'center',
         boxSizing: 'border-box',
         position: 'relative',
-        scrollMarginTop: '96px',
+        scrollMarginTop: '80px',
         width: '100%',
         overflow: 'hidden',
       }}
-      className="select-none scroll-mt-[96px]"
+      className="select-none scroll-mt-[80px]"
     >
       {/* Background ambient radial glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[520px] bg-gradient-to-b from-[#E2652B]/10 via-transparent to-transparent blur-[160px] pointer-events-none z-0" />
