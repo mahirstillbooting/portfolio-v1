@@ -27,6 +27,11 @@ export default function Navbar() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          width: '100%',
+          maxWidth: '1120px',
           background: scrolled ? 'rgba(16, 16, 18, 0.95)' : 'rgba(20, 20, 22, 0.88)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
@@ -34,25 +39,27 @@ export default function Navbar() {
           borderRadius: '24px',
           boxSizing: 'border-box',
         }}
-        className="pointer-events-auto transition-all duration-300 shadow-[0_12px_30px_rgba(0,0,0,0.6)] px-4 sm:px-7 py-2.5 md:py-0 md:h-[66px] flex flex-col md:flex-row md:items-center justify-between w-full max-w-[1120px] gap-2 md:gap-0"
+        className="pointer-events-auto transition-all duration-300 shadow-[0_12px_30px_rgba(0,0,0,0.6)] !h-auto md:!h-[68px] py-2.5 md:py-0 px-4 md:px-[28px] flex-col md:flex-row"
       >
-        {/* Main Bar: Brand Name on Left, Desktop Nav Links in Center, Let's talk on Right */}
-        <div className="flex items-center justify-between w-full md:w-auto md:shrink-0">
-          {/* Brand Name */}
+        {/* Left Brand: Mahiruddin Chowdhury sitting comfortably on far left with padding-left: 4px */}
+        <div
+          style={{ paddingLeft: '4px' }}
+          className="flex items-center justify-between w-full md:w-auto md:shrink-0 shrink-0"
+        >
           <a
             href="#hero"
             style={{
               fontFamily: "'Instrument Serif', Georgia, serif",
               lineHeight: 1,
             }}
-            className="text-xl sm:text-2xl text-white tracking-tight select-none hover:text-[#E2652B] transition-colors no-underline font-normal whitespace-nowrap pl-1"
+            className="text-xl sm:text-2xl text-white tracking-tight select-none hover:text-[#E2652B] transition-colors no-underline font-normal whitespace-nowrap"
           >
             <span className="hidden md:inline">Mahiruddin Chowdhury</span>
             <span className="inline md:hidden">MahirChy</span>
           </a>
 
-          {/* Mobile "Let's talk" CTA button (visible in top row on mobile only) */}
-          <div className="flex md:hidden items-center shrink-0">
+          {/* Mobile Right CTA button (visible in top row on mobile only) */}
+          <div className="flex md:hidden items-center shrink-0 ml-auto">
             <a
               href="#contact"
               style={{
@@ -67,8 +74,14 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Center: Desktop Navigation Links (Projects, About, Skills, Contact) */}
-        <div className="hidden md:flex items-center gap-8 lg:gap-10">
+        {/* Center: Desktop Navigation Links sitting neatly balanced with gap: 32px */}
+        <div
+          style={{
+            gap: '32px',
+            margin: '0 auto',
+          }}
+          className="hidden md:flex items-center"
+        >
           {navLinks.map((item) => (
             <a
               key={item.label}
@@ -80,8 +93,11 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Right: Desktop "Let's talk" Button */}
-        <div className="hidden md:flex items-center shrink-0">
+        {/* Right CTA: Pinned to the far right with margin-left: auto */}
+        <div
+          style={{ marginLeft: 'auto' }}
+          className="hidden md:flex items-center shrink-0"
+        >
           <a
             href="#contact"
             style={{
@@ -98,8 +114,8 @@ export default function Navbar() {
           </a>
         </div>
 
-        {/* Mobile Navigation Links Row: Projects, About, Skills, Contact */}
-        <div className="flex md:hidden items-center justify-around w-full pt-2 border-t border-white/[0.08] text-xs font-mono font-medium text-[#A1A1AA] px-1">
+        {/* Mobile Navigation Links Row */}
+        <div className="flex md:hidden items-center justify-around w-full pt-2 mt-1 border-t border-white/[0.08] text-xs font-mono font-medium text-[#A1A1AA] px-1">
           {navLinks.map((item, idx) => (
             <div key={item.label} className="flex items-center gap-2.5">
               <a

@@ -6,10 +6,11 @@ export default function Skills() {
     <section
       id="skills"
       style={{
+        scrollMarginTop: '110px',
         paddingTop: 'clamp(90px, 14vw, 160px)',
         paddingBottom: 'clamp(90px, 14vw, 160px)',
       }}
-      className="w-full max-w-[1200px] mx-auto relative flex flex-col justify-center px-4 sm:px-8 scroll-mt-24"
+      className="w-full max-w-[1200px] mx-auto relative flex flex-col justify-center px-4 sm:px-8 scroll-mt-[110px]"
     >
       {/* Section Heading with generous breathing room above and below */}
       <div className="pt-2 sm:pt-6 mb-12 sm:mb-16 lg:mb-20">

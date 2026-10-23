@@ -4,7 +4,8 @@ export default function Projects() {
   return (
     <section
       id="projects"
-      className="w-full relative min-h-screen bg-[#0b0b0c] overflow-hidden select-none"
+      style={{ scrollMarginTop: '110px' }}
+      className="w-full relative min-h-screen bg-[#0b0b0c] overflow-hidden select-none scroll-mt-[110px]"
     >
       {/* Top Transition Fade from Hero */}
       <div

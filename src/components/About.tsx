@@ -72,7 +72,6 @@ const GRID_CELL_STYLES: Omit<CellConfig, 'id'>[] = [
 ]
 
 export default function About() {
-  // Exactly 4 winning cells mapped to hobbies
   const [winningCellMap, setWinningCellMap] = useState<Record<number, Hobby>>({})
   const [discoveredCells, setDiscoveredCells] = useState<number[]>([])
   const [flippedCells, setFlippedCells] = useState<number[]>([])
@@ -85,7 +84,6 @@ export default function About() {
   const lastInteractedCellRef = useRef<number | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
-  // Initialize a fresh treasure hunt round
   const startFreshHunt = useCallback(() => {
     const validCandidateIndices: number[] = []
     GRID_CELL_STYLES.forEach((cell, idx) => {
@@ -115,7 +113,6 @@ export default function About() {
     startFreshHunt()
   }, [startFreshHunt])
 
-  // Lock background scroll when modal is open
   useEffect(() => {
     if (activeModalHobby) {
       document.body.style.overflow = 'hidden'
@@ -127,7 +124,6 @@ export default function About() {
     }
   }, [activeModalHobby])
 
-  // Escape key listener to close modal
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && activeModalHobby) {
@@ -208,42 +204,63 @@ export default function About() {
     <section
       id="about"
       style={{
+        scrollMarginTop: '110px',
         paddingTop: 'clamp(90px, 14vw, 160px)',
-        paddingBottom: 'clamp(90px, 14vw, 160px)',
+        paddingBottom: '160px',
       }}
-      className="w-full max-w-[1200px] mx-auto relative flex flex-col justify-center px-4 sm:px-6 scroll-mt-24 select-none"
+      className="w-full max-w-[1200px] mx-auto relative flex flex-col justify-center px-4 sm:px-6 scroll-mt-[110px] select-none"
     >
-      {/* Section Heading with Ample Margin */}
+      {/* Section Heading */}
       <div className="mb-10 sm:mb-14 space-y-2">
         <div className="flex items-center gap-2 text-[11px] tracking-widest text-[#E2652B] font-mono uppercase">
           <Compass className="w-3.5 h-3.5 text-[#E2652B]" />
           <span>03 · ABOUT &amp; MINDSET</span>
         </div>
-        <h2 className="text-3xl sm:text-5xl font-sans font-bold text-white tracking-tight">
+        <h2 className="text-3xl sm:text-5xl font-sans font-bold text-[#F3F4F6] tracking-tight">
           The Honest Journey
         </h2>
       </div>
 
-      {/* Bento Grid: items-start prevents vertical shrinking/clipping */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      {/* 12-Column Bento Grid Layout (gap: 24px) */}
+      <div
+        style={{
+          display: 'grid',
+          gap: '24px',
+        }}
+        className="grid grid-cols-1 lg:grid-cols-12 items-start"
+      >
         
-        {/* Card 1: Main Identity and Biography Box (7 cols) */}
+        {/* Left Bio Card (grid-column: span 7; padding: 40px;) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="lg:col-span-7 flex flex-col p-6 sm:p-8 lg:p-9 rounded-2xl sm:rounded-3xl bg-[#0e0e11] border border-white/[0.08] hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl"
+          style={{
+            padding: '40px',
+            background: '#0e0e11',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            borderRadius: '24px',
+          }}
+          className="lg:col-span-7 flex flex-col p-6 sm:p-8 lg:p-[40px] hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl"
         >
           {/* Header Divider */}
-          <div className="flex items-center justify-between text-xs font-mono text-[#71717A] tracking-wider pb-3.5 mb-5 border-b border-white/[0.08]">
-            <span className="text-white/80 font-medium">SYSTEM PROFILE · IDENTITY</span>
+          <div className="flex items-center justify-between text-xs font-mono text-[#71717A] tracking-wider pb-4 mb-6 border-b border-white/[0.08]">
+            <span className="text-[#F3F4F6]/90 font-medium">SYSTEM PROFILE · IDENTITY</span>
             <span className="text-[#E2652B] font-semibold">EAST WEST UNIVERSITY</span>
           </div>
 
-          {/* Bio Text */}
-          <div className="space-y-4 text-sm sm:text-base leading-relaxed text-[#D4D4D8] font-sans font-normal">
-            <p>
+          {/* Clean Geist Sans Typography (font-size: 15px; line-height: 1.8; color: #D4D4D8;) */}
+          <div
+            style={{
+              fontFamily: "'Geist Sans', sans-serif",
+              fontSize: '15px',
+              lineHeight: '1.8',
+              color: '#D4D4D8',
+            }}
+            className="space-y-4 font-normal"
+          >
+            <p style={{ marginBottom: '16px' }}>
               I am <strong className="text-white font-medium">Mahiruddin Chowdhury</strong>, a 4th-year Computer Science and Engineering student at East West University in Dhaka, Bangladesh. I learn at my own pace and work persistently until problems are solved.
             </p>
             <p>
@@ -251,7 +268,7 @@ export default function About() {
             </p>
           </div>
 
-          {/* Footer Row */}
+          {/* Badges Footer Row */}
           <div className="mt-8 pt-5 border-t border-white/[0.08] flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
             <div className="flex items-center gap-2 text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3.5 py-1.5 rounded-full">
               <Award className="w-4 h-4 shrink-0" />
@@ -264,34 +281,62 @@ export default function About() {
           </div>
         </motion.div>
 
-        {/* Right Column (5 cols): Vertically Stacked Location and Academic Cards */}
-        <div className="lg:col-span-5 flex flex-col gap-6">
+        {/* Right Stack (grid-column: span 5; display: flex; flex-direction: column; gap: 24px;) */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '24px',
+          }}
+          className="lg:col-span-5 flex flex-col gap-6"
+        >
           
-          {/* Card 2: Location Card */}
+          {/* Top Card: Dhaka City Location Card (padding: 32px;) */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="flex flex-col p-6 sm:p-7 rounded-2xl sm:rounded-3xl bg-[#0e0e11] border border-white/[0.08] hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl"
+            style={{
+              padding: '32px',
+              background: '#0e0e11',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              borderRadius: '24px',
+            }}
+            className="flex flex-col p-6 sm:p-[32px] hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl"
           >
             <div className="flex items-center justify-between text-xs font-mono tracking-wider text-[#71717A] pb-3 mb-4 border-b border-white/[0.08]">
-              <span className="flex items-center gap-1.5 text-white/80 font-medium">
+              <span className="flex items-center gap-1.5 text-[#F3F4F6]/90 font-medium">
                 <MapPin className="w-3.5 h-3.5 text-[#E2652B]" />
                 LOCATION
               </span>
               <span className="text-[#E2652B] font-semibold">23.81° N, 90.41° E</span>
             </div>
 
-            <h3 className="text-xl font-sans font-bold text-white mb-1.5">
+            <h3
+              style={{ color: '#F3F4F6', fontSize: '20px', fontWeight: 700, marginBottom: '8px' }}
+              className="font-sans tracking-tight"
+            >
               Dhaka City
             </h3>
-            <p className="text-sm font-sans text-[#A1A1AA] leading-relaxed">
+            <p
+              style={{ color: '#A1A1AA', fontSize: '14px', lineHeight: '1.6' }}
+              className="font-sans"
+            >
               Living and engineering in the heart of Dhaka. Fast-paced, resilient, and always active.
             </p>
 
             {/* Clean ASCII Dot Map Snippet */}
-            <div className="mt-4 p-3.5 rounded-xl bg-black/60 border border-white/[0.06] font-mono text-xs select-none overflow-x-auto">
+            <div
+              style={{
+                marginTop: '18px',
+                padding: '14px',
+                borderRadius: '14px',
+                background: 'rgba(0, 0, 0, 0.65)',
+                border: '1px solid rgba(255, 255, 255, 0.06)',
+              }}
+              className="font-mono text-xs select-none overflow-x-auto"
+            >
               <div className="text-[#8E9298] leading-tight whitespace-pre font-mono">
                 {`  ⣠⠤⠤⠤⠤⠤⣠⠤⠤⡀     ⣀⠤⠤⠤⡀
 ⢀⠎       ⢸   ⠉⠲⠤⠤⠤⠎   ⢱
@@ -304,50 +349,77 @@ export default function About() {
             </div>
           </motion.div>
 
-          {/* Card 3: Academic Degree Card */}
+          {/* Bottom Card: Academic Degree (padding: 32px;) */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="flex flex-col p-6 sm:p-7 rounded-2xl sm:rounded-3xl bg-[#0e0e11] border border-white/[0.08] hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl"
+            style={{
+              padding: '32px',
+              background: '#0e0e11',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              borderRadius: '24px',
+            }}
+            className="flex flex-col p-6 sm:p-[32px] hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl"
           >
             <div className="flex items-center justify-between text-xs font-mono tracking-wider text-[#71717A] pb-3 mb-4 border-b border-white/[0.08]">
-              <span className="text-white/80 font-medium">ACADEMIC DEGREE</span>
+              <span className="text-[#F3F4F6]/90 font-medium">ACADEMIC DEGREE</span>
               <span className="text-[#E2652B] font-semibold">4TH YEAR</span>
             </div>
-            <h3 className="text-lg font-sans text-white font-bold mb-1 tracking-tight">
+            <h3
+              style={{ color: '#F3F4F6', fontSize: '18px', fontWeight: 700, marginBottom: '4px' }}
+              className="font-sans tracking-tight"
+            >
               BSc in Computer Science &amp; Engineering
             </h3>
-            <p className="text-xs font-mono text-[#E2652B] mb-2 font-medium">
+            <p
+              style={{ color: '#E2652B', fontSize: '13px', fontFamily: 'monospace', fontWeight: 600, marginBottom: '8px' }}
+            >
               East West University · 4th Year
             </p>
-            <p className="text-sm font-sans text-[#A1A1AA] leading-relaxed">
+            <p
+              style={{ color: '#A1A1AA', fontSize: '14px', lineHeight: '1.6' }}
+              className="font-sans"
+            >
               Software engineering, database architectures, and QA verification.
             </p>
           </motion.div>
 
         </div>
 
-        {/* Card 4: Hidden Passions Treasure Hunt (Replacing the 4 bottom cards) */}
+        {/* Hidden Passions Grid (padding: 36px; margin-top: 32px;) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.25 }}
-          className="lg:col-span-12 w-full rounded-2xl sm:rounded-3xl bg-[#0e0e11] border border-white/[0.08] hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] p-5 sm:p-8 lg:p-9 backdrop-blur-xl mt-2"
+          style={{
+            padding: '36px',
+            marginTop: '32px',
+            background: '#0e0e11',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            borderRadius: '24px',
+          }}
+          className="lg:col-span-12 w-full p-6 sm:p-8 lg:p-[36px] hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl"
         >
           {/* Card Header Status Row */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-4 sm:pb-5 mb-4 sm:mb-5 border-b border-white/[0.08]">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-5 mb-5 border-b border-white/[0.08]">
             <div>
               <div className="flex items-center gap-2 text-[11px] sm:text-xs font-mono tracking-widest text-[#E2652B] uppercase mb-1">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>INTERACTIVE DISCOVERY</span>
               </div>
-              <h3 className="text-xl sm:text-2xl font-sans font-bold text-white tracking-tight">
+              <h3
+                style={{ color: '#F3F4F6' }}
+                className="text-xl sm:text-2xl font-sans font-bold tracking-tight"
+              >
                 Hidden Passions
               </h3>
-              <p className="text-xs sm:text-sm text-[#A1A1AA] mt-1 font-sans">
+              <p
+                style={{ color: '#A1A1AA' }}
+                className="text-xs sm:text-sm mt-1 font-sans"
+              >
                 Four little things that keep me curious. Find them in the grid.
               </p>
             </div>
@@ -367,7 +439,7 @@ export default function About() {
               <button
                 type="button"
                 onClick={startFreshHunt}
-                className="flex items-center gap-1.5 text-xs text-[#71717A] hover:text-white transition-colors cursor-pointer active:scale-95 px-2.5 py-1.5 rounded-lg hover:bg-white/5 border border-white/8"
+                className="flex items-center gap-1.5 text-xs text-[#71717A] hover:text-[#F3F4F6] transition-colors cursor-pointer active:scale-95 px-2.5 py-1.5 rounded-lg hover:bg-white/5 border border-white/8"
                 aria-label="Start fresh hunt"
                 title="Restart treasure hunt"
               >
@@ -381,7 +453,7 @@ export default function About() {
           <div
             role="grid"
             aria-label="Passion discovery contribution grid"
-            className="grid grid-cols-7 gap-1.5 sm:gap-3.5 max-w-[720px] mx-auto my-2 sm:my-3 p-2 sm:p-5 rounded-xl sm:rounded-2xl bg-[#070709] border border-white/5"
+            className="grid grid-cols-7 gap-2 sm:gap-3.5 max-w-[720px] mx-auto my-3 sm:my-4 p-3 sm:p-5 rounded-2xl bg-[#070709] border border-white/5"
           >
             {GRID_CELL_STYLES.map((cellStyle, idx) => {
               const isFlipped = flippedCells.includes(idx)
@@ -453,8 +525,8 @@ export default function About() {
             })}
           </div>
 
-          {/* Dynamic Restrained Feedback or Completion Banner */}
-          <div className="min-h-[26px] mt-4 flex items-center justify-center text-xs font-mono">
+          {/* Dynamic Restrained Feedback or Completion Banner (Zero Cut-Off / High Contrast) */}
+          <div className="min-h-[32px] mt-4 flex items-center justify-center text-xs font-mono">
             <AnimatePresence mode="wait">
               {allFound ? (
                 <motion.div
@@ -472,7 +544,7 @@ export default function About() {
                   initial={{ opacity: 0, y: 4 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
-                  className="text-[#71717A]"
+                  style={{ color: '#A1A1AA' }}
                 >
                   {feedbackNotice}
                 </motion.div>
@@ -481,7 +553,7 @@ export default function About() {
                   key="default-hint"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="text-[#71717A]"
+                  style={{ color: '#A1A1AA' }}
                 >
                   Discover a highlighted cell to reveal a passion.
                 </motion.div>
@@ -489,7 +561,7 @@ export default function About() {
             </AnimatePresence>
           </div>
 
-          {/* Clean Discovered Badges Row (revealed once discovered) */}
+          {/* Clean Discovered Badges Row */}
           {discoveredCells.length > 0 && (
             <div className="w-full mt-4 pt-4 border-t border-white/[0.08] flex flex-wrap items-center justify-center gap-2">
               {discoveredCells.map((idx) => {
@@ -559,7 +631,7 @@ export default function About() {
               <h3
                 id="hobby-modal-title"
                 style={{ fontFamily: "'Geist Sans', sans-serif" }}
-                className="text-xl sm:text-2xl font-bold text-white tracking-tight"
+                className="text-xl sm:text-2xl font-bold text-[#F3F4F6] tracking-tight"
               >
                 {activeModalHobby.title}
               </h3>
