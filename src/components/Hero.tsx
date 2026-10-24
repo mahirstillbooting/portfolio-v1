@@ -1,8 +1,69 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowDown, Copy, Check } from 'lucide-react'
 import PortraitCanvas from './PortraitCanvas'
 import mahirImg from '../assets/mahir.png'
+
+const textToType = 'Aspiring Software Engineer Building Impactful Applications'
+
+function TypewriterSubtitle() {
+  const [displayedText, setDisplayedText] = useState('')
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [charIndex, setCharIndex] = useState(0)
+
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>
+
+    if (!isDeleting) {
+      // Forward typing
+      if (charIndex < textToType.length) {
+        const nextChar = textToType[charIndex]
+        const isWordEnd = nextChar === ' '
+
+        // Delay: notable pause after each word, snappy for letters
+        const delay = isWordEnd ? 220 : 45
+
+        timer = setTimeout(() => {
+          setDisplayedText(textToType.slice(0, charIndex + 1))
+          setCharIndex((prev) => prev + 1)
+        }, delay)
+      } else {
+        // Full sentence finished typing -> pause before backspacing
+        timer = setTimeout(() => {
+          setIsDeleting(true)
+        }, 2200)
+      }
+    } else {
+      // Deleting / looping back from the last character
+      if (charIndex > 0) {
+        timer = setTimeout(() => {
+          setDisplayedText(textToType.slice(0, charIndex - 1))
+          setCharIndex((prev) => prev - 1)
+        }, 24)
+      } else {
+        // Fully deleted -> pause briefly before typing again
+        timer = setTimeout(() => {
+          setIsDeleting(false)
+        }, 450)
+      }
+    }
+
+    return () => clearTimeout(timer)
+  }, [charIndex, isDeleting])
+
+  return (
+    <span className="inline-flex items-center justify-center">
+      <span>{displayedText}</span>
+      <span
+        className="inline-block w-[2px] h-[1.15em] ml-1 bg-[#E2652B] align-middle rounded-full animate-pulse"
+        style={{
+          boxShadow: '0 0 8px rgba(226, 101, 43, 0.6)',
+        }}
+        aria-hidden="true"
+      />
+    </span>
+  )
+}
 
 export default function Hero() {
   const containerRef = useRef<HTMLElement>(null)
@@ -83,7 +144,7 @@ export default function Hero() {
           Mahiruddin Chowdhury
         </motion.h1>
 
-        {/* Clean subtitle */}
+        {/* Clean subtitle with looping typewriter animation */}
         <motion.p
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
@@ -93,10 +154,11 @@ export default function Hero() {
             color: '#A1A1AA',
             marginTop: '10px',
             marginBottom: '24px',
+            minHeight: '28px',
           }}
-          className="font-sans font-normal leading-relaxed text-center"
+          className="font-sans font-normal leading-relaxed text-center flex items-center justify-center"
         >
-          Computer Science &amp; Engineering Student • Building Web &amp; Software Systems.
+          <TypewriterSubtitle />
         </motion.p>
 
         {/* Spacious Modern Hero CTA Buttons */}
