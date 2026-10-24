@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { RotateCcw, Sparkles, Award, MapPin, Compass } from 'lucide-react'
 import { getAudioEnabled } from '../utils/audioState'
 import discoverySoundUrl from '../assets/mixkit-quick-win-video-game-notification-269.wav'
@@ -454,61 +454,73 @@ export default function About() {
           </div>
         </motion.div>
 
-        {/* Beside Coding... Interactive Discovery Section */}
+        {/* Beside Coding... Compact Pixel-Match Interactive Discovery Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.2 }}
           style={{
-            background: '#0e0e11',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
-            borderRadius: '24px',
-            padding: '32px',
+            background: '#111417',
+            border: '1px solid #1d2127',
+            borderRadius: '20px',
+            padding: '28px',
           }}
-          className="lg:col-span-12 w-full p-6 sm:p-8 hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl"
+          className="lg:col-span-12 w-full hover:border-[#e2652b]/30 transition-colors shadow-[0_20px_40px_rgba(0,0,0,0.6)] backdrop-blur-xl"
         >
-          {/* Card Header: Only Main Title & Subtitle */}
-          <div className="pb-4 mb-6 border-b border-white/[0.08]">
+          {/* Header */}
+          <div className="mb-[22px]">
             <h3
-              style={{ color: '#F3F4F6', fontSize: '24px', fontWeight: 700 }}
-              className="text-2xl sm:text-3xl font-sans tracking-tight"
+              style={{
+                color: '#f3f4f6',
+                fontSize: '1.35rem',
+                fontWeight: 700,
+                letterSpacing: '-0.01em',
+                marginBottom: '6px',
+              }}
+              className="font-sans"
             >
               Beside Coding...
             </h3>
             <p
-              style={{ color: '#A1A1AA', fontSize: '14px', lineHeight: '1.6', marginTop: '6px' }}
+              style={{
+                color: '#7e8794',
+                fontSize: '0.88rem',
+              }}
               className="font-sans"
             >
               Four little things that keep me curious. You may try to find them.
             </p>
           </div>
 
-          {/* Inner Container Wrapper */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start w-full">
-            
-            {/* Left Side: Flipping Tiles Matrix Inner Container */}
+          {/* 2 Columns: strictly locked to equal height */}
+          <div
+            style={{
+              display: 'grid',
+              alignItems: 'stretch',
+            }}
+            className="grid grid-cols-1 min-[769px]:grid-cols-[0.95fr_1.35fr] gap-[18px] items-stretch w-full"
+          >
+            {/* LEFT MATRIX */}
             <div
               style={{
-                padding: '24px',
-                background: '#070709',
-                border: '1px solid rgba(255, 255, 255, 0.06)',
-                borderRadius: '20px',
+                background: '#0c0f12',
+                border: '1px solid #1a1e23',
+                borderRadius: '14px',
+                padding: '22px 20px',
               }}
-              className="lg:col-span-6 xl:col-span-5 flex flex-col items-center justify-center w-full"
+              className="flex flex-col justify-between h-full w-full"
             >
               <div
                 role="grid"
                 aria-label="Passion discovery contribution grid"
                 style={{
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(7, minmax(0, 52px))',
-                  gap: '12px',
-                  justifyContent: 'center',
-                  width: '100%',
-                  maxWidth: '440px',
+                  gridTemplateColumns: 'repeat(7, 1fr)',
+                  gap: '8px',
+                  marginBottom: '18px',
                 }}
-                className="mx-auto"
+                className="w-full"
               >
                 {GRID_CELL_STYLES.map((cellStyle, idx) => {
                   const isFlipped = flippedCells.includes(idx)
@@ -520,12 +532,10 @@ export default function About() {
                     <div
                       key={idx}
                       style={{
-                        width: '100%',
-                        maxWidth: '52px',
                         aspectRatio: '1 / 1',
                         perspective: '1000px',
                       }}
-                      className="relative mx-auto w-full"
+                      className="relative w-full"
                     >
                       <button
                         ref={(el) => {
@@ -542,14 +552,14 @@ export default function About() {
                         }
                         style={{
                           transformStyle: 'preserve-3d',
-                          transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+                          transition: 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
                           transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
                           background: 'transparent',
                           backgroundColor: 'transparent',
                           border: 'none',
                           padding: 0,
                         }}
-                        className={`w-full h-full rounded-xl relative cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#E2652B] active:scale-95 transition-transform ${
+                        className={`w-full h-full rounded-[9px] relative cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-[#e2652b] active:scale-95 transition-transform ${
                           cellStyle.isBlack ? 'cursor-default opacity-60' : 'hover:scale-105'
                         }`}
                       >
@@ -560,8 +570,9 @@ export default function About() {
                             border: `1px solid ${cellStyle.borderStyle}`,
                             backfaceVisibility: 'hidden',
                             WebkitBackfaceVisibility: 'hidden',
+                            borderRadius: '9px',
                           }}
-                          className={`absolute inset-0 rounded-xl flex items-center justify-center transition-all ${
+                          className={`absolute inset-0 flex items-center justify-center transition-all ${
                             isCheckedInactive && !cellStyle.isBlack ? 'opacity-35' : ''
                           }`}
                         >
@@ -573,18 +584,19 @@ export default function About() {
                         {/* REVERSE FACE: STAR IF WINNER, X IF INCORRECT */}
                         <div
                           style={{
-                            backgroundColor: (isDiscovered || (isWinning && isFlipped)) ? '#E2652B' : '#161619',
+                            backgroundColor: (isDiscovered || (isWinning && isFlipped)) ? '#e2652b' : '#161619',
                             border: (isDiscovered || (isWinning && isFlipped))
                               ? '1px solid rgba(255, 255, 255, 0.4)'
                               : '1px solid rgba(255, 255, 255, 0.12)',
                             backfaceVisibility: 'hidden',
                             WebkitBackfaceVisibility: 'hidden',
                             transform: 'rotateY(180deg)',
+                            borderRadius: '9px',
                             boxShadow: (isDiscovered || (isWinning && isFlipped))
-                              ? '0 0 20px rgba(226, 101, 43, 0.6)'
+                              ? '0 0 12px rgba(226, 101, 43, 0.35)'
                               : 'none',
                           }}
-                          className="absolute inset-0 rounded-xl flex items-center justify-center"
+                          className="absolute inset-0 flex items-center justify-center"
                         >
                           {(isDiscovered || (isWinning && isFlipped)) ? (
                             <StarIcon />
@@ -598,86 +610,111 @@ export default function About() {
                 })}
               </div>
 
-              {/* Dynamic Feedback Text */}
-              <div className="min-h-[26px] mt-4 flex items-center justify-center text-xs font-mono text-center">
-                <AnimatePresence mode="wait">
-                  {allFound ? (
-                    <motion.div
-                      key="completed"
-                      initial={{ opacity: 0, y: 4 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -4 }}
-                      className="text-emerald-400 font-medium text-xs font-mono"
-                    >
-                      All four passions discovered.
-                    </motion.div>
-                  ) : feedbackNotice ? (
-                    <motion.div
-                      key={feedbackNotice}
-                      initial={{ opacity: 0, y: 4 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -4 }}
-                      style={{ color: '#A1A1AA' }}
-                      className="text-xs font-mono"
-                    >
-                      {feedbackNotice}
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      key="default-hint"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      style={{ color: '#A1A1AA' }}
-                      className="text-xs font-mono"
-                    >
-                      Discover a highlighted cell to reveal a passion.
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+              <div
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: '0.74rem',
+                  color: '#7e8794',
+                  textAlign: 'center',
+                  letterSpacing: '-0.01em',
+                  minHeight: '18px',
+                }}
+              >
+                {allFound
+                  ? 'All four passions discovered.'
+                  : feedbackNotice || 'Discover a highlighted cell to reveal a passion.'}
               </div>
             </div>
 
-            {/* Right Side: Discovered Rows Container */}
+            {/* RIGHT PANEL: Compact 2x2 Grid inside Dashed Container */}
             <div
               style={{
-                padding: '24px',
-                background: '#070709',
-                border: '1px solid rgba(255, 255, 255, 0.06)',
-                borderRadius: '20px',
+                background: '#0c0f12',
+                border: '1px solid #1a1e23',
+                borderRadius: '14px',
+                padding: '22px 20px',
               }}
-              className="lg:col-span-6 xl:col-span-7 flex flex-col w-full"
+              className="flex flex-col justify-between h-full w-full"
             >
-              {/* Header Top Bar */}
-              <div className="flex flex-wrap items-center justify-between gap-3 pb-3.5 mb-4 border-b border-white/[0.08]">
-                <div className="flex items-center gap-2.5">
-                  <span className="text-[#F3F4F6] font-medium text-xs font-mono uppercase tracking-wider">
-                    Discovered So Far
+              {/* Status Bar */}
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: '14px',
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: '0.75rem',
+                }}
+              >
+                <div>
+                  <span
+                    style={{
+                      color: '#f3f4f6',
+                      fontWeight: 600,
+                      letterSpacing: '0.05em',
+                    }}
+                  >
+                    DISCOVERED SO FAR
                   </span>
-                  <span className="text-xs font-mono font-semibold text-[#E2652B] bg-[#E2652B]/10 px-2.5 py-0.5 rounded-full border border-[#E2652B]/20">
+                  <span
+                    style={{
+                      color: '#e2652b',
+                      marginLeft: '4px',
+                      fontWeight: 700,
+                    }}
+                  >
                     {discoveredHobbies.length} / 4
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2.5 shrink-0">
-                  <div
-                    style={{ padding: '5px 12px' }}
-                    className="rounded-full bg-white/[0.04] border border-[#E2652B]/30 text-xs font-mono font-medium text-[#E2652B] flex items-center gap-1.5 whitespace-nowrap shadow-sm"
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                  }}
+                >
+                  <span
+                    style={{
+                      background: '#251711',
+                      border: '1px solid #4a2717',
+                      color: '#e2652b',
+                      padding: '3px 10px',
+                      borderRadius: '14px',
+                      fontSize: '0.72rem',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                    }}
                   >
                     <span
-                      className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                        allFound
-                          ? 'bg-emerald-400 shadow-[0_0_8px_#34D399]'
-                          : 'bg-[#E2652B] shadow-[0_0_8px_#E2652B]'
-                      }`}
+                      style={{
+                        width: '5px',
+                        height: '5px',
+                        borderRadius: '50%',
+                        backgroundColor: allFound ? '#10b981' : '#e2652b',
+                        boxShadow: allFound ? '0 0 6px #10b981' : '0 0 6px #e2652b',
+                      }}
                     />
-                    <span>{allFound ? 'All 4 discovered' : `${discoveredCount} out of 4 found`}</span>
-                  </div>
+                    <span>{allFound ? '4 out of 4 found' : `${discoveredCount} out of 4 found`}</span>
+                  </span>
 
                   <button
                     type="button"
                     onClick={startFreshHunt}
-                    style={{ padding: '5px 12px' }}
-                    className="flex items-center gap-1.5 text-xs font-mono text-[#A1A1AA] hover:text-[#F3F4F6] transition-colors cursor-pointer active:scale-95 rounded-full hover:bg-white/5 border border-white/10 whitespace-nowrap shadow-sm"
+                    style={{
+                      background: 'transparent',
+                      border: 'none',
+                      color: '#7e8794',
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: '0.75rem',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '5px',
+                    }}
+                    className="hover:text-white transition-colors active:scale-95"
                     aria-label="Start Again"
                     title="Restart treasure hunt"
                   >
@@ -687,68 +724,104 @@ export default function About() {
                 </div>
               </div>
 
-              {/* Compact Horizontal Rows */}
-              <div className="flex flex-col gap-3 w-full">
+              {/* THE COMPACT 2x2 CONTAINER */}
+              <div
+                style={{
+                  flex: 1,
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+                  gridTemplateRows: 'repeat(2, minmax(0, 1fr))',
+                  gap: '8px',
+                  border: '1px dashed #20252b',
+                  borderRadius: '12px',
+                  padding: '8px',
+                }}
+                className="grid max-[768px]:grid-cols-1 max-[768px]:grid-rows-none w-full"
+              >
                 {discoveredHobbies.length === 0 ? (
-                  <div
-                    style={{
-                      padding: '28px 20px',
-                      background: 'rgba(255, 255, 255, 0.02)',
-                      border: '1px dashed rgba(255, 255, 255, 0.08)',
-                      borderRadius: '16px',
-                    }}
-                    className="flex flex-col sm:flex-row items-center justify-center gap-2.5 text-xs font-mono text-[#71717A] text-center select-none w-full min-h-[160px]"
-                  >
+                  <div className="col-span-2 row-span-2 flex flex-col items-center justify-center gap-2 p-4 text-xs font-mono text-[#7e8794] text-center select-none w-full h-full min-h-[140px]">
                     <Sparkles className="w-4 h-4 text-white/20 shrink-0" />
                     <span>Uncover active tiles in the grid to reveal hidden passions here.</span>
                   </div>
                 ) : (
-                  <AnimatePresence mode="popLayout">
+                  <>
                     {discoveredHobbies.map((hobby) => (
                       <motion.div
                         key={hobby.id}
-                        initial={{ opacity: 0, x: 20, y: 6 }}
-                        animate={{ opacity: 1, x: 0, y: 0 }}
-                        exit={{ opacity: 0, x: -16, scale: 0.96 }}
-                        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        transition={{ duration: 0.2 }}
                         style={{
-                          padding: '16px 20px',
-                          background: '#121215',
-                          border: '1px solid rgba(255, 255, 255, 0.08)',
-                          borderRadius: '14px',
+                          background: 'rgba(255, 255, 255, 0.02)',
+                          border: '1px solid #1c2025',
+                          borderRadius: '8px',
+                          padding: '9px 11px',
                         }}
-                        className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-6 hover:border-[#E2652B]/40 hover:bg-[#16161a] transition-all shadow-sm w-full"
+                        className="flex flex-col justify-center hover:bg-[#e2652b]/[0.04] hover:border-[#4a2717] transition-all group"
                       >
-                        {/* Left: Custom SVG Icon + Passion Title */}
-                        <div className="shrink-0 flex items-center gap-3 sm:min-w-[190px]">
-                          {PASSION_ICONS[hobby.id]}
-                          <h4
+                        <div
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '6px',
+                            marginBottom: '3px',
+                          }}
+                        >
+                          <span
                             style={{
-                              fontSize: '15px',
-                              fontWeight: 600,
-                              color: '#FFFFFF',
-                              lineHeight: 1.3,
+                              color: '#e2652b',
+                              fontSize: '0.85rem',
+                              lineHeight: 1,
                             }}
-                            className="font-sans tracking-tight whitespace-nowrap m-0"
+                            className="shrink-0 [&_svg]:w-3.5 [&_svg]:h-3.5"
+                          >
+                            {PASSION_ICONS[hobby.id]}
+                          </span>
+                          <span
+                            style={{
+                              fontSize: '0.82rem',
+                              fontWeight: 700,
+                              color: '#fff',
+                            }}
+                            className="tracking-tight"
                           >
                             {hobby.title}
-                          </h4>
+                          </span>
                         </div>
-
-                        {/* Right: Short Brief Description */}
                         <p
                           style={{
-                            fontSize: '13px',
-                            lineHeight: '1.5',
-                            color: '#9CA3AF',
+                            fontSize: '0.71rem',
+                            color: '#7e8794',
+                            lineHeight: 1.3,
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden',
+                            margin: 0,
                           }}
-                          className="font-sans text-left sm:text-right flex-1 m-0"
                         >
                           {hobby.desc}
                         </p>
                       </motion.div>
                     ))}
-                  </AnimatePresence>
+                    {Array.from({ length: 4 - discoveredHobbies.length }).map((_, idx) => (
+                      <div
+                        key={`empty-slot-${idx}`}
+                        style={{
+                          background: 'rgba(255, 255, 255, 0.01)',
+                          border: '1px dashed #1c2025',
+                          borderRadius: '8px',
+                          padding: '9px 11px',
+                        }}
+                        className="flex flex-col items-center justify-center text-center opacity-40 select-none min-h-[56px]"
+                      >
+                        <span className="font-mono text-[10px] text-[#4b535e] tracking-wider">
+                          ···
+                        </span>
+                      </div>
+                    ))}
+                  </>
                 )}
               </div>
             </div>
