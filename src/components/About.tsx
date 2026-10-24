@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion } from 'framer-motion'
-import { RotateCcw, Sparkles, Award, MapPin, Compass } from 'lucide-react'
+import { RotateCcw, Award, MapPin, Compass } from 'lucide-react'
 import { getAudioEnabled } from '../utils/audioState'
 import discoverySoundUrl from '../assets/mixkit-quick-win-video-game-notification-269.wav'
 
@@ -737,8 +737,24 @@ export default function About() {
                 className="grid max-[768px]:grid-cols-1 max-[768px]:grid-rows-none w-full"
               >
                 {discoveredHobbies.length === 0 ? (
-                  <div className="col-span-2 row-span-2 flex flex-col items-center justify-center gap-2 p-4 text-xs font-mono text-[#7e8794] text-center select-none w-full h-full min-h-[140px]">
-                    <Sparkles className="w-4 h-4 text-white/20 shrink-0" />
+                  <div className="col-span-2 row-span-2 flex flex-col items-center justify-center gap-2.5 p-4 text-xs font-mono text-[#7e8794] text-center select-none w-full h-full min-h-[140px]">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="22"
+                      height="22"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="lucide lucide-gift preview-icon text-white/30 shrink-0"
+                    >
+                      <path d="M12 7v14" />
+                      <path d="M20 11v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8" />
+                      <path d="M7.5 7a1 1 0 0 1 0-5A4.8 8 0 0 1 12 7a4.8 8 0 0 1 4.5-5 1 1 0 0 1 0 5" />
+                      <rect x="3" y="7" width="18" height="4" rx="1" />
+                    </svg>
                     <span>Uncover active tiles in the grid to reveal hidden passions here.</span>
                   </div>
                 ) : (
