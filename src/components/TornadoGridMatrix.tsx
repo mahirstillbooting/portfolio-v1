@@ -401,11 +401,11 @@ function MatrixCell({ item, audioCtxRef }: MatrixCellProps) {
     if (leaveTimeoutRef.current) {
       clearTimeout(leaveTimeoutRef.current)
     }
-    // Linger the SVG state for 450ms after cursor exits before playing reverse animation
+    // Linger the SVG state for 700ms after cursor exits before playing reverse animation
     leaveTimeoutRef.current = setTimeout(() => {
       triggerReverseAnimation()
       leaveTimeoutRef.current = null
-    }, 450)
+    }, 700)
   }
 
   const handleTouchStart = () => {
@@ -416,11 +416,11 @@ function MatrixCell({ item, audioCtxRef }: MatrixCellProps) {
     if (leaveTimeoutRef.current) {
       clearTimeout(leaveTimeoutRef.current)
     }
-    // Linger SVG state on touch screens before reversing
+    // Linger SVG state on touch screens for 1150ms before reversing
     leaveTimeoutRef.current = setTimeout(() => {
       triggerReverseAnimation()
       leaveTimeoutRef.current = null
-    }, 850)
+    }, 1150)
   }
 
   return (

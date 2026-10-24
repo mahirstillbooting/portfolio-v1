@@ -5,7 +5,7 @@ export default function Skills() {
   return (
     <section
       id="skills"
-      className="w-full max-w-[1200px] mx-auto select-none scroll-mt-[50px]"
+      className="w-full max-w-[1200px] mx-auto select-none scroll-mt-[28px]"
     >
       {/* Section Heading: balanced breathing room above cards */}
       <div
