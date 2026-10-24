@@ -482,17 +482,17 @@ export default function About() {
           }}
           className="lg:col-span-12 w-full hover:border-[#e2652b]/30 transition-colors shadow-[0_20px_40px_rgba(0,0,0,0.6)] backdrop-blur-xl"
         >
-          {/* Header */}
-          <div className="mb-[22px]">
+          {/* Header: Beside Coding... (left) & Four little things... (right aligned on same row) */}
+          <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 sm:gap-4 mb-4 sm:mb-4">
             <h3
               style={{
                 color: '#f3f4f6',
                 fontSize: '1.35rem',
                 fontWeight: 700,
                 letterSpacing: '-0.01em',
-                marginBottom: '6px',
+                margin: 0,
               }}
-              className="font-sans"
+              className="font-sans shrink-0"
             >
               Beside Coding...
             </h3>
@@ -500,8 +500,9 @@ export default function About() {
               style={{
                 color: '#7e8794',
                 fontSize: '0.88rem',
+                margin: 0,
               }}
-              className="font-sans"
+              className="font-sans sm:text-right"
             >
               Four little things that keep me curious. You may try to find them.
             </p>
