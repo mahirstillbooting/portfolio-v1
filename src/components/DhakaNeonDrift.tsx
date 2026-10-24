@@ -1415,7 +1415,7 @@ export default function DhakaNeonDrift() {
           opacity: isFocused ? 1 : 0,
           transform: isFocused ? 'translateY(0) scale(1)' : 'translateY(16px) scale(0.97)',
           pointerEvents: isFocused ? 'auto' : 'none',
-          width: 'min(520px, 92vw)',
+          width: 'min(480px, calc(100vw - 32px))',
           maxWidth: '100%',
           boxSizing: 'border-box',
         }}
@@ -1423,7 +1423,7 @@ export default function DhakaNeonDrift() {
       >
         <div
           style={{
-            background: 'rgba(14, 14, 16, 0.88)',
+            background: 'rgba(14, 14, 16, 0.92)',
             backdropFilter: 'blur(32px)',
             WebkitBackdropFilter: 'blur(32px)',
             border: '1px solid rgba(255, 255, 255, 0.12)',
@@ -1431,12 +1431,13 @@ export default function DhakaNeonDrift() {
             boxShadow: '0 24px 64px rgba(0, 0, 0, 0.8), 0 0 40px rgba(210, 83, 29, 0.15)',
             height: 'auto',
             minHeight: 'fit-content',
+            maxHeight: 'none',
             boxSizing: 'border-box',
             display: 'flex',
             flexDirection: 'column',
-            gap: '14px',
+            gap: '12px',
           }}
-          className="relative text-left p-4 sm:p-6"
+          className="relative text-left p-[14px_16px] sm:p-[20px_24px_18px] w-full"
         >
           {/* 1. Header Row: Refined Compact Pill Badge + Close Button */}
           <div
@@ -1489,8 +1490,8 @@ export default function DhakaNeonDrift() {
           <h2
             style={{
               fontFamily: "'JetBrains Mono', monospace, sans-serif",
-              fontSize: 'clamp(1.4rem, 4vw, 1.85rem)',
-              lineHeight: 1.1,
+              fontSize: 'clamp(1.35rem, 3.8vw, 1.8rem)',
+              lineHeight: 1.15,
               margin: 0,
             }}
             className="font-extrabold tracking-tight text-white uppercase drop-shadow-[0_2px_16px_rgba(0,0,0,0.8)]"
@@ -1502,7 +1503,7 @@ export default function DhakaNeonDrift() {
           <p
             style={{
               lineHeight: 1.55,
-              fontSize: '0.88rem',
+              fontSize: '0.86rem',
               color: '#9ca3af',
               margin: 0,
               fontFamily: "'Geist Sans', sans-serif",
@@ -1512,7 +1513,7 @@ export default function DhakaNeonDrift() {
           </p>
 
           {/* 4. CODEBASE Button Container */}
-          <div style={{ marginTop: '6px' }}>
+          <div style={{ marginTop: '2px' }}>
             <a
               href={activeProject.codeUrl}
               target="_blank"
@@ -1527,7 +1528,7 @@ export default function DhakaNeonDrift() {
                 border: '1px solid rgba(255, 255, 255, 0.18)',
                 boxSizing: 'border-box',
               }}
-              className="w-full sm:w-auto justify-center sm:justify-start px-5 py-3 sm:px-6 sm:py-3 rounded-2xl text-xs sm:text-sm font-mono font-semibold tracking-wider text-white hover:bg-white/15 hover:border-white/40 hover:shadow-[0_0_28px_rgba(255,255,255,0.18)] transition-all duration-200 active:scale-95 no-underline cursor-pointer"
+              className="w-full sm:w-auto justify-center sm:justify-start px-5 py-2.5 sm:px-6 sm:py-3 rounded-2xl text-xs sm:text-sm font-mono font-semibold tracking-wider text-white hover:bg-white/15 hover:border-white/40 hover:shadow-[0_0_28px_rgba(255,255,255,0.18)] transition-all duration-200 active:scale-95 no-underline cursor-pointer"
             >
               <GithubIcon className="w-4 h-4 opacity-90 shrink-0" />
               <span>CODEBASE</span>
@@ -1535,16 +1536,19 @@ export default function DhakaNeonDrift() {
             </a>
           </div>
 
-          {/* 5. Bottom Hint Footer (Keyboard Hints: Desktop only) */}
+          {/* 5. Bottom Hint Footer (Keyboard hints on desktop, clean touch dismiss info on mobile) */}
           <div
             style={{
-              marginTop: '10px',
-              paddingTop: '12px',
+              marginTop: '14px',
+              paddingTop: '10px',
               borderTop: '1px solid rgba(255, 255, 255, 0.08)',
               fontSize: '0.72rem',
               letterSpacing: '0.06em',
               color: '#6b7280',
               fontFamily: 'monospace',
+              width: '100%',
+              boxSizing: 'border-box',
+              lineHeight: 1.2,
             }}
             className="hidden sm:flex justify-between items-center"
           >
