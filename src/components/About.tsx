@@ -179,15 +179,22 @@ export default function About() {
   return (
     <section
       id="about"
+      style={{
+        padding: '40px 24px',
+        minHeight: 'auto',
+        height: 'auto',
+        scrollMarginTop: '80px',
+        boxSizing: 'border-box',
+      }}
       className="w-full max-w-[1200px] mx-auto relative select-none scroll-mt-[80px]"
     >
       {/* Section Heading: Player Details & The Honest Journey */}
-      <div className="mb-3 sm:mb-5 space-y-1.5 shrink-0">
+      <div className="mb-6 sm:mb-8 space-y-1.5 shrink-0">
         <div className="flex items-center gap-2 text-xs tracking-widest text-[#E2652B] font-mono uppercase">
           <Compass className="w-3.5 h-3.5 text-[#E2652B]" />
           <span>03 · PLAYER DETAILS</span>
         </div>
-        <h2 className="text-2xl sm:text-4xl font-sans font-bold text-[#F3F4F6] tracking-tight">
+        <h2 className="text-3xl sm:text-5xl font-sans font-bold text-[#F3F4F6] tracking-tight">
           The Honest Journey
         </h2>
       </div>
@@ -196,9 +203,9 @@ export default function About() {
       <div
         style={{
           display: 'grid',
-          gap: '16px',
+          gap: '20px',
         }}
-        className="grid grid-cols-1 lg:grid-cols-12 items-start flex-1 my-auto w-full"
+        className="grid grid-cols-1 lg:grid-cols-12 items-start w-full"
       >
         
         {/* Left Bio Card */}
@@ -329,44 +336,44 @@ export default function About() {
             border: '1px solid rgba(255, 255, 255, 0.08)',
             borderRadius: '24px',
           }}
-          className="lg:col-span-12 w-full p-4 sm:p-5 lg:p-6 hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl"
+          className="lg:col-span-12 w-full p-6 sm:p-7 lg:p-8 hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl"
         >
           {/* Card Header: Title & Subtitle */}
-          <div className="pb-3 mb-3.5 border-b border-white/[0.08]">
-            <div className="flex items-center gap-2 text-[11px] sm:text-xs font-mono tracking-widest text-[#E2652B] uppercase mb-1">
+          <div className="pb-4 mb-5 border-b border-white/[0.08]">
+            <div className="flex items-center gap-2 text-[11px] sm:text-xs font-mono tracking-widest text-[#E2652B] uppercase mb-1.5">
               <Sparkles className="w-3.5 h-3.5" />
               <span>INTERACTIVE DISCOVERY</span>
             </div>
             <h3
               style={{ color: '#F3F4F6' }}
-              className="text-xl sm:text-2xl font-sans font-bold tracking-tight"
+              className="text-2xl sm:text-3xl font-sans font-bold tracking-tight"
             >
               Beside Coding...
             </h3>
             <p
               style={{ color: '#A1A1AA' }}
-              className="text-xs sm:text-sm mt-0.5 font-sans"
+              className="text-xs sm:text-sm mt-1 font-sans"
             >
               Four little things that keep me curious. You may try to find them.
             </p>
           </div>
 
           {/* Main Area: Grid on Left, Discovered Rows on Right */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-start mt-2">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mt-2">
             
-            {/* Left Side: 21-Cell Contribution Grid Scaled Down Compactly */}
-            <div className="lg:col-span-5 flex flex-col items-center justify-center w-full my-auto">
+            {/* Left Side: 21-Cell Contribution Grid Restored to Tactile Scale */}
+            <div className="lg:col-span-6 xl:col-span-5 flex flex-col items-center justify-center w-full">
               <div
                 role="grid"
                 aria-label="Passion discovery contribution grid"
                 style={{
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(7, minmax(0, 36px))',
-                  gap: '8px',
+                  gridTemplateColumns: 'repeat(7, minmax(0, 52px))',
+                  gap: '12px',
                   justifyContent: 'center',
-                  padding: '14px',
+                  padding: '18px',
                 }}
-                className="rounded-2xl bg-[#0a0a0c] border border-white/[0.06] shadow-inner"
+                className="w-full max-w-[480px] rounded-2xl bg-[#0a0a0c] border border-white/[0.06] shadow-inner mx-auto"
               >
                 {GRID_CELL_STYLES.map((cellStyle, idx) => {
                   const isFlipped = flippedCells.includes(idx)
@@ -377,11 +384,12 @@ export default function About() {
                     <div
                       key={idx}
                       style={{
-                        width: '36px',
-                        height: '36px',
+                        width: '100%',
+                        maxWidth: '52px',
+                        aspectRatio: '1 / 1',
                         perspective: '1000px',
                       }}
-                      className="aspect-square relative mx-auto"
+                      className="relative mx-auto w-full"
                     >
                       <button
                         ref={(el) => {
@@ -405,7 +413,7 @@ export default function About() {
                           border: 'none',
                           padding: 0,
                         }}
-                        className={`w-full h-full rounded-lg relative cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#E2652B] active:scale-95 transition-transform ${
+                        className={`w-full h-full rounded-xl relative cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#E2652B] active:scale-95 transition-transform ${
                           cellStyle.isBlack ? 'cursor-default opacity-60' : 'hover:scale-105'
                         }`}
                       >
@@ -417,7 +425,7 @@ export default function About() {
                             backfaceVisibility: 'hidden',
                             WebkitBackfaceVisibility: 'hidden',
                           }}
-                          className={`absolute inset-0 rounded-lg flex items-center justify-center transition-all ${
+                          className={`absolute inset-0 rounded-xl flex items-center justify-center transition-all ${
                             isCheckedInactive && !cellStyle.isBlack ? 'opacity-35' : ''
                           }`}
                         >
@@ -434,11 +442,11 @@ export default function About() {
                             backfaceVisibility: 'hidden',
                             WebkitBackfaceVisibility: 'hidden',
                             transform: 'rotateY(180deg)',
-                            boxShadow: '0 0 16px rgba(226, 101, 43, 0.6)',
+                            boxShadow: '0 0 20px rgba(226, 101, 43, 0.6)',
                           }}
-                          className="absolute inset-0 rounded-lg flex items-center justify-center text-white"
+                          className="absolute inset-0 rounded-xl flex items-center justify-center text-white"
                         >
-                          <Sparkles className="w-3.5 h-3.5 text-white animate-pulse" />
+                          <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-white animate-pulse" />
                         </div>
                       </button>
                     </div>
@@ -447,7 +455,7 @@ export default function About() {
               </div>
 
               {/* Dynamic Feedback Text */}
-              <div className="min-h-[22px] mt-2 flex items-center justify-center text-xs font-mono text-center">
+              <div className="min-h-[26px] mt-3 flex items-center justify-center text-xs font-mono text-center">
                 <AnimatePresence mode="wait">
                   {allFound ? (
                     <motion.div
@@ -455,7 +463,7 @@ export default function About() {
                       initial={{ opacity: 0, y: 4 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -4 }}
-                      className="text-emerald-400 font-medium text-[11px]"
+                      className="text-emerald-400 font-medium text-xs font-mono"
                     >
                       All four passions discovered.
                     </motion.div>
@@ -466,7 +474,7 @@ export default function About() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -4 }}
                       style={{ color: '#A1A1AA' }}
-                      className="text-[11px]"
+                      className="text-xs font-mono"
                     >
                       {feedbackNotice}
                     </motion.div>
@@ -476,7 +484,7 @@ export default function About() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       style={{ color: '#A1A1AA' }}
-                      className="text-[11px]"
+                      className="text-xs font-mono"
                     >
                       Discover a highlighted cell to reveal a passion.
                     </motion.div>
@@ -486,22 +494,22 @@ export default function About() {
             </div>
 
             {/* Right Side: "Discovered So Far" Container & Rows */}
-            <div className="lg:col-span-7 flex flex-col w-full">
+            <div className="lg:col-span-6 xl:col-span-7 flex flex-col w-full">
               {/* Header Top Bar */}
-              <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 mb-2.5 border-b border-white/[0.08]">
-                <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center justify-between gap-3 pb-3 mb-3 border-b border-white/[0.08]">
+                <div className="flex items-center gap-2.5">
                   <span className="text-[#F3F4F6] font-medium text-xs font-mono uppercase tracking-wider">
                     Discovered So Far
                   </span>
-                  <span className="text-xs font-mono font-semibold text-[#E2652B] bg-[#E2652B]/10 px-2 py-0.5 rounded-full border border-[#E2652B]/20">
+                  <span className="text-xs font-mono font-semibold text-[#E2652B] bg-[#E2652B]/10 px-2.5 py-0.5 rounded-full border border-[#E2652B]/20">
                     {discoveredHobbies.length} / 4
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2 shrink-0">
+                <div className="flex items-center gap-2.5 shrink-0">
                   <div
-                    style={{ padding: '4px 10px' }}
-                    className="rounded-full bg-white/[0.04] border border-[#E2652B]/30 text-[11px] font-mono font-medium text-[#E2652B] flex items-center gap-1.5 whitespace-nowrap shadow-sm"
+                    style={{ padding: '5px 12px' }}
+                    className="rounded-full bg-white/[0.04] border border-[#E2652B]/30 text-xs font-mono font-medium text-[#E2652B] flex items-center gap-1.5 whitespace-nowrap shadow-sm"
                   >
                     <span
                       className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
@@ -516,30 +524,30 @@ export default function About() {
                   <button
                     type="button"
                     onClick={startFreshHunt}
-                    style={{ padding: '4px 10px' }}
-                    className="flex items-center gap-1.5 text-[11px] font-mono text-[#A1A1AA] hover:text-[#F3F4F6] transition-colors cursor-pointer active:scale-95 rounded-full hover:bg-white/5 border border-white/10 whitespace-nowrap shadow-sm"
+                    style={{ padding: '5px 12px' }}
+                    className="flex items-center gap-1.5 text-xs font-mono text-[#A1A1AA] hover:text-[#F3F4F6] transition-colors cursor-pointer active:scale-95 rounded-full hover:bg-white/5 border border-white/10 whitespace-nowrap shadow-sm"
                     aria-label="Start Again"
                     title="Restart treasure hunt"
                   >
-                    <RotateCcw className="w-3 h-3" />
+                    <RotateCcw className="w-3.5 h-3.5" />
                     <span>Start Again</span>
                   </button>
                 </div>
               </div>
 
               {/* Compact Horizontal Rows */}
-              <div className="flex flex-col gap-2 w-full min-h-[140px]">
+              <div className="flex flex-col gap-2.5 w-full">
                 {discoveredHobbies.length === 0 ? (
                   <div
                     style={{
-                      padding: '16px 20px',
+                      padding: '24px 20px',
                       background: 'rgba(255, 255, 255, 0.02)',
                       border: '1px dashed rgba(255, 255, 255, 0.08)',
-                      borderRadius: '14px',
+                      borderRadius: '16px',
                     }}
-                    className="flex items-center justify-center gap-2 text-xs font-mono text-[#71717A] text-center select-none w-full min-h-[58px] my-auto"
+                    className="flex flex-col sm:flex-row items-center justify-center gap-2.5 text-xs font-mono text-[#71717A] text-center select-none w-full min-h-[140px]"
                   >
-                    <Sparkles className="w-3.5 h-3.5 text-white/20 shrink-0" />
+                    <Sparkles className="w-4 h-4 text-white/20 shrink-0" />
                     <span>Uncover active tiles in the grid to reveal hidden passions here.</span>
                   </div>
                 ) : (
@@ -557,14 +565,14 @@ export default function About() {
                           border: '1px solid rgba(255, 255, 255, 0.08)',
                           borderRadius: '14px',
                         }}
-                        className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-4 hover:border-[#E2652B]/40 hover:bg-[#18181d] transition-all shadow-sm w-full"
+                        className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-6 hover:border-[#E2652B]/40 hover:bg-[#18181d] transition-all shadow-sm w-full"
                       >
                         {/* Left: Passion Title */}
-                        <div className="shrink-0 flex items-center gap-2">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#E2652B] shrink-0" />
+                        <div className="shrink-0 flex items-center gap-2.5 sm:min-w-[170px]">
+                          <span className="w-2 h-2 rounded-full bg-[#E2652B] shrink-0" />
                           <h4
                             style={{
-                              fontSize: '14.5px',
+                              fontSize: '15px',
                               fontWeight: 600,
                               color: '#FFFFFF',
                             }}
@@ -577,11 +585,11 @@ export default function About() {
                         {/* Right: Short Brief Description */}
                         <p
                           style={{
-                            fontSize: '12.5px',
-                            lineHeight: '1.4',
+                            fontSize: '13px',
+                            lineHeight: '1.45',
                             color: '#9CA3AF',
                           }}
-                          className="font-sans sm:text-right text-left"
+                          className="font-sans text-left sm:text-right flex-1"
                         >
                           {hobby.desc}
                         </p>

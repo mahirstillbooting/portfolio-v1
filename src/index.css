@@ -125,9 +125,18 @@ body {
   scroll-margin-top: 80px;
 }
 
+#about {
+  padding: 40px 24px;
+  min-height: auto;
+  height: auto;
+  overflow: visible;
+  scroll-margin-top: 80px;
+  box-sizing: border-box;
+  display: block;
+}
+
 @media (min-width: 769px) {
   #projects,
-  #about,
   #skills,
   #contact {
     height: 100vh;
@@ -145,7 +154,6 @@ body {
 
 @media (max-width: 768px) {
   #projects,
-  #about,
   #skills,
   #contact {
     height: auto;
@@ -153,6 +161,9 @@ body {
     overflow: visible;
     padding: 70px 16px;
     display: block;
+  }
+  #about {
+    padding: 32px 16px;
   }
 }
 
