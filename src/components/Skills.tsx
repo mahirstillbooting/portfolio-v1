@@ -5,10 +5,17 @@ export default function Skills() {
   return (
     <section
       id="skills"
-      className="w-full max-w-[1200px] mx-auto scroll-mt-[80px]"
+      style={{
+        padding: '40px 24px',
+        minHeight: 'auto',
+        height: 'auto',
+        scrollMarginTop: '80px',
+        boxSizing: 'border-box',
+      }}
+      className="w-full max-w-[1200px] mx-auto select-none scroll-mt-[80px]"
     >
-      {/* Section Heading with generous breathing room above and below */}
-      <div className="mb-4 sm:mb-6 lg:mb-8 space-y-2 shrink-0">
+      {/* Section Heading: consistent adequate breathing room */}
+      <div className="mb-6 sm:mb-8 space-y-1.5 shrink-0">
         <div className="flex items-center gap-2 text-xs tracking-widest text-[#E2652B] font-mono uppercase">
           <Cpu className="w-3.5 h-3.5 text-[#E2652B]" />
           <span>04 · CAPABILITIES</span>
@@ -19,7 +26,7 @@ export default function Skills() {
       </div>
 
       {/* 12-Cell Interactive Grid Matrix */}
-      <div className="flex-1 flex items-center w-full">
+      <div className="w-full">
         <TornadoGridMatrix />
       </div>
     </section>

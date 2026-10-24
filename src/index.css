@@ -125,7 +125,8 @@ body {
   scroll-margin-top: 80px;
 }
 
-#about {
+#about,
+#skills {
   padding: 40px 24px;
   min-height: auto;
   height: auto;
@@ -137,7 +138,6 @@ body {
 
 @media (min-width: 769px) {
   #projects,
-  #skills,
   #contact {
     height: 100vh;
     min-height: 700px;
@@ -154,7 +154,6 @@ body {
 
 @media (max-width: 768px) {
   #projects,
-  #skills,
   #contact {
     height: auto;
     min-height: auto;
@@ -162,7 +161,8 @@ body {
     padding: 70px 16px;
     display: block;
   }
-  #about {
+  #about,
+  #skills {
     padding: 32px 16px;
   }
 }
