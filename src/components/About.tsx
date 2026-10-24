@@ -321,10 +321,10 @@ export default function About() {
   return (
     <section
       id="about"
-      className="w-full max-w-[1200px] mx-auto relative select-none scroll-mt-[80px]"
+      className="w-full max-w-[1200px] mx-auto relative select-none scroll-mt-[40px]"
     >
-      {/* Section Heading: Player Details & The Honest Journey with spacious pleasing margin */}
-      <div className="pt-2 sm:pt-4 mb-7 sm:mb-9 lg:mb-10 space-y-2 shrink-0">
+      {/* Section Heading: Player Details & The Honest Journey with balanced spacing */}
+      <div className="pt-1 sm:pt-2 mb-5 sm:mb-6 lg:mb-7 space-y-1.5 shrink-0">
         <div className="flex items-center gap-2 text-xs tracking-widest text-[#E2652B] font-mono uppercase">
           <Compass className="w-3.5 h-3.5 text-[#E2652B]" />
           <span>03 · PLAYER DETAILS</span>

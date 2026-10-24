@@ -119,10 +119,13 @@ body {
 
 #hero,
 #projects,
-#about,
 #skills,
 #contact {
   scroll-margin-top: 80px;
+}
+
+#about {
+  scroll-margin-top: 40px;
 }
 
 @media (min-width: 769px) {
@@ -135,7 +138,6 @@ body {
     box-sizing: border-box;
   }
 
-  #about,
   #skills,
   #contact {
     min-height: 100vh;
@@ -145,6 +147,18 @@ body {
     justify-content: center;
     padding-top: 100px;
     padding-bottom: 60px;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  #about {
+    min-height: 100vh;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 72px;
+    padding-bottom: 40px;
     padding-left: 24px;
     padding-right: 24px;
   }
