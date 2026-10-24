@@ -353,8 +353,12 @@ export default function About() {
             background: '#0e0e11',
             border: '1px solid rgba(255, 255, 255, 0.08)',
             borderRadius: '24px',
+            boxSizing: 'border-box',
+            padding: '28px 30px',
+            height: 'auto',
+            minHeight: 'fit-content',
           }}
-          className="lg:col-span-7 flex flex-col p-6 sm:p-7 lg:p-8 hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl"
+          className="about-detail-card lg:col-span-7 flex flex-col justify-between hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl w-full"
         >
           {/* Header Divider: DETAILS */}
           <div className="flex items-center justify-between text-xs font-mono text-[#71717A] tracking-wider pb-3.5 mb-4 border-b border-white/[0.08]">
@@ -403,8 +407,12 @@ export default function About() {
             background: '#0e0e11',
             border: '1px solid rgba(255, 255, 255, 0.08)',
             borderRadius: '24px',
+            boxSizing: 'border-box',
+            padding: '28px 30px',
+            height: 'auto',
+            minHeight: 'fit-content',
           }}
-          className="lg:col-span-5 flex flex-col p-6 sm:p-7 lg:p-8 hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl"
+          className="about-detail-card lg:col-span-5 flex flex-col justify-between hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl w-full"
         >
           {/* Top Section: Dhaka City Telemetry */}
           <div>

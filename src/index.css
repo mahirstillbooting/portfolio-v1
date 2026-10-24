@@ -180,3 +180,15 @@ body {
     padding: 20px 18px !important;
   }
 }
+
+/* About Section Detail Cards Spacing */
+.about-detail-card {
+  padding: 28px 30px !important;
+  box-sizing: border-box !important;
+}
+
+@media (max-width: 640px) {
+  .about-detail-card {
+    padding: 20px 18px !important;
+  }
+}
