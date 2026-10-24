@@ -179,53 +179,43 @@ export default function About() {
   return (
     <section
       id="about"
-      style={{
-        padding: '60px 24px',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        boxSizing: 'border-box',
-        position: 'relative',
-        scrollMarginTop: '80px',
-      }}
       className="w-full max-w-[1200px] mx-auto relative select-none scroll-mt-[80px]"
     >
       {/* Section Heading: Player Details & The Honest Journey */}
-      <div className="mb-8 sm:mb-10 space-y-2.5">
+      <div className="mb-3 sm:mb-5 space-y-1.5 shrink-0">
         <div className="flex items-center gap-2 text-xs tracking-widest text-[#E2652B] font-mono uppercase">
           <Compass className="w-3.5 h-3.5 text-[#E2652B]" />
           <span>03 · PLAYER DETAILS</span>
         </div>
-        <h2 className="text-3xl sm:text-5xl font-sans font-bold text-[#F3F4F6] tracking-tight">
+        <h2 className="text-2xl sm:text-4xl font-sans font-bold text-[#F3F4F6] tracking-tight">
           The Honest Journey
         </h2>
       </div>
 
-      {/* 12-Column Bento Grid Layout (gap: 24px) */}
+      {/* 12-Column Bento Grid Layout */}
       <div
         style={{
           display: 'grid',
-          gap: '24px',
+          gap: '16px',
         }}
-        className="grid grid-cols-1 lg:grid-cols-12 items-start"
+        className="grid grid-cols-1 lg:grid-cols-12 items-start flex-1 my-auto w-full"
       >
         
-        {/* Left Bio Card (grid-column: span 7; padding: 40px;) */}
+        {/* Left Bio Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
           style={{
-            padding: '40px',
             background: '#0e0e11',
             border: '1px solid rgba(255, 255, 255, 0.08)',
             borderRadius: '24px',
           }}
-          className="lg:col-span-7 flex flex-col p-6 sm:p-8 lg:p-[40px] hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl"
+          className="lg:col-span-7 flex flex-col p-5 sm:p-6 lg:p-7 hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl"
         >
           {/* Header Divider: DETAILS */}
-          <div className="flex items-center justify-between text-xs font-mono text-[#71717A] tracking-wider pb-4 mb-6 border-b border-white/[0.08]">
+          <div className="flex items-center justify-between text-xs font-mono text-[#71717A] tracking-wider pb-3 mb-4 border-b border-white/[0.08]">
             <span className="text-[#F3F4F6]/90 font-medium">DETAILS</span>
             <span className="text-[#E2652B] font-semibold">EAST WEST UNIVERSITY</span>
           </div>
@@ -234,13 +224,13 @@ export default function About() {
           <div
             style={{
               fontFamily: "'Geist Sans', sans-serif",
-              fontSize: '15px',
-              lineHeight: '1.8',
+              fontSize: '14.5px',
+              lineHeight: '1.7',
               color: '#D4D4D8',
             }}
-            className="space-y-4 font-normal"
+            className="space-y-3 font-normal"
           >
-            <p style={{ marginBottom: '16px' }}>
+            <p>
               I am <strong className="text-white font-medium">Mahiruddin Chowdhury</strong>, a 4th-year Computer Science and Engineering student at East West University in Dhaka, Bangladesh. I learn at my own pace and work persistently until problems are solved.
             </p>
             <p>
@@ -249,9 +239,9 @@ export default function About() {
           </div>
 
           {/* Badges Footer Row */}
-          <div className="mt-8 pt-5 border-t border-white/[0.08] flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
-            <div className="flex items-center gap-2 text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3.5 py-1.5 rounded-full">
-              <Award className="w-4 h-4 shrink-0" />
+          <div className="mt-5 pt-3.5 border-t border-white/[0.08] flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+            <div className="flex items-center gap-2 text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full">
+              <Award className="w-3.5 h-3.5 shrink-0" />
               <span className="text-[11px]">freeCodeCamp · Responsive Web Design</span>
             </div>
 
@@ -261,23 +251,22 @@ export default function About() {
           </div>
         </motion.div>
 
-        {/* Right Column: Combined Location & Academic Education Card (grid-column: span 5;) */}
+        {/* Right Column: Combined Location & Academic Education Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1 }}
           style={{
-            padding: '32px',
             background: '#0e0e11',
             border: '1px solid rgba(255, 255, 255, 0.08)',
             borderRadius: '24px',
           }}
-          className="lg:col-span-5 flex flex-col p-6 sm:p-[32px] hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl"
+          className="lg:col-span-5 flex flex-col p-5 sm:p-6 hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl"
         >
           {/* Top Section: Dhaka City Telemetry */}
           <div>
-            <div className="flex items-center justify-between text-xs font-mono tracking-wider text-[#71717A] pb-3 mb-4 border-b border-white/[0.08]">
+            <div className="flex items-center justify-between text-xs font-mono tracking-wider text-[#71717A] pb-2.5 mb-3 border-b border-white/[0.08]">
               <span className="flex items-center gap-1.5 text-[#F3F4F6]/90 font-medium">
                 <MapPin className="w-3.5 h-3.5 text-[#E2652B]" />
                 LOCATION
@@ -286,13 +275,13 @@ export default function About() {
             </div>
 
             <h3
-              style={{ color: '#F3F4F6', fontSize: '20px', fontWeight: 700, marginBottom: '6px' }}
+              style={{ color: '#F3F4F6', fontSize: '18px', fontWeight: 700, marginBottom: '4px' }}
               className="font-sans tracking-tight"
             >
               Dhaka City
             </h3>
             <p
-              style={{ color: '#A1A1AA', fontSize: '14px', lineHeight: '1.6' }}
+              style={{ color: '#A1A1AA', fontSize: '13.5px', lineHeight: '1.5' }}
               className="font-sans"
             >
               Living and engineering in the heart of Dhaka. Fast-paced, resilient, and always active.
@@ -300,28 +289,28 @@ export default function About() {
           </div>
 
           {/* Clean Integrated Divider */}
-          <div className="border-t border-white/[0.08] my-6" />
+          <div className="border-t border-white/[0.08] my-3.5" />
 
-          {/* Bottom Section: Integrated Academic Degree & Education Details (Completely cleaned of "4th Year") */}
+          {/* Bottom Section: Integrated Academic Degree & Education Details */}
           <div>
-            <div className="flex items-center justify-between text-xs font-mono tracking-wider text-[#71717A] pb-3 mb-4 border-b border-white/[0.08]">
+            <div className="flex items-center justify-between text-xs font-mono tracking-wider text-[#71717A] pb-2.5 mb-3 border-b border-white/[0.08]">
               <span className="text-[#F3F4F6]/90 font-medium">ACADEMIC DEGREE</span>
               <span className="text-[#E2652B] font-semibold">CSE</span>
             </div>
 
             <h3
-              style={{ color: '#F3F4F6', fontSize: '18px', fontWeight: 700, marginBottom: '4px' }}
+              style={{ color: '#F3F4F6', fontSize: '17px', fontWeight: 700, marginBottom: '2px' }}
               className="font-sans tracking-tight"
             >
               BSc in Computer Science &amp; Engineering
             </h3>
             <p
-              style={{ color: '#E2652B', fontSize: '13px', fontFamily: 'monospace', fontWeight: 600, marginBottom: '8px' }}
+              style={{ color: '#E2652B', fontSize: '12.5px', fontFamily: 'monospace', fontWeight: 600, marginBottom: '4px' }}
             >
               East West University
             </p>
             <p
-              style={{ color: '#A1A1AA', fontSize: '14px', lineHeight: '1.6' }}
+              style={{ color: '#A1A1AA', fontSize: '13px', lineHeight: '1.5' }}
               className="font-sans"
             >
               Software engineering, database architectures, and QA verification.
@@ -329,46 +318,38 @@ export default function About() {
           </div>
         </motion.div>
 
-        {/* Hidden Passions Grid with Smooth Side-Stack Disclosure (grid-column: span 12;) */}
+        {/* Hidden Passions Grid with Smooth Side-Stack Disclosure */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.2 }}
           style={{
-            padding: '36px',
-            marginTop: '8px',
             background: '#0e0e11',
             border: '1px solid rgba(255, 255, 255, 0.08)',
             borderRadius: '24px',
           }}
-          className="lg:col-span-12 w-full p-6 sm:p-8 lg:p-[36px] hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl"
+          className="lg:col-span-12 w-full p-4 sm:p-5 lg:p-6 hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl"
         >
-          {/* Card Header Status Row: Generous Spacing & Balanced Padding */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 mb-7 border-b border-white/[0.08]">
+          {/* Card Header Status Row */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 mb-3.5 border-b border-white/[0.08]">
             <div>
-              <div className="flex items-center gap-2 text-[11px] sm:text-xs font-mono tracking-widest text-[#E2652B] uppercase mb-1.5">
+              <div className="flex items-center gap-2 text-[11px] sm:text-xs font-mono tracking-widest text-[#E2652B] uppercase mb-1">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>INTERACTIVE DISCOVERY</span>
               </div>
               <h3
                 style={{ color: '#F3F4F6' }}
-                className="text-2xl sm:text-3xl font-sans font-bold tracking-tight"
+                className="text-xl sm:text-2xl font-sans font-bold tracking-tight"
               >
                 Hidden Passions
               </h3>
-              <p
-                style={{ color: '#A1A1AA' }}
-                className="text-xs sm:text-sm mt-1.5 font-sans leading-relaxed"
-              >
-                Four little things that keep me curious. Find them in the grid.
-              </p>
             </div>
 
-            {/* Indicator & Refresh Buttons with Proper 8px 14px Padding */}
+            {/* Indicator & Refresh Buttons */}
             <div className="flex items-center gap-3 shrink-0">
               <div
-                style={{ padding: '8px 14px' }}
+                style={{ padding: '6px 12px' }}
                 className="rounded-full bg-white/[0.04] border border-[#E2652B]/30 text-xs font-mono font-medium text-[#E2652B] flex items-center gap-2 whitespace-nowrap shadow-sm"
               >
                 <span
@@ -384,7 +365,7 @@ export default function About() {
               <button
                 type="button"
                 onClick={startFreshHunt}
-                style={{ padding: '8px 14px' }}
+                style={{ padding: '6px 12px' }}
                 className="flex items-center gap-2 text-xs font-mono text-[#A1A1AA] hover:text-[#F3F4F6] transition-colors cursor-pointer active:scale-95 rounded-full hover:bg-white/5 border border-white/10 whitespace-nowrap shadow-sm"
                 aria-label="Start fresh hunt"
                 title="Restart treasure hunt"
@@ -395,10 +376,10 @@ export default function About() {
             </div>
           </div>
 
-          {/* Side-Stack Interactive Area: Grid on Left, Discovered Cards Accumulating on Right */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mt-4">
+          {/* Side-Stack Interactive Area */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center mt-2">
             
-            {/* Left Side: 21-Cell Contribution Grid Scaled Down to 44px x 44px with gap: 10px */}
+            {/* Left Side: 21-Cell Contribution Grid */}
             <div
               style={{
                 display: 'flex',
@@ -412,11 +393,11 @@ export default function About() {
                 aria-label="Passion discovery contribution grid"
                 style={{
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(7, minmax(0, 44px))',
-                  gap: '10px',
+                  gridTemplateColumns: 'repeat(7, minmax(0, 40px))',
+                  gap: '8px',
                   justifyContent: 'center',
                 }}
-                className="w-full max-w-[420px] mx-auto p-3 sm:p-4 rounded-2xl bg-[#070709] border border-white/5"
+                className="w-full max-w-[380px] mx-auto p-2.5 sm:p-3 rounded-2xl bg-[#070709] border border-white/5"
               >
                 {GRID_CELL_STYLES.map((cellStyle, idx) => {
                   const isFlipped = flippedCells.includes(idx)
@@ -427,8 +408,8 @@ export default function About() {
                     <div
                       key={idx}
                       style={{
-                        width: '44px',
-                        height: '44px',
+                        width: '40px',
+                        height: '40px',
                         perspective: '1000px',
                       }}
                       className="aspect-square relative mx-auto"
@@ -455,7 +436,7 @@ export default function About() {
                           cellStyle.isBlack ? 'cursor-default opacity-60' : 'hover:scale-105'
                         }`}
                       >
-                        {/* FRONT FACE (Default Contribution Grid State) */}
+                        {/* FRONT FACE */}
                         <div
                           style={{
                             backgroundColor: cellStyle.bgStyle,
@@ -472,7 +453,7 @@ export default function About() {
                           )}
                         </div>
 
-                        {/* REVERSE FACE (Realistic 3D Orange Accented Discovery Face) */}
+                        {/* REVERSE FACE */}
                         <div
                           style={{
                             backgroundColor: '#E2652B',
@@ -492,8 +473,8 @@ export default function About() {
                 })}
               </div>
 
-              {/* Dynamic Feedback Text (Zero Cut-Off / High Contrast) */}
-              <div className="min-h-[28px] mt-4 flex items-center justify-center text-xs font-mono text-center">
+              {/* Dynamic Feedback Text */}
+              <div className="min-h-[24px] mt-2 flex items-center justify-center text-xs font-mono text-center">
                 <AnimatePresence mode="wait">
                   {allFound ? (
                     <motion.div
@@ -501,7 +482,7 @@ export default function About() {
                       initial={{ opacity: 0, y: 4 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -4 }}
-                      className="text-emerald-400 font-medium"
+                      className="text-emerald-400 font-medium text-[11px]"
                     >
                       All four passions discovered.
                     </motion.div>
@@ -512,6 +493,7 @@ export default function About() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -4 }}
                       style={{ color: '#A1A1AA' }}
+                      className="text-[11px]"
                     >
                       {feedbackNotice}
                     </motion.div>
@@ -521,6 +503,7 @@ export default function About() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       style={{ color: '#A1A1AA' }}
+                      className="text-[11px]"
                     >
                       Discover a highlighted cell to reveal a passion.
                     </motion.div>
@@ -529,18 +512,18 @@ export default function About() {
               </div>
             </div>
 
-            {/* Right Side: Streamlined Discovered Cards (Strictly 2 Text Elements, Zero Blinking Dots) */}
+            {/* Right Side: Streamlined Discovered Cards */}
             <div className="lg:col-span-5 flex flex-col w-full">
-              <div className="flex items-center justify-between text-xs font-mono tracking-wider text-[#71717A] pb-3 mb-3.5 border-b border-white/[0.08]">
+              <div className="flex items-center justify-between text-xs font-mono tracking-wider text-[#71717A] pb-2 mb-2.5 border-b border-white/[0.08]">
                 <span className="text-[#F3F4F6]/90 font-medium">DISCOVERED PASSIONS</span>
                 <span className="text-[#E2652B] font-semibold">{discoveredHobbies.length} / 4</span>
               </div>
 
-              <div className="flex flex-col gap-3 min-h-[220px]">
+              <div className="flex flex-col gap-2 min-h-[160px]">
                 {discoveredHobbies.length === 0 ? (
-                  <div className="flex-1 flex flex-col items-center justify-center p-6 rounded-2xl border border-dashed border-white/10 text-center text-xs font-mono text-[#71717A] min-h-[200px] select-none">
-                    <Sparkles className="w-5 h-5 text-white/20 mb-2" />
-                    <span>Uncover active cells in the grid to reveal passions here.</span>
+                  <div className="flex-1 flex flex-col items-center justify-center p-4 rounded-xl border border-dashed border-white/10 text-center text-xs font-mono text-[#71717A] min-h-[140px] select-none">
+                    <Sparkles className="w-4 h-4 text-white/20 mb-1.5" />
+                    <span className="text-[11px]">Uncover active cells in the grid to reveal passions.</span>
                   </div>
                 ) : (
                   <AnimatePresence mode="popLayout">
@@ -551,15 +534,15 @@ export default function About() {
                         animate={{ opacity: 1, x: 0, y: 0 }}
                         exit={{ opacity: 0, x: -20, scale: 0.95 }}
                         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                        style={{ padding: '14px 20px' }}
-                        className="rounded-2xl bg-[#141418] border border-white/[0.08] hover:border-[#E2652B]/40 transition-all shadow-md text-left"
+                        style={{ padding: '10px 16px' }}
+                        className="rounded-xl bg-[#141418] border border-white/[0.08] hover:border-[#E2652B]/40 transition-all shadow-md text-left"
                       >
                         <h4
                           style={{
-                            fontSize: '17px',
+                            fontSize: '15px',
                             fontWeight: 600,
                             color: '#FFFFFF',
-                            marginBottom: '4px',
+                            marginBottom: '2px',
                           }}
                           className="font-sans tracking-tight"
                         >
@@ -567,8 +550,8 @@ export default function About() {
                         </h4>
                         <p
                           style={{
-                            fontSize: '13px',
-                            lineHeight: 1.45,
+                            fontSize: '12px',
+                            lineHeight: 1.4,
                             color: '#9CA3AF',
                           }}
                           className="font-sans"

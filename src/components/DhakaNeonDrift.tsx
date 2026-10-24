@@ -1309,10 +1309,15 @@ export default function DhakaNeonDrift() {
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     }
     window.addEventListener('resize', handleResize)
+    const resizeObserver = new ResizeObserver(() => {
+      handleResize()
+    })
+    resizeObserver.observe(container)
 
     return () => {
       cancelAnimationFrame(animId)
       observer.disconnect()
+      resizeObserver.disconnect()
       virtualKeyRef.current = null
       window.removeEventListener('keydown', handleKeyDown)
       window.removeEventListener('keyup', handleKeyUp)
@@ -1351,7 +1356,7 @@ export default function DhakaNeonDrift() {
     <div
       ref={containerRef}
       tabIndex={0}
-      className="relative w-full h-[85vh] min-h-[580px] sm:h-screen sm:min-h-[640px] bg-[#0b0b0c] overflow-hidden select-none outline-none"
+      className="relative w-full h-[85vh] min-h-[580px] md:h-full md:min-h-0 bg-[#0b0b0c] overflow-hidden select-none outline-none flex-1"
       style={{
         touchAction: 'pan-y',
       }}
@@ -1368,7 +1373,7 @@ export default function DhakaNeonDrift() {
       />
 
       {/* FLOATING PAGINATION DOCK (01 - 05): Top on phone screens, bottom on desktop screens */}
-      <div className="absolute top-20 sm:top-auto sm:bottom-12 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 sm:gap-4 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full bg-black/85 border border-[#222222] backdrop-blur-xl shadow-2xl pointer-events-auto">
+      <div className="absolute top-20 sm:top-auto sm:bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 sm:gap-4 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full bg-black/85 border border-[#222222] backdrop-blur-xl shadow-2xl pointer-events-auto">
         {PROJECTS.map((p, idx) => {
           const isSelected = activeProject.id === p.id && isFocused
           return (

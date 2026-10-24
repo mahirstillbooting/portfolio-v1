@@ -416,7 +416,7 @@ function MatrixCell({ item, audioCtxRef }: MatrixCellProps) {
         overflow: 'hidden',
         transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
       }}
-      className="w-full h-[78px] sm:h-[98px] md:h-[155px] lg:h-[185px] p-1.5 sm:p-2.5 md:p-4 lg:p-5 rounded-xl sm:rounded-2xl hover:border-[#E2652B]/50 hover:bg-white/[0.05] hover:shadow-[0_16px_36px_rgba(0,0,0,0.85)] hover:-translate-y-1 active:scale-95 select-none group"
+      className="w-full h-[78px] sm:h-[98px] md:h-[135px] lg:h-[160px] p-1.5 sm:p-2.5 md:p-3.5 lg:p-4 rounded-xl sm:rounded-2xl hover:border-[#E2652B]/50 hover:bg-white/[0.05] hover:shadow-[0_16px_36px_rgba(0,0,0,0.85)] hover:-translate-y-1 active:scale-95 select-none group"
     >
       {/* Top telemetry: N-01 code and red/orange status dot */}
       <div className="w-full flex items-center justify-between text-[7px] sm:text-[9px] md:text-[10px] lg:text-[11px] font-mono text-[#71717A] px-0.5 sm:px-1">
@@ -447,7 +447,7 @@ export default function TornadoGridMatrix() {
 
   return (
     <div
-      className="w-full grid grid-cols-4 gap-2 sm:gap-3.5 md:gap-5 lg:gap-6"
+      className="w-full grid grid-cols-4 gap-2 sm:gap-3.5 md:gap-4 lg:gap-5"
     >
       {TECH_STACK_ITEMS.map((item) => (
         <MatrixCell

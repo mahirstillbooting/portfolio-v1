@@ -31,18 +31,7 @@ export default function Contact() {
   return (
     <section
       id="contact"
-      style={{
-        maxWidth: '860px',
-        margin: '0 auto',
-        padding: '60px 24px',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        boxSizing: 'border-box',
-        position: 'relative',
-        scrollMarginTop: '80px',
-      }}
-      className="w-full scroll-mt-[80px]"
+      className="w-full max-w-[860px] mx-auto scroll-mt-[80px]"
     >
       <motion.div
         initial={{ opacity: 0, scale: 0.98 }}
@@ -56,7 +45,7 @@ export default function Contact() {
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
         }}
-        className="text-center relative overflow-hidden w-full shadow-2xl p-6 sm:p-12 lg:p-14"
+        className="text-center relative overflow-hidden w-full shadow-2xl p-6 sm:p-10 lg:p-12 my-auto"
       >
         {/* Subtle Ambient Accent */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-36 bg-[#E2652B]/10 blur-3xl pointer-events-none" />
