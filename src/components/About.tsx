@@ -345,10 +345,10 @@ export default function About() {
           display: 'grid',
           gap: '20px',
         }}
-        className="grid grid-cols-1 lg:grid-cols-12 items-start w-full"
+        className="grid grid-cols-1 lg:grid-cols-12 items-stretch w-full"
       >
         
-        {/* Left Bio Card: Generous spacious internal padding and comfortable typography */}
+        {/* Left Bio Card: Stretched to equal height, clean header, spacious certification footer */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -360,38 +360,37 @@ export default function About() {
             borderRadius: '24px',
             boxSizing: 'border-box',
             padding: '28px 30px',
-            height: 'auto',
-            minHeight: 'fit-content',
           }}
-          className="about-detail-card lg:col-span-7 flex flex-col justify-between hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl w-full"
+          className="about-detail-card lg:col-span-7 flex flex-col justify-between hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl w-full h-full"
         >
-          {/* Header Divider: DETAILS */}
-          <div className="flex items-center justify-between text-xs font-mono text-[#71717A] tracking-wider pb-3.5 mb-4 border-b border-white/[0.08]">
-            <span className="text-[#F3F4F6]/90 font-medium">DETAILS</span>
-            <span className="text-[#E2652B] font-semibold">EAST WEST UNIVERSITY</span>
+          <div>
+            {/* Header Divider: DETAILS */}
+            <div className="flex items-center justify-between text-xs font-mono text-[#71717A] tracking-wider pb-3.5 mb-4 border-b border-white/[0.08]">
+              <span className="text-[#F3F4F6]/90 font-medium">DETAILS</span>
+            </div>
+
+            {/* Clean Geist Sans Typography with ample line-height and paragraph spacing */}
+            <div
+              style={{
+                fontFamily: "'Geist Sans', sans-serif",
+                fontSize: '15px',
+                lineHeight: '1.75',
+                color: '#D4D4D8',
+              }}
+              className="space-y-3.5 font-normal"
+            >
+              <p>
+                I am <strong className="text-white font-medium">Mahiruddin Chowdhury</strong>, a 4th-year Computer Science and Engineering student at East West University in Dhaka, Bangladesh. I learn at my own pace and work persistently until problems are solved.
+              </p>
+              <p>
+                My passion began with <span className="text-white font-medium">Metal Slug</span> arcades and <span className="text-[#E2652B] font-medium">GTA: San Andreas</span>, evolving into software development, web tinkering, and AI engineering.
+              </p>
+            </div>
           </div>
 
-          {/* Clean Geist Sans Typography with ample line-height and paragraph spacing */}
-          <div
-            style={{
-              fontFamily: "'Geist Sans', sans-serif",
-              fontSize: '15px',
-              lineHeight: '1.75',
-              color: '#D4D4D8',
-            }}
-            className="space-y-3.5 font-normal"
-          >
-            <p>
-              I am <strong className="text-white font-medium">Mahiruddin Chowdhury</strong>, a 4th-year Computer Science and Engineering student at East West University in Dhaka, Bangladesh. I learn at my own pace and work persistently until problems are solved.
-            </p>
-            <p>
-              My passion began with <span className="text-white font-medium">Metal Slug</span> arcades and <span className="text-[#E2652B] font-medium">GTA: San Andreas</span>, evolving into software development, web tinkering, and AI engineering.
-            </p>
-          </div>
-
-          {/* Badges Footer Row */}
-          <div className="mt-6 pt-4 border-t border-white/[0.08] flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
-            <div className="flex items-center gap-2 text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full">
+          {/* Badges Footer Row: Generous top spacing from paragraph content and subtle divider */}
+          <div className="mt-8 pt-5 border-t border-white/[0.08] flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+            <div className="flex items-center gap-2 text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full">
               <Award className="w-3.5 h-3.5 shrink-0" />
               <span className="text-[11px]">freeCodeCamp · Responsive Web Design</span>
             </div>
@@ -402,7 +401,7 @@ export default function About() {
           </div>
         </motion.div>
 
-        {/* Right Column: Combined Location & Academic Education Card with enhanced breathing room */}
+        {/* Right Column: Combined Location & Academic Education Card with clean headers */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -414,10 +413,8 @@ export default function About() {
             borderRadius: '24px',
             boxSizing: 'border-box',
             padding: '28px 30px',
-            height: 'auto',
-            minHeight: 'fit-content',
           }}
-          className="about-detail-card lg:col-span-5 flex flex-col justify-between hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl w-full"
+          className="about-detail-card lg:col-span-5 flex flex-col justify-between hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl w-full h-full"
         >
           {/* Top Section: Dhaka City Telemetry */}
           <div>
@@ -426,7 +423,6 @@ export default function About() {
                 <MapPin className="w-3.5 h-3.5 text-[#E2652B]" />
                 LOCATION
               </span>
-              <span className="text-[#E2652B] font-semibold">23.81° N, 90.41° E</span>
             </div>
 
             <h3
@@ -450,7 +446,6 @@ export default function About() {
           <div>
             <div className="flex items-center justify-between text-xs font-mono tracking-wider text-[#71717A] pb-3 mb-3.5 border-b border-white/[0.08]">
               <span className="text-[#F3F4F6]/90 font-medium">ACADEMIC DEGREE</span>
-              <span className="text-[#E2652B] font-semibold">CSE</span>
             </div>
 
             <h3
