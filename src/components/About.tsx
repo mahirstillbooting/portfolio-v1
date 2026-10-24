@@ -391,18 +391,28 @@ export default function About() {
           {/* Clean Integrated Divider */}
           <div className="border-t border-white/[0.08] my-4 sm:my-5 w-full" />
 
-          {/* Badges Footer Row: Pushed comfortably down from the horizontal divider line */}
-          <div className="flex flex-wrap items-center justify-between gap-2.5 sm:gap-3 text-xs font-mono">
-            <div className="flex items-center gap-2 text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full">
-              <Award className="w-3.5 h-3.5 shrink-0" />
-              <span className="text-[10.5px] sm:text-[11px] font-medium leading-none tracking-wide">
+          {/* Badges Footer Row: Real button-like spacious padding around text and icons */}
+          <div className="flex flex-wrap items-center justify-between gap-3 text-xs font-mono w-full">
+            <div
+              style={{
+                padding: '9px 18px',
+              }}
+              className="flex items-center gap-2.5 text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/15 border border-emerald-500/25 rounded-full transition-colors cursor-default select-none"
+            >
+              <Award className="w-4 h-4 shrink-0 text-emerald-400" />
+              <span className="text-[11px] sm:text-xs font-medium leading-none tracking-wide whitespace-nowrap">
                 freeCodeCamp · Responsive Web Design
               </span>
             </div>
 
-            <div className="flex items-center gap-2 text-sky-400 bg-sky-500/10 border border-sky-500/20 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full">
-              <Languages className="w-3.5 h-3.5 shrink-0" />
-              <span className="text-[10.5px] sm:text-[11px] font-medium leading-none tracking-wide">
+            <div
+              style={{
+                padding: '9px 18px',
+              }}
+              className="flex items-center gap-2.5 text-sky-400 bg-sky-500/10 hover:bg-sky-500/15 border border-sky-500/25 rounded-full transition-colors cursor-default select-none"
+            >
+              <Languages className="w-4 h-4 shrink-0 text-sky-400" />
+              <span className="text-[11px] sm:text-xs font-medium leading-none tracking-wide whitespace-nowrap">
                 Native &amp; Professional English Proficiency
               </span>
             </div>
