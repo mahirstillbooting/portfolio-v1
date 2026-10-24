@@ -323,8 +323,8 @@ export default function About() {
       id="about"
       className="w-full max-w-[1200px] mx-auto relative select-none scroll-mt-[80px]"
     >
-      {/* Section Heading: Player Details & The Honest Journey */}
-      <div className="mb-6 sm:mb-8 space-y-1.5 shrink-0">
+      {/* Section Heading: Player Details & The Honest Journey with spacious pleasing margin */}
+      <div className="pt-2 sm:pt-4 mb-7 sm:mb-9 lg:mb-10 space-y-2 shrink-0">
         <div className="flex items-center gap-2 text-xs tracking-widest text-[#E2652B] font-mono uppercase">
           <Compass className="w-3.5 h-3.5 text-[#E2652B]" />
           <span>03 · PLAYER DETAILS</span>
@@ -343,7 +343,7 @@ export default function About() {
         className="grid grid-cols-1 lg:grid-cols-12 items-start w-full"
       >
         
-        {/* Left Bio Card */}
+        {/* Left Bio Card: Generous spacious internal padding and comfortable typography */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -354,23 +354,23 @@ export default function About() {
             border: '1px solid rgba(255, 255, 255, 0.08)',
             borderRadius: '24px',
           }}
-          className="lg:col-span-7 flex flex-col p-5 sm:p-6 lg:p-7 hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl"
+          className="lg:col-span-7 flex flex-col p-6 sm:p-7 lg:p-8 hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl"
         >
           {/* Header Divider: DETAILS */}
-          <div className="flex items-center justify-between text-xs font-mono text-[#71717A] tracking-wider pb-3 mb-4 border-b border-white/[0.08]">
+          <div className="flex items-center justify-between text-xs font-mono text-[#71717A] tracking-wider pb-3.5 mb-4 border-b border-white/[0.08]">
             <span className="text-[#F3F4F6]/90 font-medium">DETAILS</span>
             <span className="text-[#E2652B] font-semibold">EAST WEST UNIVERSITY</span>
           </div>
 
-          {/* Clean Geist Sans Typography */}
+          {/* Clean Geist Sans Typography with ample line-height and paragraph spacing */}
           <div
             style={{
               fontFamily: "'Geist Sans', sans-serif",
-              fontSize: '14.5px',
-              lineHeight: '1.7',
+              fontSize: '15px',
+              lineHeight: '1.75',
               color: '#D4D4D8',
             }}
-            className="space-y-3 font-normal"
+            className="space-y-3.5 font-normal"
           >
             <p>
               I am <strong className="text-white font-medium">Mahiruddin Chowdhury</strong>, a 4th-year Computer Science and Engineering student at East West University in Dhaka, Bangladesh. I learn at my own pace and work persistently until problems are solved.
@@ -381,7 +381,7 @@ export default function About() {
           </div>
 
           {/* Badges Footer Row */}
-          <div className="mt-5 pt-3.5 border-t border-white/[0.08] flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+          <div className="mt-6 pt-4 border-t border-white/[0.08] flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
             <div className="flex items-center gap-2 text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full">
               <Award className="w-3.5 h-3.5 shrink-0" />
               <span className="text-[11px]">freeCodeCamp · Responsive Web Design</span>
@@ -393,7 +393,7 @@ export default function About() {
           </div>
         </motion.div>
 
-        {/* Right Column: Combined Location & Academic Education Card */}
+        {/* Right Column: Combined Location & Academic Education Card with enhanced breathing room */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -404,11 +404,11 @@ export default function About() {
             border: '1px solid rgba(255, 255, 255, 0.08)',
             borderRadius: '24px',
           }}
-          className="lg:col-span-5 flex flex-col p-5 sm:p-6 hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl"
+          className="lg:col-span-5 flex flex-col p-6 sm:p-7 lg:p-8 hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl"
         >
           {/* Top Section: Dhaka City Telemetry */}
           <div>
-            <div className="flex items-center justify-between text-xs font-mono tracking-wider text-[#71717A] pb-2.5 mb-3 border-b border-white/[0.08]">
+            <div className="flex items-center justify-between text-xs font-mono tracking-wider text-[#71717A] pb-3 mb-3.5 border-b border-white/[0.08]">
               <span className="flex items-center gap-1.5 text-[#F3F4F6]/90 font-medium">
                 <MapPin className="w-3.5 h-3.5 text-[#E2652B]" />
                 LOCATION
@@ -417,13 +417,13 @@ export default function About() {
             </div>
 
             <h3
-              style={{ color: '#F3F4F6', fontSize: '18px', fontWeight: 700, marginBottom: '4px' }}
+              style={{ color: '#F3F4F6', fontSize: '19px', fontWeight: 700, marginBottom: '6px' }}
               className="font-sans tracking-tight"
             >
               Dhaka City
             </h3>
             <p
-              style={{ color: '#A1A1AA', fontSize: '13.5px', lineHeight: '1.5' }}
+              style={{ color: '#A1A1AA', fontSize: '14px', lineHeight: '1.6' }}
               className="font-sans"
             >
               Living and engineering in the heart of Dhaka. Fast-paced, resilient, and always active.
@@ -431,28 +431,28 @@ export default function About() {
           </div>
 
           {/* Clean Integrated Divider */}
-          <div className="border-t border-white/[0.08] my-3.5" />
+          <div className="border-t border-white/[0.08] my-4 sm:my-5" />
 
           {/* Bottom Section: Integrated Academic Degree & Education Details */}
           <div>
-            <div className="flex items-center justify-between text-xs font-mono tracking-wider text-[#71717A] pb-2.5 mb-3 border-b border-white/[0.08]">
+            <div className="flex items-center justify-between text-xs font-mono tracking-wider text-[#71717A] pb-3 mb-3.5 border-b border-white/[0.08]">
               <span className="text-[#F3F4F6]/90 font-medium">ACADEMIC DEGREE</span>
               <span className="text-[#E2652B] font-semibold">CSE</span>
             </div>
 
             <h3
-              style={{ color: '#F3F4F6', fontSize: '17px', fontWeight: 700, marginBottom: '2px' }}
+              style={{ color: '#F3F4F6', fontSize: '18px', fontWeight: 700, marginBottom: '4px' }}
               className="font-sans tracking-tight"
             >
               BSc in Computer Science &amp; Engineering
             </h3>
             <p
-              style={{ color: '#E2652B', fontSize: '12.5px', fontFamily: 'monospace', fontWeight: 600, marginBottom: '4px' }}
+              style={{ color: '#E2652B', fontSize: '13px', fontFamily: 'monospace', fontWeight: 600, marginBottom: '6px' }}
             >
               East West University
             </p>
             <p
-              style={{ color: '#A1A1AA', fontSize: '13px', lineHeight: '1.5' }}
+              style={{ color: '#A1A1AA', fontSize: '13.5px', lineHeight: '1.6' }}
               className="font-sans"
             >
               Software engineering, database architectures, and QA verification.
