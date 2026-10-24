@@ -499,7 +499,7 @@ export default function About() {
               display: 'grid',
               alignItems: 'stretch',
             }}
-            className="grid grid-cols-1 min-[769px]:grid-cols-[0.95fr_1.35fr] gap-[18px] items-stretch w-full"
+            className="grid grid-cols-1 min-[769px]:grid-cols-[1fr_1.15fr] gap-[18px] items-stretch w-full"
           >
             {/* LEFT MATRIX */}
             <div
@@ -509,14 +509,15 @@ export default function About() {
                 borderRadius: '14px',
                 padding: '22px 20px',
               }}
-              className="flex flex-col justify-between h-full w-full"
+              className="flex flex-col justify-between h-full w-full min-w-0 overflow-hidden"
             >
               <div
                 role="grid"
                 aria-label="Passion discovery contribution grid"
                 style={{
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(7, 1fr)',
+                  gridTemplateColumns: 'repeat(7, minmax(0, 1fr))',
+                  width: '100%',
                   gap: '8px',
                   marginBottom: '18px',
                 }}
@@ -535,7 +536,7 @@ export default function About() {
                         aspectRatio: '1 / 1',
                         perspective: '1000px',
                       }}
-                      className="relative w-full"
+                      className="relative w-full min-w-0"
                     >
                       <button
                         ref={(el) => {
@@ -559,7 +560,7 @@ export default function About() {
                           border: 'none',
                           padding: 0,
                         }}
-                        className={`w-full h-full rounded-[9px] relative cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-[#e2652b] active:scale-95 transition-transform ${
+                        className={`w-full h-full min-w-0 rounded-[9px] relative cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-[#e2652b] active:scale-95 transition-transform ${
                           cellStyle.isBlack ? 'cursor-default opacity-60' : 'hover:scale-105'
                         }`}
                       >
@@ -634,7 +635,7 @@ export default function About() {
                 borderRadius: '14px',
                 padding: '22px 20px',
               }}
-              className="flex flex-col justify-between h-full w-full"
+              className="flex flex-col justify-between h-full w-full min-w-0"
             >
               {/* Status Bar */}
               <div
@@ -758,7 +759,7 @@ export default function About() {
                           borderRadius: '8px',
                           padding: '9px 11px',
                         }}
-                        className="flex flex-col justify-center hover:bg-[#e2652b]/[0.04] hover:border-[#4a2717] transition-all group"
+                        className="flex flex-col justify-center hover:bg-[#e2652b]/[0.04] hover:border-[#4a2717] transition-all group min-w-0"
                       >
                         <div
                           style={{
