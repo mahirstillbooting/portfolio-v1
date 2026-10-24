@@ -324,7 +324,12 @@ export default function About() {
       className="w-full max-w-[1200px] mx-auto relative select-none scroll-mt-[40px]"
     >
       {/* Section Heading: Player Details & Who Am I */}
-      <div className="pt-3 sm:pt-5 mb-7 sm:mb-9 lg:mb-10 space-y-2 shrink-0">
+      <div
+        style={{
+          marginBottom: 'clamp(36px, 4.5vw, 52px)',
+        }}
+        className="pt-1 sm:pt-2 space-y-2 shrink-0"
+      >
         <div className="flex items-center gap-2 text-xs tracking-widest text-[#E2652B] font-mono uppercase">
           <Compass className="w-3.5 h-3.5 text-[#E2652B]" />
           <span>03 · PLAYER DETAILS</span>
