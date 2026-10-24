@@ -388,8 +388,11 @@ export default function About() {
             </div>
           </div>
 
-          {/* Badges Footer Row: Generous top spacing from paragraph content and subtle divider */}
-          <div className="mt-8 pt-5 border-t border-white/[0.08] flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+          {/* Clean Integrated Divider */}
+          <div className="border-t border-white/[0.08] my-4 sm:my-5 w-full" />
+
+          {/* Badges Footer Row: Pushed comfortably down from the horizontal divider line */}
+          <div className="flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
             <div className="flex items-center gap-2 text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full">
               <Award className="w-3.5 h-3.5 shrink-0" />
               <span className="text-[11px]">freeCodeCamp · Responsive Web Design</span>
