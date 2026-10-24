@@ -178,75 +178,44 @@ interface CellConfig {
   isBlack: boolean
 }
 
-// Dynamically generate a fresh randomized matrix with subtle palette variations
-function generateRandomMatrix(): Omit<CellConfig, 'id'>[] {
-  // Inactive / "No activity recorded" cells:
-  // Made distinguishable and brighter than previous pitch black (#0E0E10)
-  const inactiveVariants = [
-    { bgStyle: '#191C20', borderStyle: 'rgba(255, 255, 255, 0.08)' },
-    { bgStyle: '#1C1F24', borderStyle: 'rgba(255, 255, 255, 0.09)' },
-    { bgStyle: '#171A1E', borderStyle: 'rgba(255, 255, 255, 0.08)' },
-    { bgStyle: '#1E2227', borderStyle: 'rgba(255, 255, 255, 0.09)' },
-  ]
+// Exact original palette: only the "no activity" tile (#161619) is made slightly brighter and distinguishable
+const BASE_GRID_CELLS: Omit<CellConfig, 'id'>[] = [
+  // 6 Charcoal tiles (#1C1C1E)
+  { colorClass: 'charcoal', bgStyle: '#1C1C1E', borderStyle: 'rgba(255, 255, 255, 0.08)', isBlack: false },
+  { colorClass: 'charcoal', bgStyle: '#1C1C1E', borderStyle: 'rgba(255, 255, 255, 0.08)', isBlack: false },
+  { colorClass: 'charcoal', bgStyle: '#1C1C1E', borderStyle: 'rgba(255, 255, 255, 0.08)', isBlack: false },
+  { colorClass: 'charcoal', bgStyle: '#1C1C1E', borderStyle: 'rgba(255, 255, 255, 0.08)', isBlack: false },
+  { colorClass: 'charcoal', bgStyle: '#1C1C1E', borderStyle: 'rgba(255, 255, 255, 0.08)', isBlack: false },
+  { colorClass: 'charcoal', bgStyle: '#1C1C1E', borderStyle: 'rgba(255, 255, 255, 0.08)', isBlack: false },
 
-  // Charcoal cells (low activity):
-  const charcoalVariants = [
-    { bgStyle: '#242930', borderStyle: 'rgba(255, 255, 255, 0.12)' },
-    { bgStyle: '#272C34', borderStyle: 'rgba(255, 255, 255, 0.12)' },
-    { bgStyle: '#21252C', borderStyle: 'rgba(255, 255, 255, 0.11)' },
-    { bgStyle: '#2A2F37', borderStyle: 'rgba(255, 255, 255, 0.13)' },
-  ]
+  // 6 Warm Brown tiles (#3A2218)
+  { colorClass: 'warm_brown', bgStyle: '#3A2218', borderStyle: 'rgba(226, 101, 43, 0.3)', isBlack: false },
+  { colorClass: 'warm_brown', bgStyle: '#3A2218', borderStyle: 'rgba(226, 101, 43, 0.3)', isBlack: false },
+  { colorClass: 'warm_brown', bgStyle: '#3A2218', borderStyle: 'rgba(226, 101, 43, 0.3)', isBlack: false },
+  { colorClass: 'warm_brown', bgStyle: '#3A2218', borderStyle: 'rgba(226, 101, 43, 0.3)', isBlack: false },
+  { colorClass: 'warm_brown', bgStyle: '#3A2218', borderStyle: 'rgba(226, 101, 43, 0.3)', isBlack: false },
+  { colorClass: 'warm_brown', bgStyle: '#3A2218', borderStyle: 'rgba(226, 101, 43, 0.3)', isBlack: false },
 
-  // Warm brown cells (medium activity):
-  const warmBrownVariants = [
-    { bgStyle: '#3D251A', borderStyle: 'rgba(226, 101, 43, 0.35)' },
-    { bgStyle: '#44291D', borderStyle: 'rgba(226, 101, 43, 0.38)' },
-    { bgStyle: '#372016', borderStyle: 'rgba(226, 101, 43, 0.32)' },
-    { bgStyle: '#4A2D20', borderStyle: 'rgba(226, 101, 43, 0.4)' },
-  ]
+  // 3 Burnt Orange tiles (#E2652B)
+  { colorClass: 'burnt_orange', bgStyle: '#E2652B', borderStyle: 'rgba(226, 101, 43, 0.7)', isBlack: false },
+  { colorClass: 'burnt_orange', bgStyle: '#E2652B', borderStyle: 'rgba(226, 101, 43, 0.7)', isBlack: false },
+  { colorClass: 'burnt_orange', bgStyle: '#E2652B', borderStyle: 'rgba(226, 101, 43, 0.7)', isBlack: false },
 
-  // Burnt orange cells (high activity / highlight):
-  const orangeVariants = [
-    { bgStyle: '#E2652B', borderStyle: 'rgba(226, 101, 43, 0.75)' },
-    { bgStyle: '#D95C22', borderStyle: 'rgba(226, 101, 43, 0.7)' },
-    { bgStyle: '#E86D33', borderStyle: 'rgba(226, 101, 43, 0.8)' },
-    { bgStyle: '#DF6227', borderStyle: 'rgba(226, 101, 43, 0.72)' },
-  ]
+  // 6 No Activity tiles: made a bit brighter (#161619) so it is distinguishable from black and other cells
+  { colorClass: 'black', bgStyle: '#161619', borderStyle: 'rgba(255, 255, 255, 0.06)', isBlack: true },
+  { colorClass: 'black', bgStyle: '#161619', borderStyle: 'rgba(255, 255, 255, 0.06)', isBlack: true },
+  { colorClass: 'black', bgStyle: '#161619', borderStyle: 'rgba(255, 255, 255, 0.06)', isBlack: true },
+  { colorClass: 'black', bgStyle: '#161619', borderStyle: 'rgba(255, 255, 255, 0.06)', isBlack: true },
+  { colorClass: 'black', bgStyle: '#161619', borderStyle: 'rgba(255, 255, 255, 0.06)', isBlack: true },
+  { colorClass: 'black', bgStyle: '#161619', borderStyle: 'rgba(255, 255, 255, 0.06)', isBlack: true },
+]
 
-  const pick = <T,>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)]
-
-  const pool: Omit<CellConfig, 'id'>[] = []
-
-  // 5 inactive cells (distinguishable, brighter dark)
-  for (let i = 0; i < 5; i++) {
-    const v = pick(inactiveVariants)
-    pool.push({ colorClass: 'black', bgStyle: v.bgStyle, borderStyle: v.borderStyle, isBlack: true })
-  }
-
-  // 7 charcoal cells
-  for (let i = 0; i < 7; i++) {
-    const v = pick(charcoalVariants)
-    pool.push({ colorClass: 'charcoal', bgStyle: v.bgStyle, borderStyle: v.borderStyle, isBlack: false })
-  }
-
-  // 5 warm brown cells
-  for (let i = 0; i < 5; i++) {
-    const v = pick(warmBrownVariants)
-    pool.push({ colorClass: 'warm_brown', bgStyle: v.bgStyle, borderStyle: v.borderStyle, isBlack: false })
-  }
-
-  // 4 burnt orange cells
-  for (let i = 0; i < 4; i++) {
-    const v = pick(orangeVariants)
-    pool.push({ colorClass: 'burnt_orange', bgStyle: v.bgStyle, borderStyle: v.borderStyle, isBlack: false })
-  }
-
-  // Shuffle all 21 cells randomly
-  return pool.sort(() => Math.random() - 0.5)
+function generateShuffledMatrix(): Omit<CellConfig, 'id'>[] {
+  return [...BASE_GRID_CELLS].sort(() => Math.random() - 0.5)
 }
 
 export default function About() {
-  const [gridCellStyles, setGridCellStyles] = useState<Omit<CellConfig, 'id'>[]>(() => generateRandomMatrix())
+  const [gridCellStyles, setGridCellStyles] = useState<Omit<CellConfig, 'id'>[]>(() => generateShuffledMatrix())
   const [winningCellMap, setWinningCellMap] = useState<Record<number, Hobby>>({})
   const [discoveredCells, setDiscoveredCells] = useState<number[]>([])
   const [discoveredHobbies, setDiscoveredHobbies] = useState<Hobby[]>([])
@@ -262,7 +231,7 @@ export default function About() {
 
   const startFreshHunt = useCallback(() => {
     // Re-roll grid color matrix pattern on every reset
-    const newStyles = generateRandomMatrix()
+    const newStyles = generateShuffledMatrix()
     setGridCellStyles(newStyles)
 
     // Randomize active passion coordinates across valid candidates
@@ -501,37 +470,42 @@ export default function About() {
             background: '#111417',
             border: '1px solid #1d2127',
             borderRadius: '20px',
+            padding: '28px',
           }}
-          className="lg:col-span-12 w-full p-4 sm:p-6 lg:p-7 hover:border-[#e2652b]/30 transition-colors shadow-[0_20px_40px_rgba(0,0,0,0.6)] backdrop-blur-xl"
+          className="lg:col-span-12 w-full hover:border-[#e2652b]/30 transition-colors shadow-[0_20px_40px_rgba(0,0,0,0.6)] backdrop-blur-xl"
         >
           {/* Header */}
-          <div className="mb-4 sm:mb-[22px]">
+          <div className="mb-[22px]">
             <h3
               style={{
                 color: '#f3f4f6',
+                fontSize: '1.35rem',
+                fontWeight: 700,
                 letterSpacing: '-0.01em',
+                marginBottom: '6px',
               }}
-              className="text-lg sm:text-xl lg:text-[1.35rem] font-bold font-sans mb-1"
+              className="font-sans"
             >
               Beside Coding...
             </h3>
             <p
               style={{
                 color: '#7e8794',
+                fontSize: '0.88rem',
               }}
-              className="text-xs sm:text-[0.88rem] font-sans leading-relaxed"
+              className="font-sans"
             >
               Four little things that keep me curious. You may try to find them.
             </p>
           </div>
 
-          {/* 2 Columns: strictly locked to equal height on desktop, fluid stack on mobile */}
+          {/* 2 Columns: strictly locked to equal height */}
           <div
             style={{
               display: 'grid',
               alignItems: 'stretch',
             }}
-            className="grid grid-cols-1 min-[769px]:grid-cols-[1fr_1.15fr] gap-3.5 sm:gap-[18px] items-stretch w-full"
+            className="grid grid-cols-1 min-[769px]:grid-cols-[1fr_1.15fr] gap-[18px] items-stretch w-full"
           >
             {/* LEFT MATRIX */}
             <div
@@ -539,8 +513,9 @@ export default function About() {
                 background: '#0c0f12',
                 border: '1px solid #1a1e23',
                 borderRadius: '14px',
+                padding: '22px 20px',
               }}
-              className="flex flex-col justify-between h-full w-full min-w-0 overflow-hidden p-3.5 sm:p-5"
+              className="flex flex-col justify-between h-full w-full min-w-0 overflow-hidden"
             >
               <div
                 role="grid"
@@ -549,8 +524,10 @@ export default function About() {
                   display: 'grid',
                   gridTemplateColumns: 'repeat(7, minmax(0, 1fr))',
                   width: '100%',
+                  gap: '8px',
+                  marginBottom: '18px',
                 }}
-                className="gap-1.5 sm:gap-2 mb-3 sm:mb-4 w-full"
+                className="w-full"
               >
                 {gridCellStyles.map((cellStyle, idx) => {
                   const isFlipped = flippedCells.includes(idx)
@@ -643,12 +620,12 @@ export default function About() {
               <div
                 style={{
                   fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: '0.74rem',
                   color: '#7e8794',
                   textAlign: 'center',
                   letterSpacing: '-0.01em',
                   minHeight: '18px',
                 }}
-                className="text-[11px] sm:text-[0.74rem] mt-1 sm:mt-0"
               >
                 {allFound
                   ? 'All four passions discovered.'
@@ -662,45 +639,61 @@ export default function About() {
                 background: '#0c0f12',
                 border: '1px solid #1a1e23',
                 borderRadius: '14px',
+                padding: '22px 20px',
               }}
-              className="flex flex-col justify-between h-full w-full min-w-0 p-3.5 sm:p-5"
+              className="flex flex-col justify-between h-full w-full min-w-0"
             >
               {/* Status Bar */}
               <div
-                className="flex items-center justify-between gap-2 mb-3 pb-2.5 border-b border-white/[0.06] font-mono"
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: '14px',
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: '0.75rem',
+                }}
               >
-                <div className="flex items-center gap-1 sm:gap-1.5 min-w-0">
+                <div>
                   <span
                     style={{
                       color: '#f3f4f6',
                       fontWeight: 600,
                       letterSpacing: '0.05em',
                     }}
-                    className="text-[10px] sm:text-xs truncate"
                   >
                     DISCOVERED SO FAR
                   </span>
                   <span
                     style={{
                       color: '#e2652b',
+                      marginLeft: '4px',
                       fontWeight: 700,
                     }}
-                    className="text-[10px] sm:text-xs shrink-0"
                   >
                     {discoveredHobbies.length} / 4
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-                  {/* Badge without the filled circle */}
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                  }}
+                >
+                  {/* Badge: clean text without filled circle */}
                   <span
                     style={{
                       background: '#251711',
                       border: '1px solid #4a2717',
                       color: '#e2652b',
+                      padding: '3px 10px',
                       borderRadius: '14px',
+                      fontSize: '0.72rem',
+                      display: 'inline-flex',
+                      alignItems: 'center',
                     }}
-                    className="px-2 sm:px-2.5 py-0.5 text-[10px] sm:text-[0.72rem] font-medium whitespace-nowrap inline-flex items-center"
                   >
                     <span>{allFound ? '4 out of 4 found' : `${discoveredCount} out of 4 found`}</span>
                   </span>
@@ -713,13 +706,17 @@ export default function About() {
                       border: 'none',
                       color: '#7e8794',
                       fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: '0.75rem',
                       cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '5px',
                     }}
-                    className="hover:text-white transition-colors active:scale-95 flex items-center gap-1 text-[11px] sm:text-[0.75rem]"
+                    className="hover:text-white transition-colors active:scale-95"
                     aria-label="Start Again"
                     title="Restart treasure hunt"
                   >
-                    <RotateCcw className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                    <RotateCcw className="w-3.5 h-3.5" />
                     <span>Start Again</span>
                   </button>
                 </div>
@@ -730,14 +727,17 @@ export default function About() {
                 style={{
                   flex: 1,
                   display: 'grid',
+                  gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+                  gridTemplateRows: 'repeat(2, minmax(0, 1fr))',
+                  gap: '8px',
                   border: '1px dashed #20252b',
                   borderRadius: '12px',
                   padding: '8px',
                 }}
-                className="grid grid-cols-1 sm:grid-cols-2 min-[769px]:grid-rows-2 gap-2 w-full min-w-0"
+                className="grid max-[768px]:grid-cols-1 max-[768px]:grid-rows-none w-full"
               >
                 {discoveredHobbies.length === 0 ? (
-                  <div className="col-span-1 sm:col-span-2 row-span-2 flex flex-col items-center justify-center gap-2 p-3 sm:p-4 text-xs font-mono text-[#7e8794] text-center select-none w-full h-full min-h-[110px] sm:min-h-[140px]">
+                  <div className="col-span-2 row-span-2 flex flex-col items-center justify-center gap-2 p-4 text-xs font-mono text-[#7e8794] text-center select-none w-full h-full min-h-[140px]">
                     <Sparkles className="w-4 h-4 text-white/20 shrink-0" />
                     <span>Uncover active tiles in the grid to reveal hidden passions here.</span>
                   </div>
@@ -754,15 +754,16 @@ export default function About() {
                           background: 'rgba(255, 255, 255, 0.02)',
                           border: '1px solid #1c2025',
                           borderRadius: '8px',
+                          padding: '9px 11px',
                         }}
-                        className="flex flex-col justify-center p-2.5 sm:p-[9px_11px] hover:bg-[#e2652b]/[0.04] hover:border-[#4a2717] transition-all group min-w-0"
+                        className="flex flex-col justify-center hover:bg-[#e2652b]/[0.04] hover:border-[#4a2717] transition-all group min-w-0"
                       >
                         <div
                           style={{
                             display: 'flex',
                             alignItems: 'center',
                             gap: '6px',
-                            marginBottom: '2px',
+                            marginBottom: '3px',
                           }}
                         >
                           <span
@@ -809,8 +810,9 @@ export default function About() {
                           background: 'rgba(255, 255, 255, 0.01)',
                           border: '1px dashed #1c2025',
                           borderRadius: '8px',
+                          padding: '9px 11px',
                         }}
-                        className="hidden sm:flex flex-col items-center justify-center text-center opacity-40 select-none min-h-[56px] p-2"
+                        className="flex flex-col items-center justify-center text-center opacity-40 select-none min-h-[56px]"
                       >
                         <span className="font-mono text-[10px] text-[#4b535e] tracking-wider">
                           ···
