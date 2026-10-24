@@ -308,13 +308,6 @@ export default function About() {
   return (
     <section
       id="about"
-      style={{
-        padding: '40px 24px',
-        minHeight: 'auto',
-        height: 'auto',
-        scrollMarginTop: '80px',
-        boxSizing: 'border-box',
-      }}
       className="w-full max-w-[1200px] mx-auto relative select-none scroll-mt-[80px]"
     >
       {/* Section Heading: Player Details & The Honest Journey */}

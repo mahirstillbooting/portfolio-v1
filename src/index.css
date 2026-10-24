@@ -125,45 +125,46 @@ body {
   scroll-margin-top: 80px;
 }
 
-#about,
-#skills {
-  padding: 40px 24px;
-  min-height: auto;
-  height: auto;
-  overflow: visible;
-  scroll-margin-top: 80px;
-  box-sizing: border-box;
-  display: block;
-}
-
 @media (min-width: 769px) {
-  #projects,
-  #contact {
+  #projects {
     height: 100vh;
     min-height: 700px;
     max-height: 900px;
     overflow: hidden;
+    position: relative;
+    box-sizing: border-box;
+  }
+
+  #about,
+  #skills,
+  #contact {
+    min-height: 100vh;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    box-sizing: border-box;
-    padding-top: 96px;
-    padding-bottom: 24px;
+    justify-content: center;
+    padding-top: 100px;
+    padding-bottom: 60px;
+    padding-left: 24px;
+    padding-right: 24px;
   }
 }
 
 @media (max-width: 768px) {
-  #projects,
-  #contact {
+  #projects {
     height: auto;
     min-height: auto;
     overflow: visible;
-    padding: 70px 16px;
-    display: block;
   }
+
   #about,
-  #skills {
-    padding: 32px 16px;
+  #skills,
+  #contact {
+    min-height: auto;
+    height: auto;
+    overflow: visible;
+    padding: 80px 16px 40px;
+    display: block;
   }
 }
 
