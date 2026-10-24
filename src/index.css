@@ -220,3 +220,13 @@ body {
     padding: 20px 18px !important;
   }
 }
+
+/* Slower, calmer breathing caret animation */
+@keyframes caretBlink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.15;
+  }
+}

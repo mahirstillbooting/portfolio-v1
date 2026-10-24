@@ -15,36 +15,35 @@ function TypewriterSubtitle() {
     let timer: ReturnType<typeof setTimeout>
 
     if (!isDeleting) {
-      // Forward typing
+      // Faster, smoother typing flow: 28ms letters, 130ms word-completion pause
       if (charIndex < textToType.length) {
         const nextChar = textToType[charIndex]
         const isWordEnd = nextChar === ' '
 
-        // Delay: notable pause after each word, snappy for letters
-        const delay = isWordEnd ? 220 : 45
+        const delay = isWordEnd ? 130 : 28
 
         timer = setTimeout(() => {
           setDisplayedText(textToType.slice(0, charIndex + 1))
           setCharIndex((prev) => prev + 1)
         }, delay)
       } else {
-        // Full sentence finished typing -> pause before backspacing
+        // Full sentence display hold
         timer = setTimeout(() => {
           setIsDeleting(true)
-        }, 2200)
+        }, 1800)
       }
     } else {
-      // Deleting / looping back from the last character
+      // Swift, fluid erasure
       if (charIndex > 0) {
         timer = setTimeout(() => {
           setDisplayedText(textToType.slice(0, charIndex - 1))
           setCharIndex((prev) => prev - 1)
-        }, 24)
+        }, 16)
       } else {
-        // Fully deleted -> pause briefly before typing again
+        // Brief pause before restarting
         timer = setTimeout(() => {
           setIsDeleting(false)
-        }, 450)
+        }, 350)
       }
     }
 
@@ -55,10 +54,11 @@ function TypewriterSubtitle() {
     <span className="inline-flex items-center justify-center">
       <span>{displayedText}</span>
       <span
-        className="inline-block w-[2px] h-[1.15em] ml-1 bg-[#E2652B] align-middle rounded-full animate-pulse"
         style={{
           boxShadow: '0 0 8px rgba(226, 101, 43, 0.6)',
+          animation: 'caretBlink 1.4s ease-in-out infinite',
         }}
+        className="inline-block w-[2px] h-[1.15em] ml-1 bg-[#E2652B] align-middle rounded-full"
         aria-hidden="true"
       />
     </span>
