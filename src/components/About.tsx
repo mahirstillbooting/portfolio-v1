@@ -413,7 +413,7 @@ export default function About() {
             >
               <Languages className="w-3.5 h-3.5 shrink-0 text-sky-400" />
               <span className="text-[10.5px] sm:text-[11px] font-medium leading-none tracking-wide whitespace-nowrap">
-                Native &amp; Professional English Proficiency
+                Good at English Speaking
               </span>
             </div>
           </div>
