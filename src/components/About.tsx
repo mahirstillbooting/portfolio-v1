@@ -49,31 +49,31 @@ interface CellConfig {
 
 const GRID_CELL_STYLES: Omit<CellConfig, 'id'>[] = [
   // Row 1 (7 cells)
-  { colorClass: 'black', bgStyle: '#0d0d0f', borderStyle: 'rgba(255, 255, 255, 0.05)', isBlack: true },
-  { colorClass: 'dark_brown', bgStyle: '#2e1a12', borderStyle: 'rgba(226, 101, 43, 0.22)', isBlack: false },
-  { colorClass: 'charcoal', bgStyle: '#1c1c20', borderStyle: 'rgba(255, 255, 255, 0.08)', isBlack: false },
-  { colorClass: 'dark_brown', bgStyle: '#2e1a12', borderStyle: 'rgba(226, 101, 43, 0.22)', isBlack: false },
-  { colorClass: 'charcoal', bgStyle: '#1c1c20', borderStyle: 'rgba(255, 255, 255, 0.08)', isBlack: false },
-  { colorClass: 'black', bgStyle: '#0d0d0f', borderStyle: 'rgba(255, 255, 255, 0.05)', isBlack: true },
-  { colorClass: 'medium_orange', bgStyle: '#5a2610', borderStyle: 'rgba(226, 101, 43, 0.35)', isBlack: false },
+  { colorClass: 'charcoal', bgStyle: '#1C1C1E', borderStyle: 'rgba(255, 255, 255, 0.08)', isBlack: false },
+  { colorClass: 'warm_brown', bgStyle: '#3A2218', borderStyle: 'rgba(226, 101, 43, 0.3)', isBlack: false },
+  { colorClass: 'charcoal', bgStyle: '#1C1C1E', borderStyle: 'rgba(255, 255, 255, 0.08)', isBlack: false },
+  { colorClass: 'warm_brown', bgStyle: '#3A2218', borderStyle: 'rgba(226, 101, 43, 0.3)', isBlack: false },
+  { colorClass: 'burnt_orange', bgStyle: '#E2652B', borderStyle: 'rgba(226, 101, 43, 0.7)', isBlack: false },
+  { colorClass: 'black', bgStyle: '#0E0E10', borderStyle: 'rgba(255, 255, 255, 0.04)', isBlack: true },
+  { colorClass: 'warm_brown', bgStyle: '#3A2218', borderStyle: 'rgba(226, 101, 43, 0.3)', isBlack: false },
 
   // Row 2 (7 cells)
-  { colorClass: 'charcoal', bgStyle: '#1c1c20', borderStyle: 'rgba(255, 255, 255, 0.08)', isBlack: false },
-  { colorClass: 'black', bgStyle: '#0d0d0f', borderStyle: 'rgba(255, 255, 255, 0.05)', isBlack: true },
-  { colorClass: 'vibrant_orange', bgStyle: '#e2652b', borderStyle: 'rgba(226, 101, 43, 0.7)', isBlack: false },
-  { colorClass: 'dark_brown', bgStyle: '#2e1a12', borderStyle: 'rgba(226, 101, 43, 0.22)', isBlack: false },
-  { colorClass: 'black', bgStyle: '#0d0d0f', borderStyle: 'rgba(255, 255, 255, 0.05)', isBlack: true },
-  { colorClass: 'charcoal', bgStyle: '#1c1c20', borderStyle: 'rgba(255, 255, 255, 0.08)', isBlack: false },
-  { colorClass: 'dark_brown', bgStyle: '#2e1a12', borderStyle: 'rgba(226, 101, 43, 0.22)', isBlack: false },
+  { colorClass: 'warm_brown', bgStyle: '#3A2218', borderStyle: 'rgba(226, 101, 43, 0.3)', isBlack: false },
+  { colorClass: 'black', bgStyle: '#0E0E10', borderStyle: 'rgba(255, 255, 255, 0.04)', isBlack: true },
+  { colorClass: 'burnt_orange', bgStyle: '#E2652B', borderStyle: 'rgba(226, 101, 43, 0.7)', isBlack: false },
+  { colorClass: 'charcoal', bgStyle: '#1C1C1E', borderStyle: 'rgba(255, 255, 255, 0.08)', isBlack: false },
+  { colorClass: 'black', bgStyle: '#0E0E10', borderStyle: 'rgba(255, 255, 255, 0.04)', isBlack: true },
+  { colorClass: 'warm_brown', bgStyle: '#3A2218', borderStyle: 'rgba(226, 101, 43, 0.3)', isBlack: false },
+  { colorClass: 'charcoal', bgStyle: '#1C1C1E', borderStyle: 'rgba(255, 255, 255, 0.08)', isBlack: false },
 
   // Row 3 (7 cells)
-  { colorClass: 'black', bgStyle: '#0d0d0f', borderStyle: 'rgba(255, 255, 255, 0.05)', isBlack: true },
-  { colorClass: 'dark_brown', bgStyle: '#2e1a12', borderStyle: 'rgba(226, 101, 43, 0.22)', isBlack: false },
-  { colorClass: 'charcoal', bgStyle: '#1c1c20', borderStyle: 'rgba(255, 255, 255, 0.08)', isBlack: false },
-  { colorClass: 'black', bgStyle: '#0d0d0f', borderStyle: 'rgba(255, 255, 255, 0.05)', isBlack: true },
-  { colorClass: 'bright_orange', bgStyle: '#963c16', borderStyle: 'rgba(226, 101, 43, 0.45)', isBlack: false },
-  { colorClass: 'black', bgStyle: '#0d0d0f', borderStyle: 'rgba(255, 255, 255, 0.05)', isBlack: true },
-  { colorClass: 'dark_brown', bgStyle: '#2e1a12', borderStyle: 'rgba(226, 101, 43, 0.22)', isBlack: false },
+  { colorClass: 'black', bgStyle: '#0E0E10', borderStyle: 'rgba(255, 255, 255, 0.04)', isBlack: true },
+  { colorClass: 'charcoal', bgStyle: '#1C1C1E', borderStyle: 'rgba(255, 255, 255, 0.08)', isBlack: false },
+  { colorClass: 'warm_brown', bgStyle: '#3A2218', borderStyle: 'rgba(226, 101, 43, 0.3)', isBlack: false },
+  { colorClass: 'black', bgStyle: '#0E0E10', borderStyle: 'rgba(255, 255, 255, 0.04)', isBlack: true },
+  { colorClass: 'burnt_orange', bgStyle: '#E2652B', borderStyle: 'rgba(226, 101, 43, 0.7)', isBlack: false },
+  { colorClass: 'black', bgStyle: '#0E0E10', borderStyle: 'rgba(255, 255, 255, 0.04)', isBlack: true },
+  { colorClass: 'charcoal', bgStyle: '#1C1C1E', borderStyle: 'rgba(255, 255, 255, 0.08)', isBlack: false },
 ]
 
 export default function About() {
@@ -318,7 +318,7 @@ export default function About() {
           </div>
         </motion.div>
 
-        {/* Hidden Passions Grid with Smooth Side-Stack Disclosure */}
+        {/* Beside Coding... Interactive Discovery Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -331,73 +331,42 @@ export default function About() {
           }}
           className="lg:col-span-12 w-full p-4 sm:p-5 lg:p-6 hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl"
         >
-          {/* Card Header Status Row */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 mb-3.5 border-b border-white/[0.08]">
-            <div>
-              <div className="flex items-center gap-2 text-[11px] sm:text-xs font-mono tracking-widest text-[#E2652B] uppercase mb-1">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>INTERACTIVE DISCOVERY</span>
-              </div>
-              <h3
-                style={{ color: '#F3F4F6' }}
-                className="text-xl sm:text-2xl font-sans font-bold tracking-tight"
-              >
-                Hidden Passions
-              </h3>
+          {/* Card Header: Title & Subtitle */}
+          <div className="pb-3 mb-3.5 border-b border-white/[0.08]">
+            <div className="flex items-center gap-2 text-[11px] sm:text-xs font-mono tracking-widest text-[#E2652B] uppercase mb-1">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>INTERACTIVE DISCOVERY</span>
             </div>
-
-            {/* Indicator & Refresh Buttons */}
-            <div className="flex items-center gap-3 shrink-0">
-              <div
-                style={{ padding: '6px 12px' }}
-                className="rounded-full bg-white/[0.04] border border-[#E2652B]/30 text-xs font-mono font-medium text-[#E2652B] flex items-center gap-2 whitespace-nowrap shadow-sm"
-              >
-                <span
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                    allFound
-                      ? 'bg-emerald-400 shadow-[0_0_8px_#34D399]'
-                      : 'bg-[#E2652B] shadow-[0_0_8px_#E2652B]'
-                  }`}
-                />
-                <span>{allFound ? 'All 4 discovered' : `${discoveredCount} of 4 found`}</span>
-              </div>
-
-              <button
-                type="button"
-                onClick={startFreshHunt}
-                style={{ padding: '6px 12px' }}
-                className="flex items-center gap-2 text-xs font-mono text-[#A1A1AA] hover:text-[#F3F4F6] transition-colors cursor-pointer active:scale-95 rounded-full hover:bg-white/5 border border-white/10 whitespace-nowrap shadow-sm"
-                aria-label="Start fresh hunt"
-                title="Restart treasure hunt"
-              >
-                <RotateCcw className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Start fresh</span>
-              </button>
-            </div>
+            <h3
+              style={{ color: '#F3F4F6' }}
+              className="text-xl sm:text-2xl font-sans font-bold tracking-tight"
+            >
+              Beside Coding...
+            </h3>
+            <p
+              style={{ color: '#A1A1AA' }}
+              className="text-xs sm:text-sm mt-0.5 font-sans"
+            >
+              Four little things that keep me curious. You may try to find them.
+            </p>
           </div>
 
-          {/* Side-Stack Interactive Area */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center mt-2">
+          {/* Main Area: Grid on Left, Discovered Rows on Right */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-start mt-2">
             
-            {/* Left Side: 21-Cell Contribution Grid */}
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-              }}
-              className="lg:col-span-7 flex flex-col items-center justify-center w-full h-full my-auto"
-            >
+            {/* Left Side: 21-Cell Contribution Grid Scaled Down Compactly */}
+            <div className="lg:col-span-5 flex flex-col items-center justify-center w-full my-auto">
               <div
                 role="grid"
                 aria-label="Passion discovery contribution grid"
                 style={{
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(7, minmax(0, 40px))',
+                  gridTemplateColumns: 'repeat(7, minmax(0, 36px))',
                   gap: '8px',
                   justifyContent: 'center',
+                  padding: '14px',
                 }}
-                className="w-full max-w-[380px] mx-auto p-2.5 sm:p-3 rounded-2xl bg-[#070709] border border-white/5"
+                className="rounded-2xl bg-[#0a0a0c] border border-white/[0.06] shadow-inner"
               >
                 {GRID_CELL_STYLES.map((cellStyle, idx) => {
                   const isFlipped = flippedCells.includes(idx)
@@ -408,8 +377,8 @@ export default function About() {
                     <div
                       key={idx}
                       style={{
-                        width: '40px',
-                        height: '40px',
+                        width: '36px',
+                        height: '36px',
                         perspective: '1000px',
                       }}
                       className="aspect-square relative mx-auto"
@@ -431,8 +400,12 @@ export default function About() {
                           transformStyle: 'preserve-3d',
                           transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
                           transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+                          background: 'transparent',
+                          backgroundColor: 'transparent',
+                          border: 'none',
+                          padding: 0,
                         }}
-                        className={`w-full h-full rounded-lg sm:rounded-xl relative cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#E2652B] active:scale-95 transition-transform ${
+                        className={`w-full h-full rounded-lg relative cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#E2652B] active:scale-95 transition-transform ${
                           cellStyle.isBlack ? 'cursor-default opacity-60' : 'hover:scale-105'
                         }`}
                       >
@@ -444,8 +417,8 @@ export default function About() {
                             backfaceVisibility: 'hidden',
                             WebkitBackfaceVisibility: 'hidden',
                           }}
-                          className={`absolute inset-0 rounded-lg sm:rounded-xl flex items-center justify-center transition-all ${
-                            isCheckedInactive && !cellStyle.isBlack ? 'opacity-40' : ''
+                          className={`absolute inset-0 rounded-lg flex items-center justify-center transition-all ${
+                            isCheckedInactive && !cellStyle.isBlack ? 'opacity-35' : ''
                           }`}
                         >
                           {isCheckedInactive && !cellStyle.isBlack && (
@@ -463,9 +436,9 @@ export default function About() {
                             transform: 'rotateY(180deg)',
                             boxShadow: '0 0 16px rgba(226, 101, 43, 0.6)',
                           }}
-                          className="absolute inset-0 rounded-lg sm:rounded-xl flex items-center justify-center text-white"
+                          className="absolute inset-0 rounded-lg flex items-center justify-center text-white"
                         >
-                          <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white animate-pulse" />
+                          <Sparkles className="w-3.5 h-3.5 text-white animate-pulse" />
                         </div>
                       </button>
                     </div>
@@ -474,7 +447,7 @@ export default function About() {
               </div>
 
               {/* Dynamic Feedback Text */}
-              <div className="min-h-[24px] mt-2 flex items-center justify-center text-xs font-mono text-center">
+              <div className="min-h-[22px] mt-2 flex items-center justify-center text-xs font-mono text-center">
                 <AnimatePresence mode="wait">
                   {allFound ? (
                     <motion.div
@@ -512,49 +485,103 @@ export default function About() {
               </div>
             </div>
 
-            {/* Right Side: Streamlined Discovered Cards */}
-            <div className="lg:col-span-5 flex flex-col w-full">
-              <div className="flex items-center justify-between text-xs font-mono tracking-wider text-[#71717A] pb-2 mb-2.5 border-b border-white/[0.08]">
-                <span className="text-[#F3F4F6]/90 font-medium">DISCOVERED PASSIONS</span>
-                <span className="text-[#E2652B] font-semibold">{discoveredHobbies.length} / 4</span>
+            {/* Right Side: "Discovered So Far" Container & Rows */}
+            <div className="lg:col-span-7 flex flex-col w-full">
+              {/* Header Top Bar */}
+              <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 mb-2.5 border-b border-white/[0.08]">
+                <div className="flex items-center gap-2">
+                  <span className="text-[#F3F4F6] font-medium text-xs font-mono uppercase tracking-wider">
+                    Discovered So Far
+                  </span>
+                  <span className="text-xs font-mono font-semibold text-[#E2652B] bg-[#E2652B]/10 px-2 py-0.5 rounded-full border border-[#E2652B]/20">
+                    {discoveredHobbies.length} / 4
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2 shrink-0">
+                  <div
+                    style={{ padding: '4px 10px' }}
+                    className="rounded-full bg-white/[0.04] border border-[#E2652B]/30 text-[11px] font-mono font-medium text-[#E2652B] flex items-center gap-1.5 whitespace-nowrap shadow-sm"
+                  >
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                        allFound
+                          ? 'bg-emerald-400 shadow-[0_0_8px_#34D399]'
+                          : 'bg-[#E2652B] shadow-[0_0_8px_#E2652B]'
+                      }`}
+                    />
+                    <span>{allFound ? 'All 4 discovered' : `${discoveredCount} out of 4 found`}</span>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={startFreshHunt}
+                    style={{ padding: '4px 10px' }}
+                    className="flex items-center gap-1.5 text-[11px] font-mono text-[#A1A1AA] hover:text-[#F3F4F6] transition-colors cursor-pointer active:scale-95 rounded-full hover:bg-white/5 border border-white/10 whitespace-nowrap shadow-sm"
+                    aria-label="Start Again"
+                    title="Restart treasure hunt"
+                  >
+                    <RotateCcw className="w-3 h-3" />
+                    <span>Start Again</span>
+                  </button>
+                </div>
               </div>
 
-              <div className="flex flex-col gap-2 min-h-[160px]">
+              {/* Compact Horizontal Rows */}
+              <div className="flex flex-col gap-2 w-full min-h-[140px]">
                 {discoveredHobbies.length === 0 ? (
-                  <div className="flex-1 flex flex-col items-center justify-center p-4 rounded-xl border border-dashed border-white/10 text-center text-xs font-mono text-[#71717A] min-h-[140px] select-none">
-                    <Sparkles className="w-4 h-4 text-white/20 mb-1.5" />
-                    <span className="text-[11px]">Uncover active cells in the grid to reveal passions.</span>
+                  <div
+                    style={{
+                      padding: '16px 20px',
+                      background: 'rgba(255, 255, 255, 0.02)',
+                      border: '1px dashed rgba(255, 255, 255, 0.08)',
+                      borderRadius: '14px',
+                    }}
+                    className="flex items-center justify-center gap-2 text-xs font-mono text-[#71717A] text-center select-none w-full min-h-[58px] my-auto"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-white/20 shrink-0" />
+                    <span>Uncover active tiles in the grid to reveal hidden passions here.</span>
                   </div>
                 ) : (
                   <AnimatePresence mode="popLayout">
                     {discoveredHobbies.map((hobby) => (
                       <motion.div
                         key={hobby.id}
-                        initial={{ opacity: 0, x: 24, y: 8 }}
+                        initial={{ opacity: 0, x: 20, y: 6 }}
                         animate={{ opacity: 1, x: 0, y: 0 }}
-                        exit={{ opacity: 0, x: -20, scale: 0.95 }}
-                        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                        style={{ padding: '10px 16px' }}
-                        className="rounded-xl bg-[#141418] border border-white/[0.08] hover:border-[#E2652B]/40 transition-all shadow-md text-left"
+                        exit={{ opacity: 0, x: -16, scale: 0.96 }}
+                        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                        style={{
+                          padding: '14px 20px',
+                          background: '#141418',
+                          border: '1px solid rgba(255, 255, 255, 0.08)',
+                          borderRadius: '14px',
+                        }}
+                        className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-4 hover:border-[#E2652B]/40 hover:bg-[#18181d] transition-all shadow-sm w-full"
                       >
-                        <h4
-                          style={{
-                            fontSize: '15px',
-                            fontWeight: 600,
-                            color: '#FFFFFF',
-                            marginBottom: '2px',
-                          }}
-                          className="font-sans tracking-tight"
-                        >
-                          {hobby.title}
-                        </h4>
+                        {/* Left: Passion Title */}
+                        <div className="shrink-0 flex items-center gap-2">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#E2652B] shrink-0" />
+                          <h4
+                            style={{
+                              fontSize: '14.5px',
+                              fontWeight: 600,
+                              color: '#FFFFFF',
+                            }}
+                            className="font-sans tracking-tight whitespace-nowrap"
+                          >
+                            {hobby.title}
+                          </h4>
+                        </div>
+
+                        {/* Right: Short Brief Description */}
                         <p
                           style={{
-                            fontSize: '12px',
-                            lineHeight: 1.4,
+                            fontSize: '12.5px',
+                            lineHeight: '1.4',
                             color: '#9CA3AF',
                           }}
-                          className="font-sans"
+                          className="font-sans sm:text-right text-left"
                         >
                           {hobby.desc}
                         </p>
