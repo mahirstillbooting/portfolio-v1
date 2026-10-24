@@ -323,10 +323,10 @@ export default function About() {
       id="about"
       className="w-full max-w-[1200px] mx-auto relative select-none scroll-mt-[40px]"
     >
-      {/* Section Heading: Player Details & Who Am I */}
+      {/* Section Heading: Player Details & Who Am I? */}
       <div
         style={{
-          marginBottom: 'clamp(36px, 4.5vw, 52px)',
+          marginBottom: 'clamp(18px, 2.25vw, 26px)',
         }}
         className="pt-1 sm:pt-2 space-y-2 shrink-0"
       >
@@ -335,7 +335,7 @@ export default function About() {
           <span>03 · PLAYER DETAILS</span>
         </div>
         <h2 className="text-3xl sm:text-5xl font-sans font-bold text-[#F3F4F6] tracking-tight">
-          Who Am I
+          Who Am I?
         </h2>
       </div>
 
