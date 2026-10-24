@@ -8,7 +8,7 @@ export default function Skills() {
       className="w-full max-w-[1200px] mx-auto select-none scroll-mt-[80px]"
     >
       {/* Section Heading: adequate breathing room above and below */}
-      <div className="mb-8 lg:mb-10 space-y-2 shrink-0">
+      <div className="mb-10 lg:mb-12 space-y-2 shrink-0">
         <div className="flex items-center gap-2 text-xs tracking-widest text-[#E2652B] font-mono uppercase">
           <Cpu className="w-3.5 h-3.5 text-[#E2652B]" />
           <span>04 · CAPABILITIES</span>
