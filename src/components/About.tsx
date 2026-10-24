@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion } from 'framer-motion'
-import { RotateCcw, Award, MapPin, Compass } from 'lucide-react'
+import { RotateCcw, Award, MapPin, Compass, Languages } from 'lucide-react'
 import { getAudioEnabled } from '../utils/audioState'
 import discoverySoundUrl from '../assets/mixkit-quick-win-video-game-notification-269.wav'
 
@@ -392,14 +392,19 @@ export default function About() {
           <div className="border-t border-white/[0.08] my-4 sm:my-5 w-full" />
 
           {/* Badges Footer Row: Pushed comfortably down from the horizontal divider line */}
-          <div className="flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
-            <div className="flex items-center gap-2 text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full">
+          <div className="flex flex-wrap items-center justify-between gap-2.5 sm:gap-3 text-xs font-mono">
+            <div className="flex items-center gap-2 text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full">
               <Award className="w-3.5 h-3.5 shrink-0" />
-              <span className="text-[11px]">freeCodeCamp · Responsive Web Design</span>
+              <span className="text-[10.5px] sm:text-[11px] font-medium leading-none tracking-wide">
+                freeCodeCamp · Responsive Web Design
+              </span>
             </div>
 
-            <div className="text-[11px] text-[#A1A1AA]">
-              Native &amp; Professional English Proficiency
+            <div className="flex items-center gap-2 text-sky-400 bg-sky-500/10 border border-sky-500/20 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full">
+              <Languages className="w-3.5 h-3.5 shrink-0" />
+              <span className="text-[10.5px] sm:text-[11px] font-medium leading-none tracking-wide">
+                Native &amp; Professional English Proficiency
+              </span>
             </div>
           </div>
         </motion.div>
