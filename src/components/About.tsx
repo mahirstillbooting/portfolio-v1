@@ -38,6 +38,137 @@ export const HOBBIES: Hobby[] = [
   },
 ]
 
+// Custom SVG Icons for Passions & Flipping Tile States
+const StarIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="preview-icon text-white animate-pulse"
+  >
+    <path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" />
+  </svg>
+)
+
+const CrossIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="preview-icon text-neutral-400"
+  >
+    <path d="M18 6 6 18" />
+    <path d="m6 6 12 12" />
+  </svg>
+)
+
+const PerfumesIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="preview-icon text-[#E2652B] shrink-0"
+  >
+    <path d="M 5 22 H 11.072" />
+    <path d="M15 5 C 23 4 23.328 12.676 20 14.536" />
+    <path d="M15.802 10.308 C 14.776 9.465 14 8.496 14 7" />
+    <path d="M2 2h.01" />
+    <path d="M2 7h.01" />
+    <path d="M5 4.5h.01" />
+    <path d="M8.127 22 A 8 8 0 0 1 4 15 3 3 0 0 1 4.879 12.879C 6.879 10.879 10 10 10 7" />
+    <circle cx="18" cy="18" r="4" />
+    <rect x="9" y="2" width="6" height="5" rx="1" />
+  </svg>
+)
+
+const GamingIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="preview-icon text-[#E2652B] shrink-0"
+  >
+    <line x1="6" x2="10" y1="11" y2="11" />
+    <line x1="8" x2="8" y1="9" y2="13" />
+    <line x1="15" x2="15.01" y1="12" y2="12" />
+    <line x1="18" x2="18.01" y1="10" y2="10" />
+    <path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z" />
+  </svg>
+)
+
+const KeyboardIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="preview-icon text-[#E2652B] shrink-0"
+  >
+    <path d="M10 8h.01" />
+    <path d="M12 12h.01" />
+    <path d="M14 8h.01" />
+    <path d="M16 12h.01" />
+    <path d="M18 8h.01" />
+    <path d="M6 8h.01" />
+    <path d="M7 16h10" />
+    <path d="M8 12h.01" />
+    <rect width="20" height="16" x="2" y="4" rx="2" />
+  </svg>
+)
+
+const PromptingIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="preview-icon text-[#E2652B] shrink-0"
+  >
+    <path d="M12.983 21.186a1 1 0 0 1-1.966 0 10 10 0 0 0-8.203-8.203 1 1 0 0 1 0-1.966 10 10 0 0 0 8.203-8.203 1 1 0 0 1 1.966 0 10 10 0 0 0 8.203 8.203 1 1 0 0 1 0 1.966 10 10 0 0 0-8.203 8.203" />
+  </svg>
+)
+
+const PASSION_ICONS: Record<string, React.ReactNode> = {
+  perfume: <PerfumesIcon />,
+  gaming: <GamingIcon />,
+  keyboards: <KeyboardIcon />,
+  prompting: <PromptingIcon />,
+}
+
 // 21-cell contribution matrix layout (7 columns x 3 rows)
 interface CellConfig {
   id: number
@@ -81,6 +212,7 @@ export default function About() {
   const [discoveredCells, setDiscoveredCells] = useState<number[]>([])
   const [discoveredHobbies, setDiscoveredHobbies] = useState<Hobby[]>([])
   const [flippedCells, setFlippedCells] = useState<number[]>([])
+  const [wrongFlippedCells, setWrongFlippedCells] = useState<number[]>([])
   const [checkedInactiveCells, setCheckedInactiveCells] = useState<number[]>([])
   const [animatingCellId, setAnimatingCellId] = useState<number | null>(null)
   const [feedbackNotice, setFeedbackNotice] = useState<string>('')
@@ -109,6 +241,7 @@ export default function About() {
     setDiscoveredCells([])
     setDiscoveredHobbies([])
     setFlippedCells([])
+    setWrongFlippedCells([])
     setCheckedInactiveCells([])
     setAnimatingCellId(null)
     setFeedbackNotice('')
@@ -139,20 +272,16 @@ export default function About() {
     lastInteractedCellRef.current = cellIndex
     const cellConfig = GRID_CELL_STYLES[cellIndex]
 
-    if (cellConfig.isBlack) {
-      setCheckedInactiveCells((prev) => (prev.includes(cellIndex) ? prev : [...prev, cellIndex]))
-      setFeedbackNotice('No activity recorded on this day.')
-      return
-    }
-
-    if (discoveredCells.includes(cellIndex)) {
+    if (discoveredCells.includes(cellIndex) || wrongFlippedCells.includes(cellIndex)) {
       return
     }
 
     const winningHobby = winningCellMap[cellIndex]
-    if (!winningHobby) {
+    if (cellConfig.isBlack || !winningHobby) {
+      setWrongFlippedCells((prev) => (prev.includes(cellIndex) ? prev : [...prev, cellIndex]))
+      setFlippedCells((prev) => (prev.includes(cellIndex) ? prev : [...prev, cellIndex]))
       setCheckedInactiveCells((prev) => (prev.includes(cellIndex) ? prev : [...prev, cellIndex]))
-      setFeedbackNotice('Nothing hidden here. Keep exploring.')
+      setFeedbackNotice(cellConfig.isBlack ? 'No activity recorded on this day.' : 'Nothing hidden here. Keep exploring.')
       return
     }
 
@@ -335,34 +464,39 @@ export default function About() {
             background: '#0e0e11',
             border: '1px solid rgba(255, 255, 255, 0.08)',
             borderRadius: '24px',
+            padding: '32px',
           }}
-          className="lg:col-span-12 w-full p-6 sm:p-7 lg:p-8 hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl"
+          className="lg:col-span-12 w-full p-6 sm:p-8 hover:border-[#E2652B]/40 transition-colors shadow-[0_16px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl"
         >
-          {/* Card Header: Title & Subtitle */}
-          <div className="pb-4 mb-5 border-b border-white/[0.08]">
-            <div className="flex items-center gap-2 text-[11px] sm:text-xs font-mono tracking-widest text-[#E2652B] uppercase mb-1.5">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>INTERACTIVE DISCOVERY</span>
-            </div>
+          {/* Card Header: Only Main Title & Subtitle */}
+          <div className="pb-4 mb-6 border-b border-white/[0.08]">
             <h3
-              style={{ color: '#F3F4F6' }}
-              className="text-2xl sm:text-3xl font-sans font-bold tracking-tight"
+              style={{ color: '#F3F4F6', fontSize: '24px', fontWeight: 700 }}
+              className="text-2xl sm:text-3xl font-sans tracking-tight"
             >
               Beside Coding...
             </h3>
             <p
-              style={{ color: '#A1A1AA' }}
-              className="text-xs sm:text-sm mt-1 font-sans"
+              style={{ color: '#A1A1AA', fontSize: '14px', lineHeight: '1.6', marginTop: '6px' }}
+              className="font-sans"
             >
               Four little things that keep me curious. You may try to find them.
             </p>
           </div>
 
-          {/* Main Area: Grid on Left, Discovered Rows on Right */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mt-2">
+          {/* Inner Container Wrapper */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start w-full">
             
-            {/* Left Side: 21-Cell Contribution Grid Restored to Tactile Scale */}
-            <div className="lg:col-span-6 xl:col-span-5 flex flex-col items-center justify-center w-full">
+            {/* Left Side: Flipping Tiles Matrix Inner Container */}
+            <div
+              style={{
+                padding: '24px',
+                background: '#070709',
+                border: '1px solid rgba(255, 255, 255, 0.06)',
+                borderRadius: '20px',
+              }}
+              className="lg:col-span-6 xl:col-span-5 flex flex-col items-center justify-center w-full"
+            >
               <div
                 role="grid"
                 aria-label="Passion discovery contribution grid"
@@ -371,14 +505,16 @@ export default function About() {
                   gridTemplateColumns: 'repeat(7, minmax(0, 52px))',
                   gap: '12px',
                   justifyContent: 'center',
-                  padding: '18px',
+                  width: '100%',
+                  maxWidth: '440px',
                 }}
-                className="w-full max-w-[480px] rounded-2xl bg-[#0a0a0c] border border-white/[0.06] shadow-inner mx-auto"
+                className="mx-auto"
               >
                 {GRID_CELL_STYLES.map((cellStyle, idx) => {
                   const isFlipped = flippedCells.includes(idx)
                   const isDiscovered = discoveredCells.includes(idx)
                   const isCheckedInactive = checkedInactiveCells.includes(idx)
+                  const isWinning = Boolean(winningCellMap[idx])
 
                   return (
                     <div
@@ -434,19 +570,27 @@ export default function About() {
                           )}
                         </div>
 
-                        {/* REVERSE FACE */}
+                        {/* REVERSE FACE: STAR IF WINNER, X IF INCORRECT */}
                         <div
                           style={{
-                            backgroundColor: '#E2652B',
-                            border: '1px solid rgba(255, 255, 255, 0.4)',
+                            backgroundColor: (isDiscovered || (isWinning && isFlipped)) ? '#E2652B' : '#161619',
+                            border: (isDiscovered || (isWinning && isFlipped))
+                              ? '1px solid rgba(255, 255, 255, 0.4)'
+                              : '1px solid rgba(255, 255, 255, 0.12)',
                             backfaceVisibility: 'hidden',
                             WebkitBackfaceVisibility: 'hidden',
                             transform: 'rotateY(180deg)',
-                            boxShadow: '0 0 20px rgba(226, 101, 43, 0.6)',
+                            boxShadow: (isDiscovered || (isWinning && isFlipped))
+                              ? '0 0 20px rgba(226, 101, 43, 0.6)'
+                              : 'none',
                           }}
-                          className="absolute inset-0 rounded-xl flex items-center justify-center text-white"
+                          className="absolute inset-0 rounded-xl flex items-center justify-center"
                         >
-                          <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-white animate-pulse" />
+                          {(isDiscovered || (isWinning && isFlipped)) ? (
+                            <StarIcon />
+                          ) : (
+                            <CrossIcon />
+                          )}
                         </div>
                       </button>
                     </div>
@@ -455,7 +599,7 @@ export default function About() {
               </div>
 
               {/* Dynamic Feedback Text */}
-              <div className="min-h-[26px] mt-3 flex items-center justify-center text-xs font-mono text-center">
+              <div className="min-h-[26px] mt-4 flex items-center justify-center text-xs font-mono text-center">
                 <AnimatePresence mode="wait">
                   {allFound ? (
                     <motion.div
@@ -493,10 +637,18 @@ export default function About() {
               </div>
             </div>
 
-            {/* Right Side: "Discovered So Far" Container & Rows */}
-            <div className="lg:col-span-6 xl:col-span-7 flex flex-col w-full">
+            {/* Right Side: Discovered Rows Container */}
+            <div
+              style={{
+                padding: '24px',
+                background: '#070709',
+                border: '1px solid rgba(255, 255, 255, 0.06)',
+                borderRadius: '20px',
+              }}
+              className="lg:col-span-6 xl:col-span-7 flex flex-col w-full"
+            >
               {/* Header Top Bar */}
-              <div className="flex flex-wrap items-center justify-between gap-3 pb-3 mb-3 border-b border-white/[0.08]">
+              <div className="flex flex-wrap items-center justify-between gap-3 pb-3.5 mb-4 border-b border-white/[0.08]">
                 <div className="flex items-center gap-2.5">
                   <span className="text-[#F3F4F6] font-medium text-xs font-mono uppercase tracking-wider">
                     Discovered So Far
@@ -536,16 +688,16 @@ export default function About() {
               </div>
 
               {/* Compact Horizontal Rows */}
-              <div className="flex flex-col gap-2.5 w-full">
+              <div className="flex flex-col gap-3 w-full">
                 {discoveredHobbies.length === 0 ? (
                   <div
                     style={{
-                      padding: '24px 20px',
+                      padding: '28px 20px',
                       background: 'rgba(255, 255, 255, 0.02)',
                       border: '1px dashed rgba(255, 255, 255, 0.08)',
                       borderRadius: '16px',
                     }}
-                    className="flex flex-col sm:flex-row items-center justify-center gap-2.5 text-xs font-mono text-[#71717A] text-center select-none w-full min-h-[140px]"
+                    className="flex flex-col sm:flex-row items-center justify-center gap-2.5 text-xs font-mono text-[#71717A] text-center select-none w-full min-h-[160px]"
                   >
                     <Sparkles className="w-4 h-4 text-white/20 shrink-0" />
                     <span>Uncover active tiles in the grid to reveal hidden passions here.</span>
@@ -560,23 +712,24 @@ export default function About() {
                         exit={{ opacity: 0, x: -16, scale: 0.96 }}
                         transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                         style={{
-                          padding: '14px 20px',
-                          background: '#141418',
+                          padding: '16px 20px',
+                          background: '#121215',
                           border: '1px solid rgba(255, 255, 255, 0.08)',
                           borderRadius: '14px',
                         }}
-                        className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-6 hover:border-[#E2652B]/40 hover:bg-[#18181d] transition-all shadow-sm w-full"
+                        className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-6 hover:border-[#E2652B]/40 hover:bg-[#16161a] transition-all shadow-sm w-full"
                       >
-                        {/* Left: Passion Title */}
-                        <div className="shrink-0 flex items-center gap-2.5 sm:min-w-[170px]">
-                          <span className="w-2 h-2 rounded-full bg-[#E2652B] shrink-0" />
+                        {/* Left: Custom SVG Icon + Passion Title */}
+                        <div className="shrink-0 flex items-center gap-3 sm:min-w-[190px]">
+                          {PASSION_ICONS[hobby.id]}
                           <h4
                             style={{
                               fontSize: '15px',
                               fontWeight: 600,
                               color: '#FFFFFF',
+                              lineHeight: 1.3,
                             }}
-                            className="font-sans tracking-tight whitespace-nowrap"
+                            className="font-sans tracking-tight whitespace-nowrap m-0"
                           >
                             {hobby.title}
                           </h4>
@@ -586,10 +739,10 @@ export default function About() {
                         <p
                           style={{
                             fontSize: '13px',
-                            lineHeight: '1.45',
+                            lineHeight: '1.5',
                             color: '#9CA3AF',
                           }}
-                          className="font-sans text-left sm:text-right flex-1"
+                          className="font-sans text-left sm:text-right flex-1 m-0"
                         >
                           {hobby.desc}
                         </p>
