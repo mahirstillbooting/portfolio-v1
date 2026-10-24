@@ -798,7 +798,7 @@ export default function DhakaNeonDrift() {
       state.isAutoNav = true
       state.isHeroCinematic = true
       state.parkedBeaconId = p.id
-      lockUntilRef.current = Date.now() + 650
+      lockUntilRef.current = Date.now() + 1000
 
       playLockSound()
       triggerBurst(new THREE.Vector3(p.pos[0], 0.5, p.pos[2]))
@@ -1235,7 +1235,7 @@ export default function DhakaNeonDrift() {
             state.parkedBeaconId = nm.data.id
             state.vx = 0
             state.vz = 0
-            lockUntilRef.current = Date.now() + 650
+            lockUntilRef.current = Date.now() + 1000
 
             playLockSound()
             triggerBurst(new THREE.Vector3(nm.data.pos[0], 0.5, nm.data.pos[2]))
@@ -1380,7 +1380,11 @@ export default function DhakaNeonDrift() {
             <button
               key={p.id}
               onClick={() => {
-                if (jumpToProjectRef.current) jumpToProjectRef.current(idx)
+                selectProject(p)
+                setIsFocused(true)
+                if (jumpToProjectRef.current) {
+                  jumpToProjectRef.current(idx)
+                }
               }}
               className="group flex items-center gap-1.5 sm:gap-2 cursor-pointer transition-all active:scale-90 px-1 py-0.5"
               aria-label={`Select ${p.num}: ${p.title}`}
@@ -1404,81 +1408,148 @@ export default function DhakaNeonDrift() {
         })}
       </div>
 
-      {/* SPATIAL PROJECT DETAIL MODAL / CARD (ULTRA-CLEAN GLASSMORPHIC HUD) */}
+      {/* SPATIAL PROJECT DETAIL MODAL / CARD (REFINED RESPONSIVE HUD) */}
       <div
         style={{
           transition: 'all 0.45s cubic-bezier(0.16, 1, 0.3, 1)',
           opacity: isFocused ? 1 : 0,
           transform: isFocused ? 'translateY(0) scale(1)' : 'translateY(16px) scale(0.97)',
           pointerEvents: isFocused ? 'auto' : 'none',
+          width: 'min(520px, 92vw)',
+          maxWidth: '100%',
+          boxSizing: 'border-box',
         }}
-        className="absolute top-1/2 -translate-y-1/2 left-3 sm:left-10 lg:left-14 w-[calc(100%-24px)] sm:w-auto max-w-xl z-40 select-text"
+        className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 sm:left-10 sm:translate-x-0 lg:left-14 z-40 select-text"
       >
         <div
           style={{
-            background: 'rgba(14, 14, 16, 0.82)',
+            background: 'rgba(14, 14, 16, 0.88)',
             backdropFilter: 'blur(32px)',
             WebkitBackdropFilter: 'blur(32px)',
             border: '1px solid rgba(255, 255, 255, 0.12)',
             borderRadius: '24px',
             boxShadow: '0 24px 64px rgba(0, 0, 0, 0.8), 0 0 40px rgba(210, 83, 29, 0.15)',
+            height: 'auto',
+            minHeight: 'fit-content',
+            boxSizing: 'border-box',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '14px',
           }}
-          className="relative flex flex-col text-left p-6 sm:p-9"
+          className="relative text-left p-4 sm:p-6"
         >
-          {/* Top Bar: Project Index Pill + Close Button */}
-          <div className="flex items-center justify-between pb-3 sm:pb-4 mb-3 sm:mb-4 border-b border-white/8">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D2531D]/15 border border-[#D2531D]/30 text-[10px] sm:text-[11px] font-mono tracking-widest text-[#E2652B] uppercase font-semibold">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#E2652B] shadow-[0_0_8px_#E2652B] animate-pulse" />
-              <span>PROJECT {activeProject.num} // 05</span>
+          {/* 1. Header Row: Refined Compact Pill Badge + Close Button */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              width: '100%',
+            }}
+          >
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                padding: '4px 10px',
+                borderRadius: '9999px',
+                backgroundColor: 'rgba(210, 83, 29, 0.12)',
+                border: '1px solid rgba(210, 83, 29, 0.28)',
+                fontSize: '11px',
+                fontFamily: "'JetBrains Mono', monospace",
+                letterSpacing: '0.08em',
+                color: '#E2652B',
+                fontWeight: 600,
+                textTransform: 'uppercase',
+                lineHeight: 1.2,
+              }}
+            >
+              <span>PROJECT {activeProject.num} OF 05</span>
             </div>
 
             <button
               type="button"
               onClick={() => setIsFocused(false)}
-              className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/12 border border-white/10 flex items-center justify-center text-neutral-400 hover:text-white transition-all cursor-pointer active:scale-95"
+              style={{
+                minWidth: '36px',
+                minHeight: '36px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              className="rounded-full bg-white/5 hover:bg-white/12 border border-white/10 text-neutral-400 hover:text-white transition-all cursor-pointer active:scale-95 shrink-0"
               title="Close card (or drive away / Esc)"
+              aria-label="Close project details"
             >
               <X className="w-4 h-4" />
             </button>
           </div>
 
-          {/* Massive Project Title */}
+          {/* 2. Project Title */}
           <h2
-            style={{ fontFamily: "'JetBrains Mono', monospace, sans-serif" }}
-            className="text-xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white uppercase mb-2.5 drop-shadow-[0_2px_16px_rgba(0,0,0,0.8)]"
+            style={{
+              fontFamily: "'JetBrains Mono', monospace, sans-serif",
+              fontSize: 'clamp(1.4rem, 4vw, 1.85rem)',
+              lineHeight: 1.1,
+              margin: 0,
+            }}
+            className="font-extrabold tracking-tight text-white uppercase drop-shadow-[0_2px_16px_rgba(0,0,0,0.8)]"
           >
             {activeProject.title}
           </h2>
 
-          {/* Concise Single-Sentence Description */}
-          <p className="text-xs sm:text-sm font-sans text-neutral-300 leading-relaxed mb-6 font-normal">
+          {/* 3. Description */}
+          <p
+            style={{
+              lineHeight: 1.55,
+              fontSize: '0.88rem',
+              color: '#9ca3af',
+              margin: 0,
+              fontFamily: "'Geist Sans', sans-serif",
+            }}
+          >
             {activeProject.desc}
           </p>
 
-          {/* Modern Glassmorphic Blurred Transparent Button */}
-          <div className="flex items-center">
+          {/* 4. CODEBASE Button Container */}
+          <div style={{ marginTop: '6px' }}>
             <a
               href={activeProject.codeUrl}
               target="_blank"
               rel="noopener noreferrer"
               style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
                 background: 'rgba(255, 255, 255, 0.07)',
                 backdropFilter: 'blur(20px)',
                 WebkitBackdropFilter: 'blur(20px)',
                 border: '1px solid rgba(255, 255, 255, 0.18)',
+                boxSizing: 'border-box',
               }}
-              className="px-6 py-3 sm:px-8 sm:py-3.5 rounded-2xl text-xs sm:text-sm font-mono font-semibold tracking-wider text-white hover:bg-white/15 hover:border-white/40 hover:shadow-[0_0_28px_rgba(255,255,255,0.18)] transition-all duration-200 active:scale-95 flex items-center gap-2.5 sm:gap-3 no-underline cursor-pointer"
+              className="w-full sm:w-auto justify-center sm:justify-start px-5 py-3 sm:px-6 sm:py-3 rounded-2xl text-xs sm:text-sm font-mono font-semibold tracking-wider text-white hover:bg-white/15 hover:border-white/40 hover:shadow-[0_0_28px_rgba(255,255,255,0.18)] transition-all duration-200 active:scale-95 no-underline cursor-pointer"
             >
-              <GithubIcon className="w-4 h-4 opacity-90" />
+              <GithubIcon className="w-4 h-4 opacity-90 shrink-0" />
               <span>CODEBASE</span>
-              <ArrowUpRight className="w-4 h-4 opacity-75" />
+              <ArrowUpRight className="w-4 h-4 opacity-75 shrink-0" />
             </a>
           </div>
 
-          {/* Navigation tip */}
-          <div className="mt-6 pt-3.5 border-t border-white/6 flex items-center justify-between text-[11px] font-mono text-neutral-500">
+          {/* 5. Bottom Hint Footer (Keyboard Hints: Desktop only) */}
+          <div
+            style={{
+              marginTop: '10px',
+              paddingTop: '12px',
+              borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+              fontSize: '0.72rem',
+              letterSpacing: '0.06em',
+              color: '#6b7280',
+              fontFamily: 'monospace',
+            }}
+            className="hidden sm:flex justify-between items-center"
+          >
             <span>WASD TO DRIVE AWAY</span>
-            <span className="hidden sm:inline">ESC TO DISMISS</span>
+            <span>ESC TO DISMISS</span>
           </div>
         </div>
       </div>
