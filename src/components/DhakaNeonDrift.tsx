@@ -1415,7 +1415,7 @@ export default function DhakaNeonDrift() {
           opacity: isFocused ? 1 : 0,
           transform: isFocused ? 'translateY(0) scale(1)' : 'translateY(16px) scale(0.97)',
           pointerEvents: isFocused ? 'auto' : 'none',
-          width: 'min(480px, calc(100vw - 32px))',
+          width: 'min(500px, calc(100vw - 32px))',
           maxWidth: '100%',
           boxSizing: 'border-box',
         }}
@@ -1423,7 +1423,7 @@ export default function DhakaNeonDrift() {
       >
         <div
           style={{
-            background: 'rgba(14, 14, 16, 0.92)',
+            background: 'rgba(14, 14, 16, 0.94)',
             backdropFilter: 'blur(32px)',
             WebkitBackdropFilter: 'blur(32px)',
             border: '1px solid rgba(255, 255, 255, 0.12)',
@@ -1435,9 +1435,9 @@ export default function DhakaNeonDrift() {
             boxSizing: 'border-box',
             display: 'flex',
             flexDirection: 'column',
-            gap: '12px',
+            gap: '14px',
           }}
-          className="relative text-left p-[14px_16px] sm:p-[20px_24px_18px] w-full"
+          className="project-hud-card relative text-left w-full"
         >
           {/* 1. Header Row: Refined Compact Pill Badge + Close Button */}
           <div
@@ -1452,7 +1452,7 @@ export default function DhakaNeonDrift() {
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                padding: '4px 10px',
+                padding: '6px 14px',
                 borderRadius: '9999px',
                 backgroundColor: 'rgba(210, 83, 29, 0.12)',
                 border: '1px solid rgba(210, 83, 29, 0.28)',
@@ -1490,7 +1490,7 @@ export default function DhakaNeonDrift() {
           <h2
             style={{
               fontFamily: "'JetBrains Mono', monospace, sans-serif",
-              fontSize: 'clamp(1.35rem, 3.8vw, 1.8rem)',
+              fontSize: 'clamp(1.4rem, 4vw, 1.85rem)',
               lineHeight: 1.15,
               margin: 0,
             }}
@@ -1502,8 +1502,8 @@ export default function DhakaNeonDrift() {
           {/* 3. Description */}
           <p
             style={{
-              lineHeight: 1.55,
-              fontSize: '0.86rem',
+              lineHeight: 1.6,
+              fontSize: '0.88rem',
               color: '#9ca3af',
               margin: 0,
               fontFamily: "'Geist Sans', sans-serif",
@@ -1513,7 +1513,7 @@ export default function DhakaNeonDrift() {
           </p>
 
           {/* 4. CODEBASE Button Container */}
-          <div style={{ marginTop: '2px' }}>
+          <div style={{ marginTop: '4px' }}>
             <a
               href={activeProject.codeUrl}
               target="_blank"
@@ -1521,14 +1521,23 @@ export default function DhakaNeonDrift() {
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '8px',
-                background: 'rgba(255, 255, 255, 0.07)',
+                gap: '10px',
+                padding: '10px 20px',
+                borderRadius: '14px',
+                background: 'rgba(255, 255, 255, 0.08)',
                 backdropFilter: 'blur(20px)',
                 WebkitBackdropFilter: 'blur(20px)',
                 border: '1px solid rgba(255, 255, 255, 0.18)',
+                fontSize: '12px',
+                fontFamily: "'JetBrains Mono', monospace",
+                fontWeight: 600,
+                letterSpacing: '0.06em',
+                color: '#ffffff',
+                textDecoration: 'none',
                 boxSizing: 'border-box',
+                transition: 'all 0.2s ease',
               }}
-              className="w-full sm:w-auto justify-center sm:justify-start px-5 py-2.5 sm:px-6 sm:py-3 rounded-2xl text-xs sm:text-sm font-mono font-semibold tracking-wider text-white hover:bg-white/15 hover:border-white/40 hover:shadow-[0_0_28px_rgba(255,255,255,0.18)] transition-all duration-200 active:scale-95 no-underline cursor-pointer"
+              className="w-full sm:w-auto justify-center sm:justify-start hover:bg-white/15 hover:border-white/40 hover:shadow-[0_0_24px_rgba(255,255,255,0.15)] active:scale-95 cursor-pointer"
             >
               <GithubIcon className="w-4 h-4 opacity-90 shrink-0" />
               <span>CODEBASE</span>
@@ -1539,13 +1548,13 @@ export default function DhakaNeonDrift() {
           {/* 5. Bottom Hint Footer (Keyboard hints on desktop, clean touch dismiss info on mobile) */}
           <div
             style={{
-              marginTop: '14px',
-              paddingTop: '10px',
+              marginTop: '16px',
+              paddingTop: '14px',
               borderTop: '1px solid rgba(255, 255, 255, 0.08)',
               fontSize: '0.72rem',
               letterSpacing: '0.06em',
               color: '#6b7280',
-              fontFamily: 'monospace',
+              fontFamily: "'JetBrains Mono', monospace",
               width: '100%',
               boxSizing: 'border-box',
               lineHeight: 1.2,

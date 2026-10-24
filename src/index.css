@@ -168,3 +168,15 @@ body {
   }
 }
 
+
+/* Project Detail Modal Card Spacing */
+.project-hud-card {
+  padding: 28px !important;
+  box-sizing: border-box !important;
+}
+
+@media (max-width: 640px) {
+  .project-hud-card {
+    padding: 20px 18px !important;
+  }
+}
