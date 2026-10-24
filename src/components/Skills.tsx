@@ -7,10 +7,10 @@ export default function Skills() {
       id="skills"
       className="w-full max-w-[1200px] mx-auto select-none scroll-mt-[50px]"
     >
-      {/* Section Heading: generous breathing room above cards */}
+      {/* Section Heading: balanced breathing room above cards */}
       <div
         style={{
-          marginBottom: 'clamp(46px, 4.5vw, 58px)',
+          marginBottom: 'clamp(34px, 3.8vw, 44px)',
         }}
         className="space-y-2 shrink-0"
       >

@@ -76,6 +76,7 @@ interface MatrixCellProps {
 function MatrixCell({ item, audioCtxRef }: MatrixCellProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const isHoveredRef = useRef(false)
+  const leaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const animRef = useRef<{
     active: boolean
     startTime: number
@@ -365,10 +366,28 @@ function MatrixCell({ item, audioCtxRef }: MatrixCellProps) {
     }
 
     animId = requestAnimationFrame(loop)
-    return () => cancelAnimationFrame(animId)
+    return () => {
+      cancelAnimationFrame(animId)
+      if (leaveTimeoutRef.current) {
+        clearTimeout(leaveTimeoutRef.current)
+      }
+    }
   }, [cellSize, size, center])
 
+  const triggerReverseAnimation = () => {
+    isHoveredRef.current = false
+    const a = animRef.current
+    a.active = true
+    a.startTime = performance.now()
+    a.duration = 650
+    a.direction = -1
+  }
+
   const handleMouseEnter = () => {
+    if (leaveTimeoutRef.current) {
+      clearTimeout(leaveTimeoutRef.current)
+      leaveTimeoutRef.current = null
+    }
     isHoveredRef.current = true
     playCardSound()
     const a = animRef.current
@@ -379,12 +398,14 @@ function MatrixCell({ item, audioCtxRef }: MatrixCellProps) {
   }
 
   const handleMouseLeave = () => {
-    isHoveredRef.current = false
-    const a = animRef.current
-    a.active = true
-    a.startTime = performance.now()
-    a.duration = 650
-    a.direction = -1
+    if (leaveTimeoutRef.current) {
+      clearTimeout(leaveTimeoutRef.current)
+    }
+    // Linger the SVG state for 450ms after cursor exits before playing reverse animation
+    leaveTimeoutRef.current = setTimeout(() => {
+      triggerReverseAnimation()
+      leaveTimeoutRef.current = null
+    }, 450)
   }
 
   const handleTouchStart = () => {
@@ -392,10 +413,14 @@ function MatrixCell({ item, audioCtxRef }: MatrixCellProps) {
   }
 
   const handleTouchEnd = () => {
-    // Keep visible briefly on mobile tap before reversing
-    setTimeout(() => {
-      handleMouseLeave()
-    }, 700)
+    if (leaveTimeoutRef.current) {
+      clearTimeout(leaveTimeoutRef.current)
+    }
+    // Linger SVG state on touch screens before reversing
+    leaveTimeoutRef.current = setTimeout(() => {
+      triggerReverseAnimation()
+      leaveTimeoutRef.current = null
+    }, 850)
   }
 
   return (
