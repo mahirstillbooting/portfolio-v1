@@ -46,14 +46,21 @@ export default function Contact() {
   }, [])
 
   const spawnFlightPixels = useCallback(() => {
-    const steps = 16
+    const steps = 30
+    const bezier = (p0: number, p1: number, p2: number, p3: number, t: number) => {
+      const u = 1 - t
+      return u * u * u * p0 + 3 * u * u * t * p1 + 3 * u * t * t * p2 + t * t * t * p3
+    }
+
     for (let i = 0; i < steps; i++) {
       setTimeout(() => {
-        const progress = i / steps
-        const x = 38 + progress * 680 + (Math.random() * 16 - 8)
-        const y = 38 - Math.sin(progress * Math.PI * 0.9) * 105 + (Math.random() * 16 - 8)
-        const dx = `${-18 - Math.random() * 24}px`
-        const dy = `${14 + Math.random() * 24}px`
+        const t = i / steps
+        const px = 38 + bezier(0, 200, 550, 1000, t)
+        const py = 38 + bezier(0, 15, -140, -280, t)
+        const x = px - 6 + (Math.random() * 8 - 4)
+        const y = py + 6 + (Math.random() * 8 - 4)
+        const dx = `${-14 - Math.random() * 20}px`
+        const dy = `${10 + Math.random() * 20}px`
         const id = Date.now() + i + Math.random()
 
         setFlightPixels((prev) => [...prev, { id, x, y, dx, dy }])
@@ -61,7 +68,7 @@ export default function Contact() {
         setTimeout(() => {
           setFlightPixels((prev) => prev.filter((p) => p.id !== id))
         }, 650)
-      }, i * 38)
+      }, i * 42)
     }
   }, [])
 
@@ -79,16 +86,16 @@ export default function Contact() {
     setIsPlaneFlying(true)
     spawnFlightPixels()
 
-    // Complete plane flyby
+    // Complete plane flyby smoothly
     setTimeout(() => {
       setIsPlaneFlying(false)
-    }, 1200)
+    }, 1450)
 
     // Smoothly restore idle direct dispatch state
     setTimeout(() => {
       setDockState('idle')
       isAnimatingRef.current = false
-    }, 2800)
+    }, 3200)
   }
 
   const handleDispatch = (e: React.FormEvent) => {
@@ -363,39 +370,52 @@ export default function Contact() {
         }
 
         .paper-plane-actor.flying {
-          animation: planeFlybyAcrossSection 1.15s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+          animation: planeFlybyAcrossSection 1.35s cubic-bezier(0.2, 0.0, 0.2, 1.0) forwards;
         }
 
-        /* Smooth aerodynamic flight path gliding across the section */
+        /* High-density 40-frame aerodynamic trajectory (continuous tangent & velocity interpolation) */
         @keyframes planeFlybyAcrossSection {
-          0% {
-            opacity: 0;
-            transform: translate3d(0, 0, 0) scale(0.5) rotate(-22deg);
-          }
-          10% {
-            opacity: 1;
-            /* Catches air current with gentle lift */
-            transform: translate3d(20px, -6px, 0) scale(1.05) rotate(-16deg);
-          }
-          36% {
-            opacity: 1;
-            /* Soars up and across headline */
-            transform: translate3d(210px, -82px, 0) scale(1.2) rotate(14deg);
-          }
-          64% {
-            opacity: 1;
-            /* Sweeps over the Right Hardware Console */
-            transform: translate3d(510px, -62px, 0) scale(1.08) rotate(26deg);
-          }
-          84% {
-            opacity: 0.9;
-            /* Banks high across top right */
-            transform: translate3d(730px, -155px, 0) scale(0.78) rotate(38deg);
-          }
-          100% {
-            opacity: 0;
-            transform: translate3d(920px, -235px, 0) scale(0.35) rotate(50deg);
-          }
+          0% { opacity: 0.0; transform: translate3d(0.0px, 0.0px, 0) scale(0.55) rotate(49.3deg); }
+          2.5% { opacity: 0.62; transform: translate3d(15.3px, 0.8px, 0) scale(0.61) rotate(46.8deg); }
+          5% { opacity: 1.0; transform: translate3d(31.1px, 1.0px, 0) scale(0.67) rotate(44.6deg); }
+          7.5% { opacity: 1.0; transform: translate3d(47.5px, 0.6px, 0) scale(0.73) rotate(42.6deg); }
+          10% { opacity: 1.0; transform: translate3d(64.5px, -0.4px, 0) scale(0.79) rotate(40.7deg); }
+          12.5% { opacity: 1.0; transform: translate3d(81.9px, -2.0px, 0) scale(0.85) rotate(39.1deg); }
+          15% { opacity: 1.0; transform: translate3d(100.0px, -4.1px, 0) scale(0.91) rotate(37.6deg); }
+          17.5% { opacity: 1.0; transform: translate3d(118.5px, -6.8px, 0) scale(0.97) rotate(36.2deg); }
+          20% { opacity: 1.0; transform: translate3d(137.6px, -9.9px, 0) scale(1.03) rotate(35.0deg); }
+          22.5% { opacity: 1.0; transform: translate3d(157.2px, -13.6px, 0) scale(1.09) rotate(33.9deg); }
+          25% { opacity: 1.0; transform: translate3d(177.3px, -17.7px, 0) scale(1.15) rotate(32.9deg); }
+          27.5% { opacity: 1.0; transform: translate3d(198.0px, -22.3px, 0) scale(1.14) rotate(32.0deg); }
+          30% { opacity: 1.0; transform: translate3d(219.1px, -27.4px, 0) scale(1.12) rotate(31.2deg); }
+          32.5% { opacity: 1.0; transform: translate3d(240.8px, -32.9px, 0) scale(1.11) rotate(30.4deg); }
+          35% { opacity: 1.0; transform: translate3d(263.0px, -38.8px, 0) scale(1.09) rotate(29.8deg); }
+          37.5% { opacity: 1.0; transform: translate3d(285.6px, -45.1px, 0) scale(1.08) rotate(29.2deg); }
+          40% { opacity: 1.0; transform: translate3d(308.8px, -51.8px, 0) scale(1.07) rotate(28.7deg); }
+          42.5% { opacity: 1.0; transform: translate3d(332.4px, -58.8px, 0) scale(1.05) rotate(28.2deg); }
+          45% { opacity: 1.0; transform: translate3d(356.6px, -66.2px, 0) scale(1.04) rotate(27.8deg); }
+          47.5% { opacity: 1.0; transform: translate3d(381.2px, -73.9px, 0) scale(1.02) rotate(27.4deg); }
+          50% { opacity: 1.0; transform: translate3d(406.2px, -81.9px, 0) scale(1.01) rotate(27.1deg); }
+          52.5% { opacity: 1.0; transform: translate3d(431.8px, -90.2px, 0) scale(1.00) rotate(26.9deg); }
+          55% { opacity: 1.0; transform: translate3d(457.8px, -98.7px, 0) scale(0.98) rotate(26.7deg); }
+          57.5% { opacity: 1.0; transform: translate3d(484.3px, -107.6px, 0) scale(0.97) rotate(26.5deg); }
+          60% { opacity: 1.0; transform: translate3d(511.2px, -116.6px, 0) scale(0.96) rotate(26.3deg); }
+          62.5% { opacity: 1.0; transform: translate3d(538.6px, -125.9px, 0) scale(0.94) rotate(26.2deg); }
+          65% { opacity: 1.0; transform: translate3d(566.4px, -135.4px, 0) scale(0.93) rotate(26.1deg); }
+          67.5% { opacity: 1.0; transform: translate3d(594.7px, -145.1px, 0) scale(0.91) rotate(26.1deg); }
+          70% { opacity: 1.0; transform: translate3d(623.3px, -154.9px, 0) scale(0.90) rotate(26.1deg); }
+          72.5% { opacity: 1.0; transform: translate3d(652.5px, -164.9px, 0) scale(0.86) rotate(26.1deg); }
+          75% { opacity: 1.0; transform: translate3d(682.0px, -175.1px, 0) scale(0.82) rotate(26.1deg); }
+          77.5% { opacity: 1.0; transform: translate3d(712.0px, -185.3px, 0) scale(0.79) rotate(26.2deg); }
+          80% { opacity: 1.0; transform: translate3d(742.4px, -195.7px, 0) scale(0.75) rotate(26.2deg); }
+          82.5% { opacity: 0.97; transform: translate3d(773.2px, -206.1px, 0) scale(0.71) rotate(26.3deg); }
+          85% { opacity: 0.83; transform: translate3d(804.4px, -216.6px, 0) scale(0.67) rotate(26.5deg); }
+          87.5% { opacity: 0.69; transform: translate3d(836.0px, -227.2px, 0) scale(0.64) rotate(26.6deg); }
+          90% { opacity: 0.56; transform: translate3d(868.1px, -237.7px, 0) scale(0.60) rotate(26.8deg); }
+          92.5% { opacity: 0.42; transform: translate3d(900.5px, -248.3px, 0) scale(0.56) rotate(27.0deg); }
+          95% { opacity: 0.28; transform: translate3d(933.3px, -258.9px, 0) scale(0.53) rotate(27.2deg); }
+          97.5% { opacity: 0.14; transform: translate3d(966.4px, -269.5px, 0) scale(0.49) rotate(27.5deg); }
+          100% { opacity: 0.0; transform: translate3d(1000.0px, -280.0px, 0) scale(0.45) rotate(27.7deg); }
         }
 
         .flight-pixel {
