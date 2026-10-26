@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { RotateCcw, Award, MapPin, Languages } from 'lucide-react'
+import PixelInteractiveIcon from './PixelInteractiveIcon'
 import { getAudioEnabled } from '../utils/audioState'
 import discoverySoundUrl from '../assets/mixkit-quick-win-video-game-notification-269.wav'
 
@@ -215,21 +216,7 @@ function generateShuffledMatrix(): Omit<CellConfig, 'id'>[] {
 }
 
 export default function About() {
-  const [isHeadingInView, setIsHeadingInView] = useState(false)
-  const headingRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    const node = headingRef.current
-    if (!node) return
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsHeadingInView(entry.isIntersecting)
-      },
-      { threshold: 0.3 }
-    )
-    observer.observe(node)
-    return () => observer.disconnect()
-  }, [])
 
   const [gridCellStyles, setGridCellStyles] = useState<Omit<CellConfig, 'id'>[]>(() => generateShuffledMatrix())
   const [winningCellMap, setWinningCellMap] = useState<Record<number, Hobby>>({})
@@ -341,17 +328,14 @@ export default function About() {
     >
       {/* Section Heading: Who Am I? (Preserved exact position) */}
       <div
-        ref={headingRef}
         style={{
           marginBottom: 'clamp(18px, 2.25vw, 26px)',
         }}
         className="pt-7 sm:pt-8 shrink-0"
       >
-        <h2 className="text-3xl sm:text-5xl font-sans font-bold text-[#F3F4F6] tracking-tight">
-          <span className={`orange-gradient-word ${isHeadingInView ? 'animate' : 'idle'}`}>
-            Who
-          </span>{' '}
-          Am I?
+        <h2 className="text-3xl sm:text-5xl font-sans font-bold text-[#F3F4F6] tracking-tight flex items-center gap-2.5 sm:gap-3.5">
+          <PixelInteractiveIcon type="gamepad" />
+          <span>Who Am I?</span>
         </h2>
       </div>
 
