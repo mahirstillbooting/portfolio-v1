@@ -46,14 +46,14 @@ export default function Contact() {
   }, [])
 
   const spawnFlightPixels = useCallback(() => {
-    const steps = 16
+    const steps = 18
     for (let i = 0; i < steps; i++) {
       setTimeout(() => {
         const progress = i / steps
-        const x = 140 + progress * 560 + (Math.random() * 20 - 10)
-        const y = 38 - progress * 210 + (Math.random() * 20 - 10)
-        const dx = `${-20 - Math.random() * 30}px`
-        const dy = `${25 + Math.random() * 35}px`
+        const x = 120 + progress * 580 + (Math.random() * 20 - 10)
+        const y = 38 - progress * 220 + (Math.random() * 20 - 10)
+        const dx = `${-24 - Math.random() * 30}px`
+        const dy = `${26 + Math.random() * 35}px`
         const id = Date.now() + i + Math.random()
 
         setFlightPixels((prev) => [...prev, { id, x, y, dx, dy }])
@@ -61,7 +61,7 @@ export default function Contact() {
         setTimeout(() => {
           setFlightPixels((prev) => prev.filter((p) => p.id !== id))
         }, 750)
-      }, i * 45)
+      }, i * 42)
     }
   }, [])
 
@@ -74,30 +74,26 @@ export default function Contact() {
       navigator.clipboard.writeText(email).catch(() => {})
     }
 
-    // Step 1: Fold the card into the paper plane core
+    // Phase 1: Card creases and folds in 3D like origami paper into a paper plane
     setDockState('folding')
 
-    // Step 2: Launch the paper plane across the section with falling pixel trail
+    // Phase 2: At apex of fold (360ms), paper plane launches into supersonic flight
     setTimeout(() => {
       setIsPlaneFlying(true)
       spawnFlightPixels()
-    }, 140)
+    }, 360)
 
-    // Step 3: Card returns softly into place with "Copied Email" confirmation state
-    setTimeout(() => {
-      setDockState('copied-state')
-    }, 950)
-
-    // Step 4: Clean up plane actor
+    // Phase 3: Plane completes flight across section and unfolds softly back into card with Copied state
     setTimeout(() => {
       setIsPlaneFlying(false)
+      setDockState('copied-state')
     }, 1450)
 
-    // Step 5: Restore original idle state after pause
+    // Phase 4: Smoothly restore idle direct dispatch state
     setTimeout(() => {
       setDockState('idle')
       isAnimatingRef.current = false
-    }, 3400)
+    }, 3800)
   }
 
   const handleDispatch = (e: React.FormEvent) => {
@@ -233,11 +229,15 @@ export default function Contact() {
           max-width: 440px;
         }
 
+        /* ==============================================================
+           ORIGAMI 3D FOLDING STAGE & PAPER PLANE MORPH
+           ============================================================== */
         .email-dock-stage {
           position: relative;
           height: 76px;
           width: 100%;
-          perspective: 1000px;
+          perspective: 1200px;
+          perspective-origin: center center;
         }
 
         .email-dock {
@@ -254,12 +254,11 @@ export default function Contact() {
           gap: 16px;
           cursor: pointer;
           user-select: none;
-          transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-                      border-color 0.3s ease,
-                      background-color 0.3s ease,
-                      box-shadow 0.3s ease,
-                      opacity 0.3s ease;
+          transform-style: preserve-3d;
           transform-origin: center center;
+          transition: border-color 0.3s ease,
+                      background-color 0.3s ease,
+                      box-shadow 0.3s ease;
           z-index: 2;
         }
 
@@ -268,31 +267,96 @@ export default function Contact() {
           box-shadow: 0 10px 30px rgba(226, 101, 43, 0.12);
         }
 
-        .email-dock.folding {
-          transform: scaleX(0.18) scaleY(0.45) rotate(-8deg);
-          background: #E2652B;
-          border-color: #FFFFFF;
+        /* Central crease light effect during origami fold */
+        .email-dock::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 50%;
+          width: 2px;
+          height: 100%;
+          background: linear-gradient(180deg, rgba(255, 255, 255, 0.35) 0%, rgba(226, 101, 43, 0.8) 100%);
           opacity: 0;
+          pointer-events: none;
+          transform: translateX(-50%);
+          transition: opacity 0.2s ease;
+        }
+
+        /* Phase 1: Card folds in 3D like real origami paper into a paper plane */
+        .email-dock.folding {
+          animation: cardOrigamiFold 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
           pointer-events: none;
         }
 
+        .email-dock.folding::after {
+          opacity: 1;
+        }
+
+        @keyframes cardOrigamiFold {
+          0% {
+            transform: perspective(1200px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
+            clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+            opacity: 1;
+            filter: brightness(1);
+          }
+          30% {
+            /* Crease along center and top corners tuck in */
+            transform: perspective(1200px) rotateX(16deg) rotateY(-22deg) scale(0.85);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 100%, 0% 100%, 0% 25%);
+            background: #1c1c20;
+            border-color: #E2652B;
+            filter: brightness(0.95);
+            opacity: 0.95;
+          }
+          65% {
+            /* Wings fold inward along center crease */
+            transform: perspective(1200px) rotateX(25deg) rotateY(-45deg) rotateZ(-10deg) scale(0.55);
+            clip-path: polygon(50% 0%, 95% 75%, 50% 100%, 5% 75%);
+            background: #E2652B;
+            border-color: #FFFFFF;
+            filter: brightness(1.1);
+            opacity: 0.9;
+          }
+          100% {
+            /* Morphs completely into paper plane triangular nose */
+            transform: perspective(1200px) rotateX(32deg) rotateY(-62deg) rotateZ(-26deg) scale(0.25) translate(40px, -15px);
+            clip-path: polygon(50% 0%, 100% 100%, 50% 75%, 0% 100%);
+            background: #E2652B;
+            opacity: 0;
+          }
+        }
+
+        /* Phase 2: Card unfolds softly back into place with Copied confirmation */
         .email-dock.copied-state {
           border-color: #E2652B;
           background: rgba(226, 101, 43, 0.08);
-          box-shadow: 0 0 32px rgba(226, 101, 43, 0.18);
-          animation: dockReturnPop 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+          box-shadow: 0 0 32px rgba(226, 101, 43, 0.2);
+          animation: cardOrigamiUnfold 0.62s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        @keyframes dockReturnPop {
+        @keyframes cardOrigamiUnfold {
           0% {
             opacity: 0;
-            transform: translateY(14px) scale(0.92);
-            filter: blur(6px);
+            transform: perspective(1200px) rotateX(25deg) rotateY(45deg) rotateZ(12deg) scale(0.35);
+            clip-path: polygon(50% 0%, 100% 100%, 50% 75%, 0% 100%);
+            filter: drop-shadow(0 0 24px #E2652B);
+          }
+          40% {
+            opacity: 0.9;
+            transform: perspective(1200px) rotateX(10deg) rotateY(15deg) scale(0.88);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 100%, 0% 100%, 0% 25%);
+            border-color: #E2652B;
+          }
+          75% {
+            transform: perspective(1200px) rotateX(-3deg) rotateY(-2deg) scale(1.02);
+            clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+            border-color: #E2652B;
           }
           100% {
             opacity: 1;
-            transform: translateY(0) scale(1);
-            filter: blur(0);
+            transform: perspective(1200px) rotateX(0deg) rotateY(0deg) scale(1);
+            clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+            border-color: #E2652B;
           }
         }
 
@@ -373,40 +437,54 @@ export default function Contact() {
           color: #FFFFFF;
         }
 
+        /* Flying Paper Plane Craft & Jet Particle Trail */
         .paper-plane-actor {
           position: absolute;
           left: 42%;
           top: 50%;
-          width: 54px;
-          height: 54px;
-          margin-left: -27px;
-          margin-top: -27px;
+          width: 56px;
+          height: 56px;
+          margin-left: -28px;
+          margin-top: -28px;
           pointer-events: none;
           opacity: 0;
           z-index: 50;
-          filter: drop-shadow(0 0 18px rgba(226, 101, 43, 0.9));
+          filter: drop-shadow(0 0 20px rgba(226, 101, 43, 0.95));
         }
 
         .paper-plane-actor.flying {
-          animation: planeFlybyAcrossSection 1.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+          animation: planeFlybyAcrossSection 1.28s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
 
+        /* Smooth aerodynamic flight path gliding across the section */
         @keyframes planeFlybyAcrossSection {
           0% {
             opacity: 0;
-            transform: translate(0, 0) scale(0.3) rotate(-25deg);
+            transform: translate(0, 0) scale(0.45) rotate(-28deg);
           }
-          18% {
+          14% {
             opacity: 1;
-            transform: translate(-36px, 14px) scale(1.15) rotate(-18deg);
+            /* Catches air current with gentle lift */
+            transform: translate(-34px, 16px) scale(1.15) rotate(-18deg);
           }
-          45% {
+          38% {
             opacity: 1;
-            transform: translate(180px, -95px) scale(1.05) rotate(12deg);
+            /* Soars up and across headline */
+            transform: translate(170px, -105px) scale(1.22) rotate(14deg);
+          }
+          62% {
+            opacity: 1;
+            /* Sweeps over the Right Hardware Console */
+            transform: translate(460px, -65px) scale(1.08) rotate(26deg);
+          }
+          82% {
+            opacity: 0.92;
+            /* Banks high across top right */
+            transform: translate(690px, -185px) scale(0.78) rotate(38deg);
           }
           100% {
             opacity: 0;
-            transform: translate(860px, -280px) scale(0.55) rotate(26deg);
+            transform: translate(860px, -260px) scale(0.42) rotate(52deg);
           }
         }
 
@@ -418,7 +496,7 @@ export default function Contact() {
           border-radius: 1px;
           pointer-events: none;
           z-index: 45;
-          box-shadow: 0 0 8px #E2652B;
+          box-shadow: 0 0 10px #E2652B;
           animation: pixelFadeFall 0.75s ease-out forwards;
         }
 
@@ -739,10 +817,10 @@ export default function Contact() {
             </p>
           </div>
 
-          {/* Tactile Email Command Dock with Paper Plane Morph Stage */}
+          {/* Tactile Email Command Dock with Origami 3D Paper Plane Morph Stage */}
           <div className="email-dock-stage" id="emailDockStage">
             
-            {/* Paper Plane SVG Actor */}
+            {/* Paper Plane SVG Actor (Launches seamlessly at apex of fold) */}
             <div className={`paper-plane-actor ${isPlaneFlying ? 'flying' : ''}`} id="paperPlaneActor">
               <svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M22 2L11 13" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -764,7 +842,7 @@ export default function Contact() {
               />
             ))}
 
-            {/* Interactive Morphing Email Card */}
+            {/* Interactive Origami Folding Card */}
             <div
               className={`email-dock ${dockState === 'folding' ? 'folding' : ''} ${dockState === 'copied-state' ? 'copied-state' : ''}`}
               id="emailDock"
