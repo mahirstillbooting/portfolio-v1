@@ -507,52 +507,44 @@ function MatrixCell({ item, audioCtxRef }: MatrixCellProps) {
       onTouchEnd={handleTouchEnd}
       onTouchCancel={handleTouchCancel}
       style={{
-        background: isActive
-          ? 'linear-gradient(180deg, rgba(226, 101, 43, 0.08) 0%, rgba(22, 22, 26, 0.95) 45%, rgba(14, 14, 16, 0.98) 100%)'
-          : 'linear-gradient(180deg, rgba(226, 101, 43, 0.04) 0%, rgba(18, 18, 22, 0.90) 45%, rgba(12, 12, 14, 0.95) 100%)',
+        background: isActive ? 'rgba(255, 255, 255, 0.045)' : 'rgba(255, 255, 255, 0.02)',
         border: isActive ? '1px solid rgba(226, 101, 43, 0.45)' : '1px solid rgba(255, 255, 255, 0.09)',
         transform: isActive ? 'translateY(-4px)' : 'translateY(0px)',
         boxShadow: isActive
-          ? '0 16px 36px rgba(0, 0, 0, 0.85), 0 0 24px rgba(226, 101, 43, 0.14)'
+          ? '0 16px 36px rgba(0, 0, 0, 0.85), 0 0 20px rgba(226, 101, 43, 0.12)'
           : '0 4px 16px rgba(0, 0, 0, 0.35)',
         position: 'relative',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         cursor: 'pointer',
         overflow: 'hidden',
         transition: 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease, background 0.35s ease, box-shadow 0.35s ease',
       }}
-      className="w-full h-[78px] sm:h-[98px] md:h-[135px] lg:h-[160px] p-1.5 sm:p-2.5 md:p-3.5 lg:p-4 rounded-xl sm:rounded-2xl active:scale-95 select-none group"
+      className="w-full h-[78px] sm:h-[98px] md:h-[135px] lg:h-[160px] p-2 sm:p-3 md:p-4 rounded-xl sm:rounded-2xl active:scale-95 select-none group gap-1.5 sm:gap-2.5 md:gap-3.5"
     >
       {/* 1. Specular Top-Edge Rim Light (Fixed warm orange linear-gradient highlight) */}
       <div
-        className="pointer-events-none absolute top-0 left-[6%] right-[6%] h-[1px] transition-opacity duration-300 z-10"
+        className="pointer-events-none absolute top-0 left-[8%] right-[8%] h-[1px] transition-opacity duration-300 z-10"
         style={{
           background: 'linear-gradient(90deg, transparent 0%, #E2652B 50%, transparent 100%)',
-          opacity: isActive ? 1 : 0.82,
-          boxShadow: '0 0 10px rgba(226, 101, 43, 0.85)',
+          opacity: isActive ? 1 : 0.78,
+          boxShadow: '0 0 8px rgba(226, 101, 43, 0.75)',
         }}
       />
 
-      {/* 2. Soft Ambient Overhead Horizon Glow (Fixed warm orange glow bleeding downward) */}
+      {/* 2. Soft Minimal Overhead Horizon Glow (Tight, subtle bleed strictly at top edge) */}
       <div
-        className="pointer-events-none absolute top-0 left-0 right-0 h-[44px] transition-opacity duration-300 z-0"
+        className="pointer-events-none absolute top-0 left-0 right-0 h-[14px] sm:h-[18px] transition-opacity duration-300 z-0"
         style={{
-          background: 'radial-gradient(ellipse at 50% 0%, rgba(226, 101, 43, 0.18) 0%, transparent 75%)',
-          opacity: isActive ? 1 : 0.85,
+          background: 'radial-gradient(ellipse 60% 100% at 50% 0%, rgba(226, 101, 43, 0.12) 0%, transparent 100%)',
+          opacity: isActive ? 1 : 0.75,
         }}
       />
-
-      {/* Top telemetry: N-01 code and red/orange status dot */}
-      <div className="relative z-10 w-full flex items-center justify-between text-[7px] sm:text-[9px] md:text-[10px] lg:text-[11px] font-mono text-[#71717A] px-0.5 sm:px-1">
-        <span>{item.code}</span>
-        <span style={{ color: isActive ? '#E2652B' : '#71717A', transition: 'color 0.25s ease' }} className="text-[6px] sm:text-[8px] md:text-[9px]">●</span>
-      </div>
 
       {/* Internal 280x280 Canvas (28x28 pixel matrix) */}
-      <div className="relative z-10 w-7 h-7 sm:w-9 sm:h-9 md:w-16 md:h-16 lg:w-20 lg:h-20 flex items-center justify-center my-auto">
+      <div className="relative z-10 w-8 h-8 sm:w-11 sm:h-11 md:w-16 md:h-16 lg:w-20 lg:h-20 flex items-center justify-center">
         <canvas
           ref={canvasRef}
           width={280}
@@ -567,7 +559,7 @@ function MatrixCell({ item, audioCtxRef }: MatrixCellProps) {
           color: isActive ? '#FFFFFF' : '#D4D4D8',
           transition: 'color 0.25s ease',
         }}
-        className="relative z-10 w-full text-center text-[8px] sm:text-[10px] md:text-xs lg:text-[13px] font-mono font-medium truncate px-0.5 sm:px-1"
+        className="relative z-10 w-full text-center text-[9px] sm:text-[11px] md:text-xs lg:text-[13px] font-mono font-medium truncate px-0.5 sm:px-1"
       >
         {item.fullName}
       </div>
