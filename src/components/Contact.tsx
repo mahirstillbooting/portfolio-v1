@@ -2,6 +2,7 @@ import { useState, useCallback, useRef } from 'react'
 import UseAnimations from 'react-useanimations'
 import mail from 'react-useanimations/lib/mail'
 import github from 'react-useanimations/lib/github'
+import instagram from 'react-useanimations/lib/instagram'
 import { getAudioEnabled } from '../utils/audioState'
 import winSoundUrl from '../assets/mixkit-quick-win-video-game-notification-269.wav'
 
@@ -623,80 +624,104 @@ export default function Contact() {
           {/* Tactile Email Command Dock with Animated Mail Icon */}
           <div className="email-dock-stage" id="emailDockStage">
             
-            {/* Interactive Tactile Email Card */}
-            <div
-              className={`email-dock ${dockState === 'copied-state' ? 'copied-state' : ''}`}
-              id="emailDock"
-              role="button"
-              tabIndex={0}
-              onClick={handleCopyEmail}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault()
-                  handleCopyEmail()
-                }
-              }}
-            >
-              <div className="email-dock-left">
-                <div className="email-icon-frame" id="emailIconFrame">
-                  <UseAnimations
-                    animation={mail}
-                    size={32}
-                    strokeColor={dockState === 'copied-state' ? '#FFFFFF' : '#E2652B'}
-                  />
-                </div>
-                <div className="email-meta">
-                  <span className="email-label" id="emailLabel">
-                    {dockState === 'copied-state' ? 'Dispatch Ready' : 'Direct Dispatch'}
+            <UseAnimations
+              animation={mail}
+              size={32}
+              strokeColor={dockState === 'copied-state' ? '#FFFFFF' : '#E2652B'}
+              render={(eventProps, animationProps) => (
+                <div
+                  className={`email-dock ${dockState === 'copied-state' ? 'copied-state' : ''}`}
+                  id="emailDock"
+                  role="button"
+                  tabIndex={0}
+                  {...eventProps}
+                  onClick={(e) => {
+                    eventProps.onClick(e)
+                    handleCopyEmail()
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      handleCopyEmail()
+                    }
+                  }}
+                >
+                  <div className="email-dock-left">
+                    <div className="email-icon-frame" id="emailIconFrame">
+                      <span {...animationProps} />
+                    </div>
+                    <div className="email-meta">
+                      <span className="email-label" id="emailLabel">
+                        {dockState === 'copied-state' ? 'Dispatch Ready' : 'Direct Dispatch'}
+                      </span>
+                      <span className="email-address" id="emailAddress">
+                        {dockState === 'copied-state' ? 'Copied Email to Clipboard!' : email}
+                      </span>
+                    </div>
+                  </div>
+                  <span className="copy-kbd" id="copyKbd">
+                    {dockState === 'copied-state' ? 'COPIED ✓' : 'COPY'}
                   </span>
-                  <span className="email-address" id="emailAddress">
-                    {dockState === 'copied-state' ? 'Copied Email to Clipboard!' : email}
-                  </span>
                 </div>
-              </div>
-              <span className="copy-kbd" id="copyKbd">
-                {dockState === 'copied-state' ? 'COPIED ✓' : 'COPY'}
-              </span>
-            </div>
+              )}
+            />
 
           </div>
 
-          {/* Social Bento Cards */}
+          {/* Social Bento Cards with Card-Level Hover Triggers */}
           <div className="social-bento-row">
             
-            <a href="https://github.com/mahirstillbooting" target="_blank" rel="noopener noreferrer" className="social-card">
-              <div className="social-card-top">
-                <div className="social-badge">
-                  <UseAnimations
-                    animation={github}
-                    size={32}
-                    strokeColor="#E2652B"
-                  />
-                </div>
-                <span className="external-arrow">↗</span>
-              </div>
-              <div className="social-card-bottom">
-                <span className="social-title">GitHub</span>
-                <span className="social-sub">@mahirstillbooting</span>
-              </div>
-            </a>
+            <UseAnimations
+              animation={github}
+              size={32}
+              strokeColor="#E2652B"
+              render={(eventProps, animationProps) => (
+                <a
+                  href="https://github.com/mahirstillbooting"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-card"
+                  {...eventProps}
+                >
+                  <div className="social-card-top">
+                    <div className="social-badge">
+                      <span {...animationProps} />
+                    </div>
+                    <span className="external-arrow">↗</span>
+                  </div>
+                  <div className="social-card-bottom">
+                    <span className="social-title">GitHub</span>
+                    <span className="social-sub">@mahirstillbooting</span>
+                  </div>
+                </a>
+              )}
+            />
 
-            <a href="https://instagram.com/pixl.potion" target="_blank" rel="noopener noreferrer" className="social-card">
-              <div className="social-card-top">
-                <div className="social-badge">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
-                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-                    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
-                  </svg>
-                </div>
-                <span className="external-arrow">↗</span>
-              </div>
-              <div className="social-card-bottom">
-                <span className="social-title">Instagram</span>
-                <span className="social-sub">@pixl.potion</span>
-              </div>
-            </a>
+            <UseAnimations
+              animation={instagram}
+              size={32}
+              strokeColor="#E2652B"
+              render={(eventProps, animationProps) => (
+                <a
+                  href="https://instagram.com/pixl.potion"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-card"
+                  {...eventProps}
+                >
+                  <div className="social-card-top">
+                    <div className="social-badge">
+                      <span {...animationProps} />
+                    </div>
+                    <span className="external-arrow">↗</span>
+                  </div>
+                  <div className="social-card-bottom">
+                    <span className="social-title">Instagram</span>
+                    <span className="social-sub">@pixl.potion</span>
+                  </div>
+                </a>
+              )}
+            />
 
           </div>
 
