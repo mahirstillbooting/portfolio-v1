@@ -1,4 +1,6 @@
 import { useState, useCallback, useRef } from 'react'
+import UseAnimations from 'react-useanimations'
+import mail from 'react-useanimations/lib/mail'
 import { getAudioEnabled } from '../utils/audioState'
 import winSoundUrl from '../assets/mixkit-quick-win-video-game-notification-269.wav'
 
@@ -9,18 +11,8 @@ const TOPICS = [
   'Collaboration',
 ]
 
-interface FlightPixel {
-  id: number
-  x: number
-  y: number
-  dx: string
-  dy: string
-}
-
 export default function Contact() {
   const [dockState, setDockState] = useState<'idle' | 'copied-state'>('idle')
-  const [isPlaneFlying, setIsPlaneFlying] = useState(false)
-  const [flightPixels, setFlightPixels] = useState<FlightPixel[]>([])
   const [selectedTopic, setSelectedTopic] = useState('Full-Stack Role')
   const [name, setName] = useState('')
   const [returnEmail, setReturnEmail] = useState('')
@@ -45,33 +37,6 @@ export default function Contact() {
     }
   }, [])
 
-  const spawnFlightPixels = useCallback(() => {
-    const steps = 30
-    const bezier = (p0: number, p1: number, p2: number, p3: number, t: number) => {
-      const u = 1 - t
-      return u * u * u * p0 + 3 * u * u * t * p1 + 3 * u * t * t * p2 + t * t * t * p3
-    }
-
-    for (let i = 0; i < steps; i++) {
-      setTimeout(() => {
-        const t = i / steps
-        const px = 38 + bezier(0, 200, 550, 1000, t)
-        const py = 38 + bezier(0, 15, -140, -280, t)
-        const x = px - 6 + (Math.random() * 8 - 4)
-        const y = py + 6 + (Math.random() * 8 - 4)
-        const dx = `${-14 - Math.random() * 20}px`
-        const dy = `${10 + Math.random() * 20}px`
-        const id = Date.now() + i + Math.random()
-
-        setFlightPixels((prev) => [...prev, { id, x, y, dx, dy }])
-
-        setTimeout(() => {
-          setFlightPixels((prev) => prev.filter((p) => p.id !== id))
-        }, 650)
-      }, i * 42)
-    }
-  }, [])
-
   const handleCopyEmail = () => {
     if (isAnimatingRef.current) return
     isAnimatingRef.current = true
@@ -81,21 +46,14 @@ export default function Contact() {
       navigator.clipboard.writeText(email).catch(() => {})
     }
 
-    // Instant tactile copied state & launch paper plane flight
+    // Set copied state & trigger react-useanimations mail icon
     setDockState('copied-state')
-    setIsPlaneFlying(true)
-    spawnFlightPixels()
-
-    // Complete plane flyby smoothly
-    setTimeout(() => {
-      setIsPlaneFlying(false)
-    }, 1450)
 
     // Smoothly restore idle direct dispatch state
     setTimeout(() => {
       setDockState('idle')
       isAnimatingRef.current = false
-    }, 3200)
+    }, 2800)
   }
 
   const handleDispatch = (e: React.FormEvent) => {
@@ -353,94 +311,7 @@ export default function Contact() {
           color: #FFFFFF;
         }
 
-        /* Flying Paper Plane Craft & Jet Particle Trail */
-        .paper-plane-actor {
-          position: absolute;
-          left: 38px;
-          top: 50%;
-          width: 44px;
-          height: 44px;
-          margin-left: -22px;
-          margin-top: -22px;
-          pointer-events: none;
-          opacity: 0;
-          z-index: 50;
-          will-change: transform, opacity;
-          filter: drop-shadow(0 0 16px rgba(226, 101, 43, 0.95));
-        }
 
-        .paper-plane-actor.flying {
-          animation: planeFlybyAcrossSection 1.35s cubic-bezier(0.2, 0.0, 0.2, 1.0) forwards;
-        }
-
-        /* High-density 40-frame aerodynamic trajectory (continuous tangent & velocity interpolation) */
-        @keyframes planeFlybyAcrossSection {
-          0% { opacity: 0.0; transform: translate3d(0.0px, 0.0px, 0) scale(0.55) rotate(49.3deg); }
-          2.5% { opacity: 0.62; transform: translate3d(15.3px, 0.8px, 0) scale(0.61) rotate(46.8deg); }
-          5% { opacity: 1.0; transform: translate3d(31.1px, 1.0px, 0) scale(0.67) rotate(44.6deg); }
-          7.5% { opacity: 1.0; transform: translate3d(47.5px, 0.6px, 0) scale(0.73) rotate(42.6deg); }
-          10% { opacity: 1.0; transform: translate3d(64.5px, -0.4px, 0) scale(0.79) rotate(40.7deg); }
-          12.5% { opacity: 1.0; transform: translate3d(81.9px, -2.0px, 0) scale(0.85) rotate(39.1deg); }
-          15% { opacity: 1.0; transform: translate3d(100.0px, -4.1px, 0) scale(0.91) rotate(37.6deg); }
-          17.5% { opacity: 1.0; transform: translate3d(118.5px, -6.8px, 0) scale(0.97) rotate(36.2deg); }
-          20% { opacity: 1.0; transform: translate3d(137.6px, -9.9px, 0) scale(1.03) rotate(35.0deg); }
-          22.5% { opacity: 1.0; transform: translate3d(157.2px, -13.6px, 0) scale(1.09) rotate(33.9deg); }
-          25% { opacity: 1.0; transform: translate3d(177.3px, -17.7px, 0) scale(1.15) rotate(32.9deg); }
-          27.5% { opacity: 1.0; transform: translate3d(198.0px, -22.3px, 0) scale(1.14) rotate(32.0deg); }
-          30% { opacity: 1.0; transform: translate3d(219.1px, -27.4px, 0) scale(1.12) rotate(31.2deg); }
-          32.5% { opacity: 1.0; transform: translate3d(240.8px, -32.9px, 0) scale(1.11) rotate(30.4deg); }
-          35% { opacity: 1.0; transform: translate3d(263.0px, -38.8px, 0) scale(1.09) rotate(29.8deg); }
-          37.5% { opacity: 1.0; transform: translate3d(285.6px, -45.1px, 0) scale(1.08) rotate(29.2deg); }
-          40% { opacity: 1.0; transform: translate3d(308.8px, -51.8px, 0) scale(1.07) rotate(28.7deg); }
-          42.5% { opacity: 1.0; transform: translate3d(332.4px, -58.8px, 0) scale(1.05) rotate(28.2deg); }
-          45% { opacity: 1.0; transform: translate3d(356.6px, -66.2px, 0) scale(1.04) rotate(27.8deg); }
-          47.5% { opacity: 1.0; transform: translate3d(381.2px, -73.9px, 0) scale(1.02) rotate(27.4deg); }
-          50% { opacity: 1.0; transform: translate3d(406.2px, -81.9px, 0) scale(1.01) rotate(27.1deg); }
-          52.5% { opacity: 1.0; transform: translate3d(431.8px, -90.2px, 0) scale(1.00) rotate(26.9deg); }
-          55% { opacity: 1.0; transform: translate3d(457.8px, -98.7px, 0) scale(0.98) rotate(26.7deg); }
-          57.5% { opacity: 1.0; transform: translate3d(484.3px, -107.6px, 0) scale(0.97) rotate(26.5deg); }
-          60% { opacity: 1.0; transform: translate3d(511.2px, -116.6px, 0) scale(0.96) rotate(26.3deg); }
-          62.5% { opacity: 1.0; transform: translate3d(538.6px, -125.9px, 0) scale(0.94) rotate(26.2deg); }
-          65% { opacity: 1.0; transform: translate3d(566.4px, -135.4px, 0) scale(0.93) rotate(26.1deg); }
-          67.5% { opacity: 1.0; transform: translate3d(594.7px, -145.1px, 0) scale(0.91) rotate(26.1deg); }
-          70% { opacity: 1.0; transform: translate3d(623.3px, -154.9px, 0) scale(0.90) rotate(26.1deg); }
-          72.5% { opacity: 1.0; transform: translate3d(652.5px, -164.9px, 0) scale(0.86) rotate(26.1deg); }
-          75% { opacity: 1.0; transform: translate3d(682.0px, -175.1px, 0) scale(0.82) rotate(26.1deg); }
-          77.5% { opacity: 1.0; transform: translate3d(712.0px, -185.3px, 0) scale(0.79) rotate(26.2deg); }
-          80% { opacity: 1.0; transform: translate3d(742.4px, -195.7px, 0) scale(0.75) rotate(26.2deg); }
-          82.5% { opacity: 0.97; transform: translate3d(773.2px, -206.1px, 0) scale(0.71) rotate(26.3deg); }
-          85% { opacity: 0.83; transform: translate3d(804.4px, -216.6px, 0) scale(0.67) rotate(26.5deg); }
-          87.5% { opacity: 0.69; transform: translate3d(836.0px, -227.2px, 0) scale(0.64) rotate(26.6deg); }
-          90% { opacity: 0.56; transform: translate3d(868.1px, -237.7px, 0) scale(0.60) rotate(26.8deg); }
-          92.5% { opacity: 0.42; transform: translate3d(900.5px, -248.3px, 0) scale(0.56) rotate(27.0deg); }
-          95% { opacity: 0.28; transform: translate3d(933.3px, -258.9px, 0) scale(0.53) rotate(27.2deg); }
-          97.5% { opacity: 0.14; transform: translate3d(966.4px, -269.5px, 0) scale(0.49) rotate(27.5deg); }
-          100% { opacity: 0.0; transform: translate3d(1000.0px, -280.0px, 0) scale(0.45) rotate(27.7deg); }
-        }
-
-        .flight-pixel {
-          position: absolute;
-          width: 5px;
-          height: 5px;
-          background: #E2652B;
-          border-radius: 1px;
-          pointer-events: none;
-          z-index: 45;
-          will-change: transform, opacity;
-          box-shadow: 0 0 10px #E2652B;
-          animation: pixelFadeFall 0.65s ease-out forwards;
-        }
-
-        @keyframes pixelFadeFall {
-          0% {
-            opacity: 1;
-            transform: translate3d(0, 0, 0) scale(1);
-          }
-          100% {
-            opacity: 0;
-            transform: translate3d(var(--dx), var(--dy), 0) scale(0.2);
-          }
-        }
 
         .social-bento-row {
           display: grid;
@@ -748,31 +619,9 @@ export default function Contact() {
             </p>
           </div>
 
-          {/* Tactile Email Command Dock with Flying Paper Plane */}
+          {/* Tactile Email Command Dock with Animated Mail Icon */}
           <div className="email-dock-stage" id="emailDockStage">
             
-            {/* Paper Plane SVG Actor */}
-            <div className={`paper-plane-actor ${isPlaneFlying ? 'flying' : ''}`} id="paperPlaneActor">
-              <svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M22 2L11 13" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M22 2L15 22L11 13L2 9L22 2Z" fill="#E2652B" stroke="#FFFFFF" strokeWidth="1.6" strokeLinejoin="round"/>
-              </svg>
-            </div>
-
-            {/* Spawned Flight Trail Pixels */}
-            {flightPixels.map((p) => (
-              <span
-                key={p.id}
-                className="flight-pixel"
-                style={{
-                  left: `${p.x}px`,
-                  top: `${p.y}px`,
-                  '--dx': p.dx,
-                  '--dy': p.dy,
-                } as React.CSSProperties}
-              />
-            ))}
-
             {/* Interactive Tactile Email Card */}
             <div
               className={`email-dock ${dockState === 'copied-state' ? 'copied-state' : ''}`}
@@ -789,16 +638,11 @@ export default function Contact() {
             >
               <div className="email-dock-left">
                 <div className="email-icon-frame" id="emailIconFrame">
-                  {dockState === 'copied-state' ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                  ) : (
-                    <svg id="emailSvgIcon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <rect width="20" height="16" x="2" y="4" rx="2"/>
-                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
-                    </svg>
-                  )}
+                  <UseAnimations
+                    animation={mail}
+                    size={32}
+                    strokeColor={dockState === 'copied-state' ? '#FFFFFF' : '#E2652B'}
+                  />
                 </div>
                 <div className="email-meta">
                   <span className="email-label" id="emailLabel">
