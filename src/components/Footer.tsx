@@ -1,37 +1,32 @@
 import { Terminal } from 'lucide-react'
+import { GithubIcon } from './Icons'
 
 export default function Footer() {
   return (
-    <footer className="w-full border-t border-white/6 bg-[#060608] py-10 px-6 sm:px-8 font-mono text-xs text-[#6B7280] flex justify-center select-none">
-      <div className="w-full max-w-[1200px] flex flex-col sm:flex-row items-center justify-between gap-4">
+    <footer className="w-full border-t border-white/[0.12] bg-[#0A0A0C] py-8 px-6 sm:px-8 font-mono text-xs text-[#A1A1AA] flex justify-center select-none shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
+      <div className="w-full max-w-[1120px] flex flex-col sm:flex-row items-center justify-between gap-4">
         
-        {/* TUI Vim-Style Keybind Hints */}
-        <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-5 gap-y-1 text-[11px]">
-          <div>
-            <span className="kbd-tag mr-1.5">arrows/wasd</span>
-            <span>Rover &amp; Nav</span>
-          </div>
-          <div>
-            <span className="kbd-tag mr-1.5">g</span>
-            <a
-              href="https://github.com/mahirstillbooting"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#9CA3AF] hover:text-[#E2652B] transition-colors"
-            >
-              GitHub
-            </a>
-          </div>
+        {/* Left: Social Profile */}
+        <div className="flex items-center gap-4 text-xs">
+          <a
+            href="https://github.com/mahirstillbooting"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex items-center gap-2 text-[#D4D4D8] hover:text-[#E2652B] transition-colors duration-200 font-medium"
+          >
+            <GithubIcon className="w-4 h-4 text-[#A1A1AA] group-hover:text-[#E2652B] transition-colors duration-200" />
+            <span>GitHub</span>
+          </a>
         </div>
 
-        {/* Center / Right: System Status & Brand */}
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5 text-[#E5E7EB]">
+        {/* Right: System Status & Brand */}
+        <div className="flex items-center gap-3 text-xs">
+          <div className="flex items-center gap-1.5 text-[#F4F4F6]">
             <Terminal className="w-3.5 h-3.5 text-[#E2652B]" />
-            <span>STATUS: <strong className="text-[#E2652B] font-normal">ONLINE</strong></span>
+            <span>STATUS: <strong className="text-[#E2652B] font-semibold">ONLINE</strong></span>
           </div>
           <span className="text-white/20">|</span>
-          <span>MAHIRUDDIN CHOWDHURY // PORTFOLIO V1</span>
+          <span className="text-[#E4E4E7] font-medium tracking-wide">MAHIRUDDIN CHOWDHURY</span>
         </div>
 
       </div>

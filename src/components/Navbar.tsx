@@ -89,26 +89,26 @@ export default function Navbar() {
               flexShrink: 0,
               whiteSpace: 'nowrap',
               marginRight: '8px',
-              padding: '12px 22px',
-              borderRadius: '14px',
-              background: 'rgba(255, 255, 255, 0.07)',
+              padding: '10px 18px',
+              borderRadius: '12px',
+              background: 'transparent',
               border: '1px solid rgba(255, 255, 255, 0.16)',
-              color: '#F3F4F6',
-              fontFamily: "'Geist Sans', sans-serif",
+              color: '#F3F1EE',
+              fontFamily: "'Geist', -apple-system, BlinkMacSystemFont, sans-serif",
               fontSize: '14px',
               fontWeight: 500,
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '10px',
+              gap: '8px',
               boxSizing: 'border-box',
-              transition: 'all 0.2s ease',
+              transition: 'border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease, color 0.25s ease, transform 0.2s ease',
             }}
-            className="group hover:!bg-white hover:!text-black hover:!border-white active:scale-95 no-underline cursor-pointer shadow-sm !py-2 !px-3.5 md:!py-[12px] md:!px-[22px] text-xs md:text-sm"
+            className="group hover:!border-[#E2652B] hover:!bg-[rgba(226,101,43,0.08)] hover:shadow-[0_0_20px_rgba(226,101,43,0.22)] active:scale-95 no-underline cursor-pointer !py-2 !px-3.5 md:!py-[10px] md:!px-[18px] text-xs md:text-sm"
           >
             <span>Let's talk</span>
             <ArrowUpRight
-              className="w-3.5 h-3.5 md:w-4 md:h-4 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              className="w-3.5 h-3.5 md:w-4 md:h-4 shrink-0 text-[#A1A1AA] transition-all duration-300 ease-out group-hover:text-[#E2652B] group-hover:translate-x-[3px] group-hover:-translate-y-[3px]"
               strokeWidth={2}
             />
           </a>
