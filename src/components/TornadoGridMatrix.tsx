@@ -507,10 +507,14 @@ function MatrixCell({ item, audioCtxRef }: MatrixCellProps) {
       onTouchEnd={handleTouchEnd}
       onTouchCancel={handleTouchCancel}
       style={{
-        background: isActive ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.025)',
-        border: isActive ? '1px solid rgba(226, 101, 43, 0.5)' : '1px solid rgba(255, 255, 255, 0.09)',
+        background: isActive
+          ? 'linear-gradient(180deg, rgba(226, 101, 43, 0.07) 0%, rgba(22, 22, 26, 0.95) 45%, rgba(14, 14, 16, 0.98) 100%)'
+          : 'linear-gradient(180deg, rgba(255, 255, 255, 0.035) 0%, rgba(18, 18, 22, 0.85) 45%, rgba(12, 12, 14, 0.92) 100%)',
+        border: isActive ? '1px solid rgba(226, 101, 43, 0.45)' : '1px solid rgba(255, 255, 255, 0.09)',
         transform: isActive ? 'translateY(-4px)' : 'translateY(0px)',
-        boxShadow: isActive ? '0 16px 36px rgba(0,0,0,0.85)' : 'none',
+        boxShadow: isActive
+          ? '0 16px 36px rgba(0, 0, 0, 0.85), 0 0 24px rgba(226, 101, 43, 0.14)'
+          : '0 4px 16px rgba(0, 0, 0, 0.35)',
         position: 'relative',
         display: 'flex',
         flexDirection: 'column',
@@ -522,14 +526,37 @@ function MatrixCell({ item, audioCtxRef }: MatrixCellProps) {
       }}
       className="w-full h-[78px] sm:h-[98px] md:h-[135px] lg:h-[160px] p-1.5 sm:p-2.5 md:p-3.5 lg:p-4 rounded-xl sm:rounded-2xl active:scale-95 select-none group"
     >
+      {/* 1. Specular Top-Edge Rim Light (Raycast / Linear-style fading gradient highlight) */}
+      <div
+        className="pointer-events-none absolute top-0 left-[6%] right-[6%] h-[1px] transition-all duration-300 z-10"
+        style={{
+          background: isActive
+            ? 'linear-gradient(90deg, transparent 0%, #E2652B 50%, transparent 100%)'
+            : 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.35) 50%, transparent 100%)',
+          opacity: isActive ? 1 : 0.7,
+          boxShadow: isActive ? '0 0 10px rgba(226, 101, 43, 0.85)' : '0 0 6px rgba(255, 255, 255, 0.15)',
+        }}
+      />
+
+      {/* 2. Soft Ambient Overhead Horizon Glow bleeding downward below the rim light */}
+      <div
+        className="pointer-events-none absolute top-0 left-0 right-0 h-[44px] transition-all duration-300 z-0"
+        style={{
+          background: isActive
+            ? 'radial-gradient(ellipse at 50% 0%, rgba(226, 101, 43, 0.2) 0%, transparent 75%)'
+            : 'radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.05) 0%, transparent 75%)',
+          opacity: isActive ? 1 : 0.8,
+        }}
+      />
+
       {/* Top telemetry: N-01 code and red/orange status dot */}
-      <div className="w-full flex items-center justify-between text-[7px] sm:text-[9px] md:text-[10px] lg:text-[11px] font-mono text-[#71717A] px-0.5 sm:px-1">
+      <div className="relative z-10 w-full flex items-center justify-between text-[7px] sm:text-[9px] md:text-[10px] lg:text-[11px] font-mono text-[#71717A] px-0.5 sm:px-1">
         <span>{item.code}</span>
         <span style={{ color: isActive ? '#E2652B' : '#71717A', transition: 'color 0.25s ease' }} className="text-[6px] sm:text-[8px] md:text-[9px]">●</span>
       </div>
 
       {/* Internal 280x280 Canvas (28x28 pixel matrix) */}
-      <div className="relative w-7 h-7 sm:w-9 sm:h-9 md:w-16 md:h-16 lg:w-20 lg:h-20 flex items-center justify-center my-auto">
+      <div className="relative z-10 w-7 h-7 sm:w-9 sm:h-9 md:w-16 md:h-16 lg:w-20 lg:h-20 flex items-center justify-center my-auto">
         <canvas
           ref={canvasRef}
           width={280}
@@ -544,7 +571,7 @@ function MatrixCell({ item, audioCtxRef }: MatrixCellProps) {
           color: isActive ? '#FFFFFF' : '#D4D4D8',
           transition: 'color 0.25s ease',
         }}
-        className="w-full text-center text-[8px] sm:text-[10px] md:text-xs lg:text-[13px] font-mono font-medium truncate px-0.5 sm:px-1"
+        className="relative z-10 w-full text-center text-[8px] sm:text-[10px] md:text-xs lg:text-[13px] font-mono font-medium truncate px-0.5 sm:px-1"
       >
         {item.fullName}
       </div>
