@@ -508,8 +508,8 @@ function MatrixCell({ item, audioCtxRef }: MatrixCellProps) {
       onTouchCancel={handleTouchCancel}
       style={{
         background: isActive
-          ? 'linear-gradient(180deg, rgba(226, 101, 43, 0.07) 0%, rgba(22, 22, 26, 0.95) 45%, rgba(14, 14, 16, 0.98) 100%)'
-          : 'linear-gradient(180deg, rgba(255, 255, 255, 0.035) 0%, rgba(18, 18, 22, 0.85) 45%, rgba(12, 12, 14, 0.92) 100%)',
+          ? 'linear-gradient(180deg, rgba(226, 101, 43, 0.08) 0%, rgba(22, 22, 26, 0.95) 45%, rgba(14, 14, 16, 0.98) 100%)'
+          : 'linear-gradient(180deg, rgba(226, 101, 43, 0.04) 0%, rgba(18, 18, 22, 0.90) 45%, rgba(12, 12, 14, 0.95) 100%)',
         border: isActive ? '1px solid rgba(226, 101, 43, 0.45)' : '1px solid rgba(255, 255, 255, 0.09)',
         transform: isActive ? 'translateY(-4px)' : 'translateY(0px)',
         boxShadow: isActive
@@ -526,26 +526,22 @@ function MatrixCell({ item, audioCtxRef }: MatrixCellProps) {
       }}
       className="w-full h-[78px] sm:h-[98px] md:h-[135px] lg:h-[160px] p-1.5 sm:p-2.5 md:p-3.5 lg:p-4 rounded-xl sm:rounded-2xl active:scale-95 select-none group"
     >
-      {/* 1. Specular Top-Edge Rim Light (Raycast / Linear-style fading gradient highlight) */}
+      {/* 1. Specular Top-Edge Rim Light (Fixed warm orange linear-gradient highlight) */}
       <div
-        className="pointer-events-none absolute top-0 left-[6%] right-[6%] h-[1px] transition-all duration-300 z-10"
+        className="pointer-events-none absolute top-0 left-[6%] right-[6%] h-[1px] transition-opacity duration-300 z-10"
         style={{
-          background: isActive
-            ? 'linear-gradient(90deg, transparent 0%, #E2652B 50%, transparent 100%)'
-            : 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.35) 50%, transparent 100%)',
-          opacity: isActive ? 1 : 0.7,
-          boxShadow: isActive ? '0 0 10px rgba(226, 101, 43, 0.85)' : '0 0 6px rgba(255, 255, 255, 0.15)',
+          background: 'linear-gradient(90deg, transparent 0%, #E2652B 50%, transparent 100%)',
+          opacity: isActive ? 1 : 0.82,
+          boxShadow: '0 0 10px rgba(226, 101, 43, 0.85)',
         }}
       />
 
-      {/* 2. Soft Ambient Overhead Horizon Glow bleeding downward below the rim light */}
+      {/* 2. Soft Ambient Overhead Horizon Glow (Fixed warm orange glow bleeding downward) */}
       <div
-        className="pointer-events-none absolute top-0 left-0 right-0 h-[44px] transition-all duration-300 z-0"
+        className="pointer-events-none absolute top-0 left-0 right-0 h-[44px] transition-opacity duration-300 z-0"
         style={{
-          background: isActive
-            ? 'radial-gradient(ellipse at 50% 0%, rgba(226, 101, 43, 0.2) 0%, transparent 75%)'
-            : 'radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.05) 0%, transparent 75%)',
-          opacity: isActive ? 1 : 0.8,
+          background: 'radial-gradient(ellipse at 50% 0%, rgba(226, 101, 43, 0.18) 0%, transparent 75%)',
+          opacity: isActive ? 1 : 0.85,
         }}
       />
 
