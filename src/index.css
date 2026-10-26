@@ -230,3 +230,48 @@ body {
     opacity: 0.15;
   }
 }
+
+
+/* Luminous Orange Gradient Word Transformation */
+.orange-gradient-word {
+  display: inline-block;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  transition: filter 0.5s ease;
+}
+
+.orange-gradient-word.animate {
+  background-image: linear-gradient(
+    115deg,
+    #E2652B 0%,
+    #FF8A48 20%,
+    #FFAE7A 40%,
+    #E2652B 65%,
+    #F3F4F6 88%,
+    #F3F4F6 100%
+  );
+  background-size: 260% 100%;
+  animation: orangeGradientTransform 1.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.orange-gradient-word.idle {
+  background-image: linear-gradient(135deg, #F3F4F6 0%, #F3F4F6 100%);
+  background-size: 100% 100%;
+  filter: none;
+}
+
+@keyframes orangeGradientTransform {
+  0% {
+    background-position: 100% 0;
+    filter: drop-shadow(0 0 0px transparent);
+  }
+  40% {
+    filter: drop-shadow(0 0 16px rgba(226, 101, 43, 0.65));
+  }
+  100% {
+    background-position: 0% 0;
+    filter: drop-shadow(0 0 10px rgba(226, 101, 43, 0.35));
+  }
+}

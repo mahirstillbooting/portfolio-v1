@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion } from 'framer-motion'
-import { RotateCcw, Award, MapPin, Compass, Languages } from 'lucide-react'
+import { RotateCcw, Award, MapPin, Languages } from 'lucide-react'
 import { getAudioEnabled } from '../utils/audioState'
 import discoverySoundUrl from '../assets/mixkit-quick-win-video-game-notification-269.wav'
 
@@ -215,6 +215,22 @@ function generateShuffledMatrix(): Omit<CellConfig, 'id'>[] {
 }
 
 export default function About() {
+  const [isHeadingInView, setIsHeadingInView] = useState(false)
+  const headingRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const node = headingRef.current
+    if (!node) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsHeadingInView(entry.isIntersecting)
+      },
+      { threshold: 0.3 }
+    )
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [])
+
   const [gridCellStyles, setGridCellStyles] = useState<Omit<CellConfig, 'id'>[]>(() => generateShuffledMatrix())
   const [winningCellMap, setWinningCellMap] = useState<Record<number, Hobby>>({})
   const [discoveredCells, setDiscoveredCells] = useState<number[]>([])
@@ -323,19 +339,19 @@ export default function About() {
       id="about"
       className="w-full max-w-[1200px] mx-auto relative select-none scroll-mt-[40px]"
     >
-      {/* Section Heading: Player Details & Who Am I? */}
+      {/* Section Heading: Who Am I? (Preserved exact position) */}
       <div
+        ref={headingRef}
         style={{
           marginBottom: 'clamp(18px, 2.25vw, 26px)',
         }}
-        className="pt-1 sm:pt-2 space-y-2 shrink-0"
+        className="pt-7 sm:pt-8 shrink-0"
       >
-        <div className="flex items-center gap-2 text-xs tracking-widest text-[#E2652B] font-mono uppercase">
-          <Compass className="w-3.5 h-3.5 text-[#E2652B]" />
-          <span>03 · PLAYER DETAILS</span>
-        </div>
         <h2 className="text-3xl sm:text-5xl font-sans font-bold text-[#F3F4F6] tracking-tight">
-          Who Am I?
+          <span className={`orange-gradient-word ${isHeadingInView ? 'animate' : 'idle'}`}>
+            Who
+          </span>{' '}
+          Am I?
         </h2>
       </div>
 

@@ -1,25 +1,41 @@
-import { Cpu } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
 import TornadoGridMatrix from './TornadoGridMatrix'
 
 export default function Skills() {
+  const [isHeadingInView, setIsHeadingInView] = useState(false)
+  const headingRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const node = headingRef.current
+    if (!node) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsHeadingInView(entry.isIntersecting)
+      },
+      { threshold: 0.3 }
+    )
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [])
+
   return (
     <section
       id="skills"
       className="w-full max-w-[1200px] mx-auto select-none scroll-mt-[28px]"
     >
-      {/* Section Heading: balanced breathing room above cards */}
+      {/* Section Heading: Tech I Know (Preserved exact position) */}
       <div
+        ref={headingRef}
         style={{
           marginBottom: 'clamp(34px, 3.8vw, 44px)',
         }}
-        className="space-y-2 shrink-0"
+        className="pt-6 shrink-0"
       >
-        <div className="flex items-center gap-2 text-xs tracking-widest text-[#E2652B] font-mono uppercase">
-          <Cpu className="w-3.5 h-3.5 text-[#E2652B]" />
-          <span>04 · CAPABILITIES</span>
-        </div>
         <h2 className="text-3xl sm:text-5xl font-sans font-bold text-white tracking-tight">
-          Tech I Know
+          <span className={`orange-gradient-word ${isHeadingInView ? 'animate' : 'idle'}`}>
+            Tech
+          </span>{' '}
+          I Know
         </h2>
       </div>
 
