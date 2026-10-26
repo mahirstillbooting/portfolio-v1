@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback } from 'react'
+import React, { useEffect, useRef, useCallback, useState } from 'react'
 import { getAudioEnabled } from '../utils/audioState'
 import pageTurnSoundUrl from '../assets/mixkit-page-turn-single-1104.wav'
 
@@ -74,9 +74,13 @@ interface MatrixCellProps {
 }
 
 function MatrixCell({ item, audioCtxRef }: MatrixCellProps) {
+  const cellRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const isHoveredRef = useRef(false)
+  const [isActive, setIsActive] = useState(false)
+  const isExpandedRef = useRef(false)
   const leaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const lastTouchTimeRef = useRef(0)
+  const touchStartPosRef = useRef<{ x: number; y: number } | null>(null)
   const animRef = useRef<{
     active: boolean
     startTime: number
@@ -311,7 +315,7 @@ function MatrixCell({ item, audioCtxRef }: MatrixCellProps) {
         const fromX = a.direction === 1 ? p.startX : p.targetX
         const fromY = a.direction === 1 ? p.startY : p.targetY
         const toX = a.direction === 1 ? p.targetX : p.startX
-        const toY = a.direction === 1 ? p.targetY : p.startX
+        const toY = a.direction === 1 ? p.targetY : p.startY
 
         const dx0 = fromX - center
         const dy0 = fromY - center
@@ -374,30 +378,64 @@ function MatrixCell({ item, audioCtxRef }: MatrixCellProps) {
     }
   }, [cellSize, size, center])
 
-  const triggerReverseAnimation = () => {
-    isHoveredRef.current = false
-    const a = animRef.current
-    a.active = true
-    a.startTime = performance.now()
-    a.duration = 650
-    a.direction = -1
-  }
-
-  const handleMouseEnter = () => {
-    if (leaveTimeoutRef.current) {
-      clearTimeout(leaveTimeoutRef.current)
-      leaveTimeoutRef.current = null
-    }
-    isHoveredRef.current = true
+  const triggerReverseAnimation = useCallback(() => {
+    if (!isExpandedRef.current) return
+    isExpandedRef.current = false
+    setIsActive(false)
     playCardSound()
     const a = animRef.current
     a.active = true
     a.startTime = performance.now()
     a.duration = 650
+    a.direction = -1
+  }, [playCardSound])
+
+  const startForwardAnimation = useCallback(() => {
+    if (leaveTimeoutRef.current) {
+      clearTimeout(leaveTimeoutRef.current)
+      leaveTimeoutRef.current = null
+    }
+    const wasExpanded = isExpandedRef.current
+    isExpandedRef.current = true
+    setIsActive(true)
+    if (!wasExpanded) {
+      playCardSound()
+    }
+    const a = animRef.current
+    a.active = true
+    a.startTime = performance.now()
+    a.duration = 650
     a.direction = 1
+  }, [playCardSound])
+
+  // Global touch listener to retract if tapped outside
+  useEffect(() => {
+    const handleGlobalTouch = (e: TouchEvent) => {
+      if (!isExpandedRef.current) return
+      const cellEl = cellRef.current
+      if (cellEl && !cellEl.contains(e.target as Node)) {
+        if (leaveTimeoutRef.current) {
+          clearTimeout(leaveTimeoutRef.current)
+          leaveTimeoutRef.current = null
+        }
+        triggerReverseAnimation()
+      }
+    }
+
+    window.addEventListener('touchstart', handleGlobalTouch, { passive: true })
+    return () => {
+      window.removeEventListener('touchstart', handleGlobalTouch)
+    }
+  }, [triggerReverseAnimation])
+
+  const handleMouseEnter = () => {
+    // Ignore synthetic mouse events fired by touch screens
+    if (Date.now() - lastTouchTimeRef.current < 1000) return
+    startForwardAnimation()
   }
 
   const handleMouseLeave = () => {
+    if (Date.now() - lastTouchTimeRef.current < 1000) return
     if (leaveTimeoutRef.current) {
       clearTimeout(leaveTimeoutRef.current)
     }
@@ -408,30 +446,71 @@ function MatrixCell({ item, audioCtxRef }: MatrixCellProps) {
     }, 700)
   }
 
-  const handleTouchStart = () => {
-    handleMouseEnter()
+  const handleTouchStart = (e: React.TouchEvent) => {
+    lastTouchTimeRef.current = Date.now()
+    if (e.touches.length > 0) {
+      touchStartPosRef.current = {
+        x: e.touches[0].clientX,
+        y: e.touches[0].clientY,
+      }
+    }
+    startForwardAnimation()
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!touchStartPosRef.current || e.touches.length === 0) return
+    const dx = Math.abs(e.touches[0].clientX - touchStartPosRef.current.x)
+    const dy = Math.abs(e.touches[0].clientY - touchStartPosRef.current.y)
+    // If user is scrolling the page (> 10px movement), cancel active state and retract
+    if (dx > 10 || dy > 10) {
+      touchStartPosRef.current = null
+      if (leaveTimeoutRef.current) {
+        clearTimeout(leaveTimeoutRef.current)
+        leaveTimeoutRef.current = null
+      }
+      triggerReverseAnimation()
+    }
   }
 
   const handleTouchEnd = () => {
+    lastTouchTimeRef.current = Date.now()
+    touchStartPosRef.current = null
+
     if (leaveTimeoutRef.current) {
       clearTimeout(leaveTimeoutRef.current)
     }
-    // Linger SVG state on touch screens for 1150ms before reversing
+    // Linger SVG state on touch screens for 1150ms before reversing back to old position
     leaveTimeoutRef.current = setTimeout(() => {
       triggerReverseAnimation()
       leaveTimeoutRef.current = null
     }, 1150)
   }
 
+  const handleTouchCancel = () => {
+    lastTouchTimeRef.current = Date.now()
+    touchStartPosRef.current = null
+
+    if (leaveTimeoutRef.current) {
+      clearTimeout(leaveTimeoutRef.current)
+      leaveTimeoutRef.current = null
+    }
+    triggerReverseAnimation()
+  }
+
   return (
     <div
+      ref={cellRef}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
+      onTouchCancel={handleTouchCancel}
       style={{
-        background: 'rgba(255, 255, 255, 0.025)',
-        border: '1px solid rgba(255, 255, 255, 0.09)',
+        background: isActive ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.025)',
+        border: isActive ? '1px solid rgba(226, 101, 43, 0.5)' : '1px solid rgba(255, 255, 255, 0.09)',
+        transform: isActive ? 'translateY(-4px)' : 'translateY(0px)',
+        boxShadow: isActive ? '0 16px 36px rgba(0,0,0,0.85)' : 'none',
         position: 'relative',
         display: 'flex',
         flexDirection: 'column',
@@ -439,14 +518,14 @@ function MatrixCell({ item, audioCtxRef }: MatrixCellProps) {
         justifyContent: 'space-between',
         cursor: 'pointer',
         overflow: 'hidden',
-        transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+        transition: 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease, background 0.35s ease, box-shadow 0.35s ease',
       }}
-      className="w-full h-[78px] sm:h-[98px] md:h-[135px] lg:h-[160px] p-1.5 sm:p-2.5 md:p-3.5 lg:p-4 rounded-xl sm:rounded-2xl hover:border-[#E2652B]/50 hover:bg-white/[0.05] hover:shadow-[0_16px_36px_rgba(0,0,0,0.85)] hover:-translate-y-1 active:scale-95 select-none group"
+      className="w-full h-[78px] sm:h-[98px] md:h-[135px] lg:h-[160px] p-1.5 sm:p-2.5 md:p-3.5 lg:p-4 rounded-xl sm:rounded-2xl active:scale-95 select-none group"
     >
       {/* Top telemetry: N-01 code and red/orange status dot */}
       <div className="w-full flex items-center justify-between text-[7px] sm:text-[9px] md:text-[10px] lg:text-[11px] font-mono text-[#71717A] px-0.5 sm:px-1">
         <span>{item.code}</span>
-        <span className="text-[6px] sm:text-[8px] md:text-[9px] text-[#E2652B]">●</span>
+        <span style={{ color: isActive ? '#E2652B' : '#71717A', transition: 'color 0.25s ease' }} className="text-[6px] sm:text-[8px] md:text-[9px]">●</span>
       </div>
 
       {/* Internal 280x280 Canvas (28x28 pixel matrix) */}
@@ -460,7 +539,13 @@ function MatrixCell({ item, audioCtxRef }: MatrixCellProps) {
       </div>
 
       {/* Bottom telemetry: Full Tech Name */}
-      <div className="w-full text-center text-[8px] sm:text-[10px] md:text-xs lg:text-[13px] font-mono font-medium text-[#D4D4D8] group-hover:text-white transition-colors truncate px-0.5 sm:px-1">
+      <div
+        style={{
+          color: isActive ? '#FFFFFF' : '#D4D4D8',
+          transition: 'color 0.25s ease',
+        }}
+        className="w-full text-center text-[8px] sm:text-[10px] md:text-xs lg:text-[13px] font-mono font-medium truncate px-0.5 sm:px-1"
+      >
         {item.fullName}
       </div>
     </div>
