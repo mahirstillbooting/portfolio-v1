@@ -111,7 +111,6 @@ export default function Contact() {
 
   const handleDispatch = (e: React.FormEvent) => {
     e.preventDefault()
-    playChime()
     setIsDispatched(true)
 
     const subject = encodeURIComponent(`[${selectedTopic}] Transmission from ${name || 'Portfolio Visitor'}`)

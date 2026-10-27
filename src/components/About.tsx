@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { RotateCcw, Award, MapPin, Languages } from 'lucide-react'
 import PixelInteractiveIcon from './PixelInteractiveIcon'
+import ShinyText from './ShinyText'
 import { getAudioEnabled } from '../utils/audioState'
 import discoverySoundUrl from '../assets/mixkit-quick-win-video-game-notification-269.wav'
 
@@ -335,7 +336,25 @@ export default function About() {
       >
         <h2 className="text-3xl sm:text-5xl font-sans font-bold text-[#F3F4F6] tracking-tight flex items-center gap-2.5 sm:gap-3.5">
           <PixelInteractiveIcon type="gamepad" />
-          <span>Who Am I?</span>
+          <ShinyText
+            text="Who Am I?"
+            color="#b5b5b5"
+            shineColor="#ffffff"
+            speed={2}
+            shineWidth={40}
+            softness={0.8}
+            trigger="loop"
+            delay={0}
+            angle={120}
+            bands={1}
+            glow={0}
+            direction="left"
+            easing="smooth"
+            yoyo={false}
+            followPointer={false}
+            pauseOnHover={false}
+            disabled={false}
+          />
         </h2>
       </div>
 
