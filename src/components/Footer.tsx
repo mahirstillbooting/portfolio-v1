@@ -10,16 +10,22 @@ export default function Footer() {
 
   return (
     <footer
-      className="w-full relative overflow-hidden flex flex-col justify-center items-center select-none shadow-[0_-20px_50px_rgba(0,0,0,0.7)]"
+      className="w-full relative overflow-hidden flex flex-col justify-center items-center select-none"
       style={{ minHeight: 'clamp(360px, 46vh, 520px)' }}
     >
-      {/* Interactive MicroSlats Animated Background */}
-      <div className="absolute inset-0 z-0">
+      {/* Interactive MicroSlats Animated Background with 200px Organic Mask Fade */}
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          maskImage: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.05) 50px, rgba(0,0,0,0.6) 130px, black 220px)',
+          WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.05) 50px, rgba(0,0,0,0.6) 130px, black 220px)',
+        }}
+      >
         <MicroSlats
           preset="swell"
           color="#f97316"
           glintColor="#ffffff"
-          backgroundColor="#120f17"
+          backgroundColor="#080808"
           slatWidth={10}
           slatHeight={25}
           gap={3}
@@ -45,25 +51,25 @@ export default function Footer() {
         />
       </div>
 
-      {/* Deep dark gradient fade from contact section into slats - seamless, no horizontal line */}
-      <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-[#080808] via-[#080808]/90 via-35% to-transparent pointer-events-none z-[1]" />
+      {/* Deep dark gradient overlay melting from contact section with zero visible border */}
+      <div className="absolute top-0 left-0 right-0 h-48 bg-gradient-to-b from-[#080808] via-[#080808]/90 via-35% to-transparent pointer-events-none z-[1]" />
 
-      {/* Floating Centered Glass Dock with Enlarged Typography */}
+      {/* Floating Centered Glass Dock */}
       <div className="relative z-10 w-full max-w-[1120px] px-4 sm:px-8 py-8 pointer-events-none flex justify-center items-center">
-        <div className="w-full flex flex-col md:flex-row items-center justify-between gap-6 py-5 px-6 sm:px-8 rounded-2xl bg-[#0A0A0D]/85 backdrop-blur-xl border border-white/[0.12] shadow-[0_20px_50px_rgba(0,0,0,0.7),0_0_24px_rgba(226,101,43,0.08)]">
+        <div className="w-full flex flex-col md:flex-row items-center justify-between gap-5 py-4 px-6 sm:px-8 rounded-2xl bg-[#08080A]/60 backdrop-blur-xl border border-white/[0.08] shadow-[0_16px_40px_rgba(0,0,0,0.5),0_0_24px_rgba(226,101,43,0.06)]">
           
           {/* Left: GitHub Profile Link with Animated Icon */}
           <div className="flex items-center pointer-events-auto">
             <UseAnimations
               animation={github}
-              size={32}
+              size={30}
               strokeColor="#E2652B"
               render={(eventProps, animationProps) => (
                 <a
                   href={githubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center gap-3 py-2 px-3.5 rounded-xl hover:bg-white/[0.05] transition-all duration-200"
+                  className="group flex items-center gap-3 py-1.5 px-3 rounded-xl hover:bg-white/[0.05] transition-all duration-200"
                   {...eventProps}
                   onPointerEnter={(e) => {
                     eventProps.onPointerEnter({ ...e, pointerType: 'mouse' } as React.PointerEvent<HTMLElement>)
@@ -88,7 +94,7 @@ export default function Footer() {
             />
           </div>
 
-          {/* Center: System Status & Brand with Enlarged Prominence */}
+          {/* Center: System Status & Brand with Instrument Serif non-bold Title Case */}
           <div className="flex flex-col sm:flex-row items-center gap-2.5 sm:gap-4 pointer-events-auto text-center">
             <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.08]">
               <Terminal className="w-4 h-4 text-[#E2652B]" />
@@ -97,8 +103,14 @@ export default function Footer() {
               </span>
             </div>
             <span className="hidden sm:inline text-white/20">|</span>
-            <span className="font-sans text-sm sm:text-base font-bold tracking-wider text-white">
-              MAHIRUDDIN CHOWDHURY
+            <span
+              style={{
+                fontFamily: "'Instrument Serif', Georgia, serif",
+                lineHeight: 1.1,
+              }}
+              className="text-2xl sm:text-3xl font-normal text-white tracking-normal select-none"
+            >
+              Mahiruddin Chowdhury
             </span>
           </div>
 
@@ -106,14 +118,14 @@ export default function Footer() {
           <div className="flex items-center pointer-events-auto">
             <UseAnimations
               animation={discord}
-              size={32}
+              size={30}
               strokeColor="#E2652B"
               render={(eventProps, animationProps) => (
                 <a
                   href={discordUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center gap-3 py-2 px-3.5 rounded-xl hover:bg-white/[0.05] transition-all duration-200"
+                  className="group flex items-center gap-3 py-1.5 px-3 rounded-xl hover:bg-white/[0.05] transition-all duration-200"
                   {...eventProps}
                   onPointerEnter={(e) => {
                     eventProps.onPointerEnter({ ...e, pointerType: 'mouse' } as React.PointerEvent<HTMLElement>)
