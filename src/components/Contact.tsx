@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import UseAnimations from 'react-useanimations'
 import mail from 'react-useanimations/lib/mail'
 import github from 'react-useanimations/lib/github'
@@ -25,6 +25,55 @@ export default function Contact() {
   const winAudioRef = useRef<HTMLAudioElement | null>(null)
   const email = 'stellaroasis116@gmail.com'
 
+  const mailAnimRef = useRef<{ enter: () => void; leave: () => void }>({ enter: () => {}, leave: () => {} })
+  const githubAnimRef = useRef<{ enter: () => void; leave: () => void }>({ enter: () => {}, leave: () => {} })
+  const instaAnimRef = useRef<{ enter: () => void; leave: () => void }>({ enter: () => {}, leave: () => {} })
+
+  // Auto-trigger sequence for smaller screens and touch devices when scrolling into Contact
+  useEffect(() => {
+    const contactSection = document.getElementById('contact')
+    if (!contactSection) return
+
+    let hasTriggered = false
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries
+        if (entry.isIntersecting) {
+          if (!hasTriggered) {
+            hasTriggered = true
+            // Staggered greeting sequence for mobile & smaller screens
+            const t1 = setTimeout(() => {
+              mailAnimRef.current.enter()
+              setTimeout(() => mailAnimRef.current.leave(), 1200)
+            }, 350)
+
+            const t2 = setTimeout(() => {
+              githubAnimRef.current.enter()
+              setTimeout(() => githubAnimRef.current.leave(), 1600)
+            }, 750)
+
+            const t3 = setTimeout(() => {
+              instaAnimRef.current.enter()
+              setTimeout(() => instaAnimRef.current.leave(), 1200)
+            }, 1150)
+
+            return () => {
+              clearTimeout(t1)
+              clearTimeout(t2)
+              clearTimeout(t3)
+            }
+          }
+        } else {
+          hasTriggered = false
+        }
+      },
+      { threshold: 0.25 }
+    )
+
+    observer.observe(contactSection)
+    return () => observer.disconnect()
+  }, [])
+
   const playChime = useCallback(() => {
     if (!getAudioEnabled()) return
     try {
@@ -50,10 +99,12 @@ export default function Contact() {
 
     // Set copied state & trigger react-useanimations mail icon
     setDockState('copied-state')
+    mailAnimRef.current.enter()
 
     // Smoothly restore idle direct dispatch state
     setTimeout(() => {
       setDockState('idle')
+      mailAnimRef.current.leave()
       isAnimatingRef.current = false
     }, 2800)
   }
@@ -576,19 +627,144 @@ export default function Contact() {
 
         @media (max-width: 920px) {
           .contact-bento-section {
-            padding: 96px 16px 32px;
+            min-height: auto;
+            padding: 88px 16px 36px;
           }
           .bento-shell {
             grid-template-columns: 1fr;
-            padding: 28px 22px;
+            padding: 28px 20px;
             gap: 28px;
+            border-radius: 24px;
+          }
+          .contact-desc {
+            max-width: 100%;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .contact-title {
+            font-size: clamp(26px, 7vw, 36px);
+          }
+          .input-grid {
+            grid-template-columns: 1fr;
           }
         }
 
         @media (max-width: 560px) {
-          .input-grid,
+          .contact-bento-section {
+            padding: 80px 12px 28px;
+          }
+          .bento-shell {
+            padding: 20px 14px;
+            border-radius: 20px;
+            gap: 22px;
+          }
+          .bento-shell::before {
+            width: 280px;
+            height: 280px;
+            top: -60px;
+            left: -40px;
+          }
+          .bento-shell::after {
+            width: 160px;
+            height: 120px;
+          }
+          .status-badge {
+            padding: 6px 12px;
+            font-size: 10px;
+          }
+          .contact-title {
+            font-size: 26px;
+            line-height: 1.15;
+            word-break: break-word;
+          }
+          .contact-desc {
+            font-size: 13.5px;
+            line-height: 1.6;
+          }
+          .email-dock-stage {
+            min-height: 64px;
+            height: auto;
+          }
+          .email-dock {
+            padding: 12px 14px;
+            gap: 10px;
+            border-radius: 14px;
+          }
+          .email-dock-left {
+            gap: 10px;
+          }
+          .email-icon-frame {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+          }
+          .email-label {
+            font-size: 9.5px;
+          }
+          .email-address {
+            font-size: 12px;
+            max-width: 175px;
+          }
+          .copy-kbd {
+            padding: 6px 10px;
+            font-size: 10px;
+            border-radius: 8px;
+          }
           .social-bento-row {
             grid-template-columns: 1fr;
+            gap: 10px;
+          }
+          .social-card {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: 14px;
+          }
+          .social-card-top {
+            display: contents;
+          }
+          .social-badge {
+            grid-column: 1;
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+          }
+          .social-card-bottom {
+            grid-column: 2;
+            gap: 1px;
+            min-width: 0;
+          }
+          .social-title {
+            font-size: 13.5px;
+          }
+          .social-sub {
+            font-size: 11px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          .external-arrow {
+            grid-column: 3;
+            width: 26px;
+            height: 26px;
+            font-size: 12px;
+          }
+          .right-console {
+            padding: 20px 14px;
+            border-radius: 18px;
+            gap: 18px;
+          }
+          .topic-chip {
+            padding: 7px 11px;
+            font-size: 11.5px;
+          }
+          .console-input,
+          .console-textarea {
+            padding: 11px 14px;
+            font-size: 13px;
           }
           .console-footer {
             flex-direction: column;
@@ -596,6 +772,18 @@ export default function Contact() {
           }
           .btn-dispatch {
             justify-content: center;
+            width: 100%;
+          }
+        }
+
+        @media (max-width: 380px) {
+          .email-address {
+            font-size: 11px;
+            max-width: 135px;
+          }
+          .copy-kbd {
+            padding: 5px 8px;
+            font-size: 9px;
           }
         }
       `}</style>
@@ -628,24 +816,38 @@ export default function Contact() {
               animation={mail}
               size={32}
               strokeColor={dockState === 'copied-state' ? '#FFFFFF' : '#E2652B'}
-              render={(eventProps, animationProps) => (
-                <div
-                  className={`email-dock ${dockState === 'copied-state' ? 'copied-state' : ''}`}
-                  id="emailDock"
-                  role="button"
-                  tabIndex={0}
-                  {...eventProps}
-                  onClick={(e) => {
-                    eventProps.onClick(e)
-                    handleCopyEmail()
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault()
+              render={(eventProps, animationProps) => {
+                mailAnimRef.current = {
+                  enter: () => eventProps.onMouseEnter({ defaultPrevented: false } as React.MouseEvent<HTMLElement>),
+                  leave: () => eventProps.onMouseLeave({ defaultPrevented: false } as React.MouseEvent<HTMLElement>),
+                }
+                return (
+                  <div
+                    className={`email-dock ${dockState === 'copied-state' ? 'copied-state' : ''}`}
+                    id="emailDock"
+                    role="button"
+                    tabIndex={0}
+                    {...eventProps}
+                    onPointerEnter={(e) => {
+                      eventProps.onPointerEnter({ ...e, pointerType: 'mouse' } as React.PointerEvent<HTMLElement>)
+                    }}
+                    onTouchStart={() => {
+                      mailAnimRef.current.enter()
+                    }}
+                    onTouchEnd={() => {
+                      setTimeout(() => mailAnimRef.current.leave(), 1200)
+                    }}
+                    onClick={(e) => {
+                      eventProps.onClick(e)
                       handleCopyEmail()
-                    }
-                  }}
-                >
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault()
+                        handleCopyEmail()
+                      }
+                    }}
+                  >
                   <div className="email-dock-left">
                     <div className="email-icon-frame" id="emailIconFrame">
                       <span {...animationProps} />
@@ -663,7 +865,8 @@ export default function Contact() {
                     {dockState === 'copied-state' ? 'COPIED ✓' : 'COPY'}
                   </span>
                 </div>
-              )}
+                )
+              }}
             />
 
           </div>
@@ -675,14 +878,28 @@ export default function Contact() {
               animation={github}
               size={32}
               strokeColor="#E2652B"
-              render={(eventProps, animationProps) => (
-                <a
-                  href="https://github.com/mahirstillbooting"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="social-card"
-                  {...eventProps}
-                >
+              render={(eventProps, animationProps) => {
+                githubAnimRef.current = {
+                  enter: () => eventProps.onMouseEnter({ defaultPrevented: false } as React.MouseEvent<HTMLElement>),
+                  leave: () => eventProps.onMouseLeave({ defaultPrevented: false } as React.MouseEvent<HTMLElement>),
+                }
+                return (
+                  <a
+                    href="https://github.com/mahirstillbooting"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="social-card"
+                    {...eventProps}
+                    onPointerEnter={(e) => {
+                      eventProps.onPointerEnter({ ...e, pointerType: 'mouse' } as React.PointerEvent<HTMLElement>)
+                    }}
+                    onTouchStart={() => {
+                      githubAnimRef.current.enter()
+                    }}
+                    onTouchEnd={() => {
+                      setTimeout(() => githubAnimRef.current.leave(), 1600)
+                    }}
+                  >
                   <div className="social-card-top">
                     <div className="social-badge">
                       <span {...animationProps} />
@@ -694,21 +911,36 @@ export default function Contact() {
                     <span className="social-sub">@mahirstillbooting</span>
                   </div>
                 </a>
-              )}
+                )
+              }}
             />
 
             <UseAnimations
               animation={instagram}
               size={32}
               strokeColor="#E2652B"
-              render={(eventProps, animationProps) => (
-                <a
-                  href="https://instagram.com/pixl.potion"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="social-card"
-                  {...eventProps}
-                >
+              render={(eventProps, animationProps) => {
+                instaAnimRef.current = {
+                  enter: () => eventProps.onMouseEnter({ defaultPrevented: false } as React.MouseEvent<HTMLElement>),
+                  leave: () => eventProps.onMouseLeave({ defaultPrevented: false } as React.MouseEvent<HTMLElement>),
+                }
+                return (
+                  <a
+                    href="https://instagram.com/pixl.potion"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="social-card"
+                    {...eventProps}
+                    onPointerEnter={(e) => {
+                      eventProps.onPointerEnter({ ...e, pointerType: 'mouse' } as React.PointerEvent<HTMLElement>)
+                    }}
+                    onTouchStart={() => {
+                      instaAnimRef.current.enter()
+                    }}
+                    onTouchEnd={() => {
+                      setTimeout(() => instaAnimRef.current.leave(), 1200)
+                    }}
+                  >
                   <div className="social-card-top">
                     <div className="social-badge">
                       <span {...animationProps} />
@@ -720,7 +952,8 @@ export default function Contact() {
                     <span className="social-sub">@pixl.potion</span>
                   </div>
                 </a>
-              )}
+                )
+              }}
             />
 
           </div>
