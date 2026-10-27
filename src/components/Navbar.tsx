@@ -5,7 +5,9 @@ import { ArrowUpRight } from 'lucide-react'
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [isTouched, setIsTouched] = useState(false)
+  const [isBrandTouched, setIsBrandTouched] = useState(false)
   const touchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const brandTouchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const handleTouchStart = () => {
     if (touchTimeoutRef.current) clearTimeout(touchTimeoutRef.current)
@@ -19,6 +21,18 @@ export default function Navbar() {
     }, 800)
   }
 
+  const handleBrandTouchStart = () => {
+    if (brandTouchTimeoutRef.current) clearTimeout(brandTouchTimeoutRef.current)
+    setIsBrandTouched(true)
+  }
+
+  const handleBrandTouchEnd = () => {
+    if (brandTouchTimeoutRef.current) clearTimeout(brandTouchTimeoutRef.current)
+    brandTouchTimeoutRef.current = setTimeout(() => {
+      setIsBrandTouched(false)
+    }, 800)
+  }
+
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 30)
@@ -27,6 +41,7 @@ export default function Navbar() {
     return () => {
       window.removeEventListener('scroll', handleScroll)
       if (touchTimeoutRef.current) clearTimeout(touchTimeoutRef.current)
+      if (brandTouchTimeoutRef.current) clearTimeout(brandTouchTimeoutRef.current)
     }
   }, [])
 
@@ -68,11 +83,16 @@ export default function Navbar() {
         >
           <a
             href="#hero"
+            onTouchStart={handleBrandTouchStart}
+            onTouchEnd={handleBrandTouchEnd}
+            onTouchCancel={() => setIsBrandTouched(false)}
             style={{
               fontFamily: "'Instrument Serif', Georgia, serif",
               lineHeight: 1,
             }}
-            className="text-xl sm:text-2xl text-white tracking-tight select-none hover:text-[#E2652B] transition-colors no-underline font-normal whitespace-nowrap"
+            className={`text-xl sm:text-2xl tracking-tight select-none hover:text-[#E2652B] active:text-[#E2652B] transition-colors duration-200 no-underline font-normal whitespace-nowrap ${
+              isBrandTouched ? 'text-[#E2652B]' : 'text-white'
+            }`}
           >
             <span className="hidden md:inline">Mahiruddin Chowdhury</span>
             <span className="inline md:hidden">MahirChy</span>
