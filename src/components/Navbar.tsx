@@ -1,16 +1,33 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
+  const [isTouched, setIsTouched] = useState(false)
+  const touchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const handleTouchStart = () => {
+    if (touchTimeoutRef.current) clearTimeout(touchTimeoutRef.current)
+    setIsTouched(true)
+  }
+
+  const handleTouchEnd = () => {
+    if (touchTimeoutRef.current) clearTimeout(touchTimeoutRef.current)
+    touchTimeoutRef.current = setTimeout(() => {
+      setIsTouched(false)
+    }, 800)
+  }
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 30)
     }
     window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      if (touchTimeoutRef.current) clearTimeout(touchTimeoutRef.current)
+    }
   }, [])
 
   const navLinks = [
@@ -85,14 +102,18 @@ export default function Navbar() {
         <div className="flex items-center shrink-0 ml-auto md:ml-auto">
           <a
             href="#contact"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+            onTouchCancel={() => setIsTouched(false)}
             style={{
               flexShrink: 0,
               whiteSpace: 'nowrap',
               marginRight: '8px',
               padding: '10px 18px',
               borderRadius: '12px',
-              background: 'transparent',
-              border: '1px solid rgba(255, 255, 255, 0.16)',
+              background: isTouched ? 'rgba(226, 101, 43, 0.08)' : 'transparent',
+              border: isTouched ? '1px solid #E2652B' : '1px solid rgba(255, 255, 255, 0.16)',
+              boxShadow: isTouched ? '0 0 20px rgba(226, 101, 43, 0.22)' : 'none',
               color: '#F3F1EE',
               fontFamily: "'Geist', -apple-system, BlinkMacSystemFont, sans-serif",
               fontSize: '14px',
@@ -104,11 +125,15 @@ export default function Navbar() {
               boxSizing: 'border-box',
               transition: 'border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease, color 0.25s ease, transform 0.2s ease',
             }}
-            className="group hover:!border-[#E2652B] hover:!bg-[rgba(226,101,43,0.08)] hover:shadow-[0_0_20px_rgba(226,101,43,0.22)] active:scale-95 no-underline cursor-pointer !py-[10px] !px-[18px] text-sm"
+            className="group hover:!border-[#E2652B] hover:!bg-[rgba(226,101,43,0.08)] hover:shadow-[0_0_20px_rgba(226,101,43,0.22)] active:!border-[#E2652B] active:!bg-[rgba(226,101,43,0.08)] active:shadow-[0_0_20px_rgba(226,101,43,0.22)] active:scale-95 no-underline cursor-pointer !py-[10px] !px-[18px] text-sm"
           >
             <span>Let's talk</span>
             <ArrowUpRight
-              className="w-4 h-4 shrink-0 text-[#A1A1AA] transition-all duration-300 ease-out group-hover:text-[#E2652B] group-hover:translate-x-[3px] group-hover:-translate-y-[3px]"
+              className={`w-4 h-4 shrink-0 transition-all duration-300 ease-out group-hover:text-[#E2652B] group-hover:translate-x-[3px] group-hover:-translate-y-[3px] group-active:text-[#E2652B] group-active:translate-x-[3px] group-active:-translate-y-[3px] ${
+                isTouched
+                  ? 'text-[#E2652B] translate-x-[3px] -translate-y-[3px]'
+                  : 'text-[#A1A1AA]'
+              }`}
               strokeWidth={2}
             />
           </a>

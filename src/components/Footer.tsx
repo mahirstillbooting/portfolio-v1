@@ -154,7 +154,7 @@ export default function Footer() {
 
           {/* Center: System Status & Brand in matching font-mono, non-bold, Title Case in ONE Line */}
           <div className="flex items-center gap-1.5 sm:gap-3 pointer-events-auto text-center whitespace-nowrap min-w-0">
-            <div className="flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 rounded-full bg-white/[0.03] border border-white/[0.08] shrink-0">
+            <div className="flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 rounded-full bg-white/[0.03] shrink-0">
               <Terminal className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#E2652B] shrink-0" />
               <span className="font-mono text-[10px] sm:text-xs text-[#D4D4D8] inline-flex items-center">
                 STATUS:&nbsp;<TypewriterOnline />
