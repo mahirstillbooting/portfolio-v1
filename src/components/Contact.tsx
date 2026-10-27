@@ -1042,11 +1042,27 @@ export default function Contact() {
             <button type="submit" className="btn-dispatch">
               {isDispatched ? (
                 <>
-                  <span>Dispatched ✓</span>
+                  <span>Committed ✓</span>
                 </>
               ) : (
                 <>
-                  <span>Send Transmission</span> <span>→</span>
+                  <span>Git Commit</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="lucide lucide-arrow-up-from-line"
+                  >
+                    <path d="m18 9-6-6-6 6" />
+                    <path d="M12 3v14" />
+                    <path d="M5 21h14" />
+                  </svg>
                 </>
               )}
             </button>
