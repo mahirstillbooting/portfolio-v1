@@ -43,14 +43,17 @@ function TypewriterOnline() {
   }, [charIndex, isDeleting])
 
   return (
-    <span className="inline-flex items-center text-[#E2652B] font-semibold font-mono tracking-wider">
+    <span
+      style={{ width: '6.5ch' }}
+      className="inline-flex items-center justify-start text-left text-[#E2652B] font-semibold font-mono tracking-wider shrink-0 overflow-visible"
+    >
       <span>{displayedText}</span>
       <span
         style={{
           boxShadow: '0 0 8px rgba(226, 101, 43, 0.7)',
           animation: 'caretBlink 1.4s ease-in-out infinite',
         }}
-        className="inline-block w-[1.5px] h-[1em] ml-0.5 bg-[#E2652B] align-middle rounded-full"
+        className="inline-block w-[1.5px] h-[1em] ml-0.5 bg-[#E2652B] align-middle rounded-full shrink-0"
         aria-hidden="true"
       />
     </span>
@@ -153,8 +156,8 @@ export default function Footer() {
           <div className="flex items-center gap-1.5 sm:gap-3 pointer-events-auto text-center whitespace-nowrap min-w-0">
             <div className="flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 rounded-full bg-white/[0.03] border border-white/[0.08] shrink-0">
               <Terminal className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#E2652B] shrink-0" />
-              <span className="font-mono text-[10px] sm:text-xs text-[#D4D4D8]">
-                STATUS: <TypewriterOnline />
+              <span className="font-mono text-[10px] sm:text-xs text-[#D4D4D8] inline-flex items-center">
+                STATUS:&nbsp;<TypewriterOnline />
               </span>
             </div>
             <span className="text-white/20 text-xs shrink-0">|</span>
