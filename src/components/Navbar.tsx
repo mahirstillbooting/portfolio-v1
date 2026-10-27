@@ -104,11 +104,11 @@ export default function Navbar() {
               boxSizing: 'border-box',
               transition: 'border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease, color 0.25s ease, transform 0.2s ease',
             }}
-            className="group hover:!border-[#E2652B] hover:!bg-[rgba(226,101,43,0.08)] hover:shadow-[0_0_20px_rgba(226,101,43,0.22)] active:scale-95 no-underline cursor-pointer !py-2 !px-3.5 md:!py-[10px] md:!px-[18px] text-xs md:text-sm"
+            className="group hover:!border-[#E2652B] hover:!bg-[rgba(226,101,43,0.08)] hover:shadow-[0_0_20px_rgba(226,101,43,0.22)] active:scale-95 no-underline cursor-pointer !py-[10px] !px-[18px] text-sm"
           >
             <span>Let's talk</span>
             <ArrowUpRight
-              className="w-3.5 h-3.5 md:w-4 md:h-4 shrink-0 text-[#A1A1AA] transition-all duration-300 ease-out group-hover:text-[#E2652B] group-hover:translate-x-[3px] group-hover:-translate-y-[3px]"
+              className="w-4 h-4 shrink-0 text-[#A1A1AA] transition-all duration-300 ease-out group-hover:text-[#E2652B] group-hover:translate-x-[3px] group-hover:-translate-y-[3px]"
               strokeWidth={2}
             />
           </a>
