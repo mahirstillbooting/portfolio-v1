@@ -113,9 +113,9 @@ export default function Contact() {
     e.preventDefault()
     setIsDispatched(true)
 
-    const subject = encodeURIComponent(`[${selectedTopic}] Transmission from ${name || 'Portfolio Visitor'}`)
+    const subject = encodeURIComponent(`[${selectedTopic}] Git Commit from ${name || 'Portfolio Visitor'}`)
     const body = encodeURIComponent(
-      `Name: ${name || 'N/A'}\nEmail: ${returnEmail || 'N/A'}\nTopic: ${selectedTopic}\n\nMessage:\n${
+      `Name: ${name || 'N/A'}\nEmail: ${returnEmail || 'N/A'}\nTopic: ${selectedTopic}\n\nCommit Message:\n${
         message || 'Hi Mahir, I saw your portfolio and wanted to connect!'
       }`
     )
