@@ -798,7 +798,7 @@ export default function DhakaNeonDrift() {
       state.isAutoNav = true
       state.isHeroCinematic = true
       state.parkedBeaconId = p.id
-      lockUntilRef.current = Date.now() + 1000
+      lockUntilRef.current = Date.now() + 2200
 
       playLockSound()
       triggerBurst(new THREE.Vector3(p.pos[0], 0.5, p.pos[2]))
@@ -834,6 +834,7 @@ export default function DhakaNeonDrift() {
           state.isAutoNav = false
           state.vx = 0
           state.vz = 0
+          setIsFocused(true)
         },
       })
     }
@@ -876,6 +877,7 @@ export default function DhakaNeonDrift() {
           state.isAutoNav = false
           state.vx = 0
           state.vz = 0
+          setIsFocused(true)
         },
       })
     }
@@ -1106,8 +1108,8 @@ export default function DhakaNeonDrift() {
 
       const time = clock.getElapsedTime()
 
-      // Clear parked beacon lock once car drives safely away
-      if (state.parkedBeaconId) {
+      // Clear parked beacon lock once car has finished auto-nav, grace period has passed, and car drives safely away
+      if (state.parkedBeaconId && !state.isAutoNav && Date.now() > lockUntilRef.current) {
         const curProj = PROJECTS.find((p) => p.id === state.parkedBeaconId)
         if (curProj && Math.hypot(state.x - curProj.pos[0], state.z - curProj.pos[2]) > 3.6) {
           state.parkedBeaconId = null
@@ -1379,7 +1381,9 @@ export default function DhakaNeonDrift() {
           return (
             <button
               key={p.id}
-              onClick={() => {
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation()
                 selectProject(p)
                 setIsFocused(true)
                 if (jumpToProjectRef.current) {
