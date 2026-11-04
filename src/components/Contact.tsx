@@ -478,17 +478,9 @@ export default function Contact() {
           gap: 8px;
         }
 
-        .console-title::before {
-          content: "";
-          display: inline-block;
-          width: 6px;
-          height: 6px;
-          background: #E2652B;
-          border-radius: 1px;
-        }
-
         .console-dots {
           display: flex;
+          align-items: center;
           gap: 6px;
         }
 
@@ -496,7 +488,35 @@ export default function Contact() {
           width: 6px;
           height: 6px;
           border-radius: 50%;
-          background: rgba(255, 255, 255, 0.14);
+          background: rgba(255, 255, 255, 0.18);
+          animation: consoleDotFlash 1.4s infinite ease-in-out both;
+        }
+
+        .console-dots span:nth-child(1) {
+          animation-delay: 0s;
+        }
+
+        .console-dots span:nth-child(2) {
+          animation-delay: 0.22s;
+        }
+
+        .console-dots span:nth-child(3) {
+          animation-delay: 0.44s;
+        }
+
+        @keyframes consoleDotFlash {
+          0%, 80%, 100% {
+            opacity: 0.3;
+            transform: scale(0.85);
+            background: rgba(255, 255, 255, 0.18);
+            box-shadow: none;
+          }
+          40% {
+            opacity: 1;
+            transform: scale(1.2);
+            background: #E2652B;
+            box-shadow: 0 0 8px rgba(226, 101, 43, 0.75);
+          }
         }
 
         .topic-group {
@@ -963,7 +983,23 @@ export default function Contact() {
         <form className="right-console" onSubmit={handleDispatch}>
           
           <div className="console-header">
-            <span className="console-title">Message Console</span>
+            <span className="console-title">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#E2652B"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="lucide lucide-message-square preview-icon text-[#E2652B] shrink-0"
+              >
+                <path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z" />
+              </svg>
+              Message Console
+            </span>
             <div className="console-dots">
               <span></span><span></span><span></span>
             </div>
