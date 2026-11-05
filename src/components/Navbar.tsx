@@ -205,8 +205,10 @@ export default function Navbar() {
                         },
                       }}
                     >
-                      {/* Dotted underline in clean crisp white (no glow) */}
-                      <div className="w-full h-full border-b-[2px] border-dotted border-white" />
+                      {/* Base dim dotted track (matches ShinyText base color #b5b5b5) */}
+                      <div className="w-full h-full border-b-[2px] border-dotted border-white/30" />
+                      {/* Shimmering pure white (#ffffff) shine sweep (matches ShinyText on 'Who Am I?') */}
+                      <div className="absolute inset-0 border-b-[2px] border-dotted border-white nav-dots-shimmer" />
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -287,7 +289,7 @@ export default function Navbar() {
                   {isActive && (
                     <motion.div
                       layoutId="mobileActiveSectionIndicator"
-                      className="absolute -bottom-0.5 left-0 right-0 border-b-[1.5px] border-dotted border-white"
+                      className="absolute -bottom-0.5 left-0 right-0 h-[1.5px] pointer-events-none"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
@@ -303,7 +305,12 @@ export default function Navbar() {
                           ease: 'easeInOut',
                         },
                       }}
-                    />
+                    >
+                      {/* Base dim dotted track */}
+                      <div className="w-full h-full border-b-[1.5px] border-dotted border-white/30" />
+                      {/* Shimmering pure white shine sweep */}
+                      <div className="absolute inset-0 border-b-[1.5px] border-dotted border-white nav-dots-shimmer" />
+                    </motion.div>
                   )}
                 </AnimatePresence>
               </span>

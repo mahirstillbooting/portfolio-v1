@@ -230,3 +230,41 @@ body {
     opacity: 0.15;
   }
 }
+
+/* Shimmering Dotted Underline Animation (matches ShinyText on 'Who Am I?') */
+@keyframes navDotShimmer {
+  0% {
+    -webkit-mask-position: -50% 0;
+    mask-position: -50% 0;
+  }
+  100% {
+    -webkit-mask-position: 150% 0;
+    mask-position: 150% 0;
+  }
+}
+
+.nav-dots-shimmer {
+  -webkit-mask-image: linear-gradient(
+    120deg,
+    transparent 0%,
+    transparent 20%,
+    rgba(0, 0, 0, 0.4) 38%,
+    black 50%,
+    rgba(0, 0, 0, 0.4) 62%,
+    transparent 80%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    120deg,
+    transparent 0%,
+    transparent 20%,
+    rgba(0, 0, 0, 0.4) 38%,
+    black 50%,
+    rgba(0, 0, 0, 0.4) 62%,
+    transparent 80%,
+    transparent 100%
+  );
+  -webkit-mask-size: 300% 100%;
+  mask-size: 300% 100%;
+  animation: navDotShimmer 2.2s linear infinite;
+}
