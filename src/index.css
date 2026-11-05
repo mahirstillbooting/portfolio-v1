@@ -231,7 +231,7 @@ body {
   }
 }
 
-/* Shimmering Dotted Underline Animation (continuous, left-to-right, jitter-free, crisp pixel squares) */
+/* Shimmering Dotted Underline Animation (continuous, left-to-right, strictly fixed 3px pixel squares) */
 @keyframes navDotShimmer {
   0% {
     background-position: 0px 0;
@@ -258,8 +258,8 @@ body {
   animation: navDotShimmer 2s linear infinite;
   -webkit-mask-image: linear-gradient(to right, black 3px, transparent 3px);
   mask-image: linear-gradient(to right, black 3px, transparent 3px);
-  -webkit-mask-size: 6.5px 2.5px;
-  mask-size: 6.5px 2.5px;
+  -webkit-mask-size: 6px 2.5px;
+  mask-size: 6px 2.5px;
   -webkit-mask-repeat: repeat-x;
   mask-repeat: repeat-x;
 }
