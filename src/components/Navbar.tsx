@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
 
 export default function Navbar() {
@@ -160,20 +160,32 @@ export default function Navbar() {
                 className="relative py-1 text-sm text-[#A1A1AA] hover:text-white transition-colors font-sans font-medium no-underline tracking-wide flex flex-col items-center group"
               >
                 <span>{item.label}</span>
-                {isActive && (
-                  <div className="absolute -bottom-1 left-0 right-0 h-[2px] overflow-hidden pointer-events-none">
-                    {/* Faint dotted baseline track */}
-                    <div className="w-full h-full border-b-[2px] border-dotted border-white/25" />
-                    {/* Smooth filling dotted progress bar */}
+                <AnimatePresence>
+                  {isActive && (
                     <motion.div
-                      key={item.href}
-                      initial={{ width: 0 }}
-                      animate={{ width: '100%' }}
-                      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                      className="absolute inset-y-0 left-0 border-b-[2px] border-dotted border-white shadow-[0_0_8px_rgba(255,255,255,0.85)]"
-                    />
-                  </div>
-                )}
+                      layoutId="activeSectionIndicator"
+                      className="absolute -bottom-1 left-0 right-0 h-[2px] pointer-events-none"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{
+                        layout: {
+                          type: 'spring',
+                          stiffness: 140,
+                          damping: 20,
+                          mass: 1,
+                        },
+                        opacity: {
+                          duration: 0.35,
+                          ease: 'easeInOut',
+                        },
+                      }}
+                    >
+                      {/* Dotted underline in white with soft luminous glow */}
+                      <div className="w-full h-full border-b-[2px] border-dotted border-white shadow-[0_0_8px_rgba(255,255,255,0.85)]" />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </a>
             )
           })}
@@ -244,18 +256,32 @@ export default function Navbar() {
               }}
               className="flex-1 py-1.5 px-2.5 rounded-full text-[11px] font-mono font-medium text-[#D4D4D8] hover:text-[#E2652B] hover:border-[#E2652B]/60 active:scale-95 transition-all duration-200 shadow-[0_4px_16px_rgba(0,0,0,0.45)] no-underline flex items-center justify-center gap-1.5 whitespace-nowrap relative overflow-hidden"
             >
-              <span className={`w-1 h-1 rounded-full ${isActive ? 'bg-white shadow-[0_0_6px_#fff]' : 'bg-[#E2652B]'}`} />
+              <span className={`w-1 h-1 rounded-full transition-colors duration-300 ${isActive ? 'bg-white shadow-[0_0_6px_#fff]' : 'bg-[#E2652B]'}`} />
               <span className="relative">
                 {item.label}
-                {isActive && (
-                  <motion.div
-                    key={`m-${item.href}`}
-                    initial={{ width: 0 }}
-                    animate={{ width: '100%' }}
-                    transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                    className="absolute -bottom-0.5 left-0 right-0 border-b-[1.5px] border-dotted border-white shadow-[0_0_6px_rgba(255,255,255,0.8)]"
-                  />
-                )}
+                <AnimatePresence>
+                  {isActive && (
+                    <motion.div
+                      layoutId="mobileActiveSectionIndicator"
+                      className="absolute -bottom-0.5 left-0 right-0 border-b-[1.5px] border-dotted border-white shadow-[0_0_6px_rgba(255,255,255,0.8)]"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{
+                        layout: {
+                          type: 'spring',
+                          stiffness: 140,
+                          damping: 20,
+                          mass: 1,
+                        },
+                        opacity: {
+                          duration: 0.35,
+                          ease: 'easeInOut',
+                        },
+                      }}
+                    />
+                  )}
+                </AnimatePresence>
               </span>
             </a>
           )
