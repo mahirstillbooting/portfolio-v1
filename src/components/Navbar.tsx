@@ -4,6 +4,7 @@ import { ArrowUpRight } from 'lucide-react'
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
+  const [activeSection, setActiveSection] = useState<string | null>(null)
   const [isTouched, setIsTouched] = useState(false)
   const [isBrandTouched, setIsBrandTouched] = useState(false)
   const touchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -36,8 +37,49 @@ export default function Navbar() {
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 30)
+
+      const projectsEl = document.getElementById('projects')
+      if (!projectsEl) return
+
+      // If scrolled near bottom of page -> activate contact
+      const isAtBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 70
+      if (isAtBottom) {
+        setActiveSection('#contact')
+        return
+      }
+
+      // Threshold line for section entry (fixed navbar height is ~68px + offset)
+      const threshold = 220
+      const projectsRect = projectsEl.getBoundingClientRect()
+
+      // When projects section has not yet reached the threshold, we are in the Hero section
+      if (projectsRect.top > threshold) {
+        setActiveSection(null)
+        return
+      }
+
+      // Find the currently active section
+      const sectionIds = ['projects', 'about', 'skills', 'contact']
+      let current: string | null = null
+
+      for (const id of sectionIds) {
+        const el = document.getElementById(id)
+        if (el) {
+          const rect = el.getBoundingClientRect()
+          if (rect.top <= threshold) {
+            current = `#${id}`
+          }
+        }
+      }
+
+      setActiveSection(current)
     }
+
     window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll()
+
     return () => {
       window.removeEventListener('scroll', handleScroll)
       if (touchTimeoutRef.current) clearTimeout(touchTimeoutRef.current)
@@ -83,6 +125,7 @@ export default function Navbar() {
         >
           <a
             href="#hero"
+            onClick={() => setActiveSection(null)}
             onTouchStart={handleBrandTouchStart}
             onTouchEnd={handleBrandTouchEnd}
             onTouchCancel={() => setIsBrandTouched(false)}
@@ -107,21 +150,40 @@ export default function Navbar() {
           }}
           className="hidden md:flex items-center"
         >
-          {navLinks.map((item) => (
-            <a
-              key={item.label}
-              href={item.href}
-              className="text-sm text-[#A1A1AA] hover:text-white transition-colors font-sans font-medium no-underline tracking-wide"
-            >
-              {item.label}
-            </a>
-          ))}
+          {navLinks.map((item) => {
+            const isActive = activeSection === item.href
+            return (
+              <a
+                key={item.label}
+                href={item.href}
+                onClick={() => setActiveSection(item.href)}
+                className="relative py-1 text-sm text-[#A1A1AA] hover:text-white transition-colors font-sans font-medium no-underline tracking-wide flex flex-col items-center group"
+              >
+                <span>{item.label}</span>
+                {isActive && (
+                  <div className="absolute -bottom-1 left-0 right-0 h-[2px] overflow-hidden pointer-events-none">
+                    {/* Faint dotted baseline track */}
+                    <div className="w-full h-full border-b-[2px] border-dotted border-white/25" />
+                    {/* Smooth filling dotted progress bar */}
+                    <motion.div
+                      key={item.href}
+                      initial={{ width: 0 }}
+                      animate={{ width: '100%' }}
+                      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                      className="absolute inset-y-0 left-0 border-b-[2px] border-dotted border-white shadow-[0_0_8px_rgba(255,255,255,0.85)]"
+                    />
+                  </div>
+                )}
+              </a>
+            )
+          })}
         </div>
 
         {/* Right CTA: Let's talk ↗ Button */}
         <div className="flex items-center shrink-0 ml-auto md:ml-auto">
           <a
             href="#contact"
+            onClick={() => setActiveSection('#contact')}
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
             onTouchCancel={() => setIsTouched(false)}
@@ -167,22 +229,37 @@ export default function Navbar() {
         transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
         className="flex md:hidden items-center justify-center gap-2 w-full max-w-[380px] pointer-events-auto px-1"
       >
-        {navLinks.map((item) => (
-          <a
-            key={item.label}
-            href={item.href}
-            style={{
-              background: scrolled ? 'rgba(18, 18, 22, 0.92)' : 'rgba(22, 22, 26, 0.85)',
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
-            }}
-            className="flex-1 py-1.5 px-2.5 rounded-full text-[11px] font-mono font-medium text-[#D4D4D8] hover:text-[#E2652B] hover:border-[#E2652B]/60 active:scale-95 transition-all duration-200 shadow-[0_4px_16px_rgba(0,0,0,0.45)] no-underline flex items-center justify-center gap-1.5 whitespace-nowrap"
-          >
-            <span className="w-1 h-1 rounded-full bg-[#E2652B]" />
-            <span>{item.label}</span>
-          </a>
-        ))}
+        {navLinks.map((item) => {
+          const isActive = activeSection === item.href
+          return (
+            <a
+              key={item.label}
+              href={item.href}
+              onClick={() => setActiveSection(item.href)}
+              style={{
+                background: scrolled ? 'rgba(18, 18, 22, 0.92)' : 'rgba(22, 22, 26, 0.85)',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+                border: isActive ? '1px solid rgba(255, 255, 255, 0.35)' : '1px solid rgba(255, 255, 255, 0.12)',
+              }}
+              className="flex-1 py-1.5 px-2.5 rounded-full text-[11px] font-mono font-medium text-[#D4D4D8] hover:text-[#E2652B] hover:border-[#E2652B]/60 active:scale-95 transition-all duration-200 shadow-[0_4px_16px_rgba(0,0,0,0.45)] no-underline flex items-center justify-center gap-1.5 whitespace-nowrap relative overflow-hidden"
+            >
+              <span className={`w-1 h-1 rounded-full ${isActive ? 'bg-white shadow-[0_0_6px_#fff]' : 'bg-[#E2652B]'}`} />
+              <span className="relative">
+                {item.label}
+                {isActive && (
+                  <motion.div
+                    key={`m-${item.href}`}
+                    initial={{ width: 0 }}
+                    animate={{ width: '100%' }}
+                    transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                    className="absolute -bottom-0.5 left-0 right-0 border-b-[1.5px] border-dotted border-white shadow-[0_0_6px_rgba(255,255,255,0.8)]"
+                  />
+                )}
+              </span>
+            </a>
+          )
+        })}
       </motion.div>
     </header>
   )
