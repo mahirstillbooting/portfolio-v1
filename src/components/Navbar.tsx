@@ -188,7 +188,7 @@ export default function Navbar() {
                   {isActive && (
                     <motion.div
                       layoutId="activeSectionIndicator"
-                      className="absolute -bottom-1 left-0 right-0 h-[2px] pointer-events-none"
+                      className="absolute -bottom-1 left-0 right-0 h-[2.5px] pointer-events-none"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}

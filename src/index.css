@@ -231,7 +231,7 @@ body {
   }
 }
 
-/* Shimmering Dotted Underline Animation (continuous, left-to-right, jitter-free, bright) */
+/* Shimmering Dotted Underline Animation (continuous, left-to-right, jitter-free, crisp pixel squares) */
 @keyframes navDotShimmer {
   0% {
     background-position: 0px 0;
@@ -243,23 +243,23 @@ body {
 
 .nav-shimmer-dots {
   width: 100%;
-  height: 2px;
+  height: 2.5px;
   background: repeating-linear-gradient(
     90deg,
     rgba(255, 255, 255, 0.55) 0px,
     rgba(255, 255, 255, 0.55) 20px,
-    rgba(255, 255, 255, 0.88) 35px,
+    rgba(255, 255, 255, 0.9) 35px,
     #ffffff 45px,
-    rgba(255, 255, 255, 0.88) 55px,
+    rgba(255, 255, 255, 0.9) 55px,
     rgba(255, 255, 255, 0.55) 70px,
     rgba(255, 255, 255, 0.55) 90px
   );
   background-size: 90px 100%;
   animation: navDotShimmer 2s linear infinite;
-  -webkit-mask-image: radial-gradient(circle 1px at 2.5px 1px, black 1px, transparent 1.1px);
-  mask-image: radial-gradient(circle 1px at 2.5px 1px, black 1px, transparent 1.1px);
-  -webkit-mask-size: 5px 2px;
-  mask-size: 5px 2px;
+  -webkit-mask-image: linear-gradient(to right, black 3px, transparent 3px);
+  mask-image: linear-gradient(to right, black 3px, transparent 3px);
+  -webkit-mask-size: 6.5px 2.5px;
+  mask-size: 6.5px 2.5px;
   -webkit-mask-repeat: repeat-x;
   mask-repeat: repeat-x;
 }
