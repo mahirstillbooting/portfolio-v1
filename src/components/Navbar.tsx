@@ -205,34 +205,7 @@ export default function Navbar() {
                         },
                       }}
                     >
-                      {/* Mathematically equidistant dots (eliminates browser border-dotted uneven spacing) */}
-                      <svg className="w-full h-[2px] block overflow-hidden" preserveAspectRatio="none">
-                        <line
-                          x1="2"
-                          y1="1"
-                          x2="100%"
-                          y2="1"
-                          stroke="rgba(255, 255, 255, 0.3)"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeDasharray="0 5"
-                        />
-                      </svg>
-                      {/* Shimmering pure white (#ffffff) sweep moving smoothly left-to-right */}
-                      <div className="absolute inset-0 nav-dots-shimmer pointer-events-none">
-                        <svg className="w-full h-[2px] block overflow-hidden" preserveAspectRatio="none">
-                          <line
-                            x1="2"
-                            y1="1"
-                            x2="100%"
-                            y2="1"
-                            stroke="#ffffff"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeDasharray="0 5"
-                          />
-                        </svg>
-                      </div>
+                      <div className="nav-shimmer-dots" />
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -330,34 +303,7 @@ export default function Navbar() {
                         },
                       }}
                     >
-                      {/* Base dim equidistant dotted line */}
-                      <svg className="w-full h-[1.5px] block overflow-hidden" preserveAspectRatio="none">
-                        <line
-                          x1="2"
-                          y1="0.75"
-                          x2="100%"
-                          y2="0.75"
-                          stroke="rgba(255, 255, 255, 0.3)"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeDasharray="0 4"
-                        />
-                      </svg>
-                      {/* Shimmering pure white sweep moving smoothly left-to-right */}
-                      <div className="absolute inset-0 nav-dots-shimmer pointer-events-none">
-                        <svg className="w-full h-[1.5px] block overflow-hidden" preserveAspectRatio="none">
-                          <line
-                            x1="2"
-                            y1="0.75"
-                            x2="100%"
-                            y2="0.75"
-                            stroke="#ffffff"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeDasharray="0 4"
-                          />
-                        </svg>
-                      </div>
+                      <div className="nav-shimmer-dots" />
                     </motion.div>
                   )}
                 </AnimatePresence>

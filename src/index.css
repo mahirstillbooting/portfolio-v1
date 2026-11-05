@@ -231,38 +231,35 @@ body {
   }
 }
 
-/* Shimmering Dotted Underline Animation (continuous, left-to-right, no pause) */
+/* Shimmering Dotted Underline Animation (continuous, left-to-right, jitter-free, bright) */
 @keyframes navDotShimmer {
   0% {
-    -webkit-mask-position: 0px 0;
-    mask-position: 0px 0;
+    background-position: 0px 0;
   }
   100% {
-    -webkit-mask-position: 90px 0;
-    mask-position: 90px 0;
+    background-position: 90px 0;
   }
 }
 
-.nav-dots-shimmer {
-  -webkit-mask-image: repeating-linear-gradient(
+.nav-shimmer-dots {
+  width: 100%;
+  height: 2px;
+  background: repeating-linear-gradient(
     90deg,
-    transparent 0px,
-    transparent 20px,
-    rgba(0, 0, 0, 0.35) 35px,
-    black 45px,
-    rgba(0, 0, 0, 0.35) 55px,
-    transparent 70px,
-    transparent 90px
+    rgba(255, 255, 255, 0.55) 0px,
+    rgba(255, 255, 255, 0.55) 20px,
+    rgba(255, 255, 255, 0.88) 35px,
+    #ffffff 45px,
+    rgba(255, 255, 255, 0.88) 55px,
+    rgba(255, 255, 255, 0.55) 70px,
+    rgba(255, 255, 255, 0.55) 90px
   );
-  mask-image: repeating-linear-gradient(
-    90deg,
-    transparent 0px,
-    transparent 20px,
-    rgba(0, 0, 0, 0.35) 35px,
-    black 45px,
-    rgba(0, 0, 0, 0.35) 55px,
-    transparent 70px,
-    transparent 90px
-  );
+  background-size: 90px 100%;
   animation: navDotShimmer 2s linear infinite;
+  -webkit-mask-image: radial-gradient(circle 1px at 2.5px 1px, black 1px, transparent 1.1px);
+  mask-image: radial-gradient(circle 1px at 2.5px 1px, black 1px, transparent 1.1px);
+  -webkit-mask-size: 5px 2px;
+  mask-size: 5px 2px;
+  -webkit-mask-repeat: repeat-x;
+  mask-repeat: repeat-x;
 }
