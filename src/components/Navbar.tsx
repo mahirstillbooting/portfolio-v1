@@ -10,6 +10,20 @@ export default function Navbar() {
   const touchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const brandTouchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
+  // Prevents intermediate scroll-spy updates when a nav link is clicked
+  const isManualNavRef = useRef(false)
+  const manualNavTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const handleNavClick = (href: string | null) => {
+    setActiveSection(href)
+    isManualNavRef.current = true
+
+    if (manualNavTimeoutRef.current) clearTimeout(manualNavTimeoutRef.current)
+    manualNavTimeoutRef.current = setTimeout(() => {
+      isManualNavRef.current = false
+    }, 850)
+  }
+
   const handleTouchStart = () => {
     if (touchTimeoutRef.current) clearTimeout(touchTimeoutRef.current)
     setIsTouched(true)
@@ -37,6 +51,9 @@ export default function Navbar() {
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 30)
+
+      // Skip scroll-spy calculation while smooth-scrolling to a clicked link
+      if (isManualNavRef.current) return
 
       const projectsEl = document.getElementById('projects')
       if (!projectsEl) return
@@ -77,13 +94,20 @@ export default function Navbar() {
       setActiveSection(current)
     }
 
+    const handleScrollEnd = () => {
+      isManualNavRef.current = false
+    }
+
     window.addEventListener('scroll', handleScroll, { passive: true })
+    window.addEventListener('scrollend', handleScrollEnd)
     handleScroll()
 
     return () => {
       window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('scrollend', handleScrollEnd)
       if (touchTimeoutRef.current) clearTimeout(touchTimeoutRef.current)
       if (brandTouchTimeoutRef.current) clearTimeout(brandTouchTimeoutRef.current)
+      if (manualNavTimeoutRef.current) clearTimeout(manualNavTimeoutRef.current)
     }
   }, [])
 
@@ -125,7 +149,7 @@ export default function Navbar() {
         >
           <a
             href="#hero"
-            onClick={() => setActiveSection(null)}
+            onClick={() => handleNavClick(null)}
             onTouchStart={handleBrandTouchStart}
             onTouchEnd={handleBrandTouchEnd}
             onTouchCancel={() => setIsBrandTouched(false)}
@@ -156,7 +180,7 @@ export default function Navbar() {
               <a
                 key={item.label}
                 href={item.href}
-                onClick={() => setActiveSection(item.href)}
+                onClick={() => handleNavClick(item.href)}
                 className="relative py-1 text-sm text-[#A1A1AA] hover:text-white transition-colors font-sans font-medium no-underline tracking-wide flex flex-col items-center group"
               >
                 <span>{item.label}</span>
@@ -171,18 +195,18 @@ export default function Navbar() {
                       transition={{
                         layout: {
                           type: 'spring',
-                          stiffness: 140,
-                          damping: 20,
-                          mass: 1,
+                          stiffness: 180,
+                          damping: 24,
+                          mass: 0.9,
                         },
                         opacity: {
-                          duration: 0.35,
+                          duration: 0.25,
                           ease: 'easeInOut',
                         },
                       }}
                     >
-                      {/* Dotted underline in white with soft luminous glow */}
-                      <div className="w-full h-full border-b-[2px] border-dotted border-white shadow-[0_0_8px_rgba(255,255,255,0.85)]" />
+                      {/* Dotted underline in clean crisp white (no glow) */}
+                      <div className="w-full h-full border-b-[2px] border-dotted border-white" />
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -195,7 +219,7 @@ export default function Navbar() {
         <div className="flex items-center shrink-0 ml-auto md:ml-auto">
           <a
             href="#contact"
-            onClick={() => setActiveSection('#contact')}
+            onClick={() => handleNavClick('#contact')}
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
             onTouchCancel={() => setIsTouched(false)}
@@ -247,7 +271,7 @@ export default function Navbar() {
             <a
               key={item.label}
               href={item.href}
-              onClick={() => setActiveSection(item.href)}
+              onClick={() => handleNavClick(item.href)}
               style={{
                 background: scrolled ? 'rgba(18, 18, 22, 0.92)' : 'rgba(22, 22, 26, 0.85)',
                 backdropFilter: 'blur(16px)',
@@ -256,26 +280,26 @@ export default function Navbar() {
               }}
               className="flex-1 py-1.5 px-2.5 rounded-full text-[11px] font-mono font-medium text-[#D4D4D8] hover:text-[#E2652B] hover:border-[#E2652B]/60 active:scale-95 transition-all duration-200 shadow-[0_4px_16px_rgba(0,0,0,0.45)] no-underline flex items-center justify-center gap-1.5 whitespace-nowrap relative overflow-hidden"
             >
-              <span className={`w-1 h-1 rounded-full transition-colors duration-300 ${isActive ? 'bg-white shadow-[0_0_6px_#fff]' : 'bg-[#E2652B]'}`} />
+              <span className={`w-1 h-1 rounded-full transition-colors duration-300 ${isActive ? 'bg-white' : 'bg-[#E2652B]'}`} />
               <span className="relative">
                 {item.label}
                 <AnimatePresence>
                   {isActive && (
                     <motion.div
                       layoutId="mobileActiveSectionIndicator"
-                      className="absolute -bottom-0.5 left-0 right-0 border-b-[1.5px] border-dotted border-white shadow-[0_0_6px_rgba(255,255,255,0.8)]"
+                      className="absolute -bottom-0.5 left-0 right-0 border-b-[1.5px] border-dotted border-white"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       transition={{
                         layout: {
                           type: 'spring',
-                          stiffness: 140,
-                          damping: 20,
-                          mass: 1,
+                          stiffness: 180,
+                          damping: 24,
+                          mass: 0.9,
                         },
                         opacity: {
-                          duration: 0.35,
+                          duration: 0.25,
                           ease: 'easeInOut',
                         },
                       }}
