@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
 
 export default function Navbar() {
@@ -49,7 +49,9 @@ export default function Navbar() {
   }
 
   useEffect(() => {
-    const handleScroll = () => {
+    let ticking = false
+
+    const updateScrollSpy = () => {
       setScrolled(window.scrollY > 30)
 
       // Skip scroll-spy calculation while smooth-scrolling to a clicked link
@@ -67,8 +69,8 @@ export default function Navbar() {
         return
       }
 
-      // Threshold line for section entry (fixed navbar height is ~68px + offset)
-      const threshold = 220
+      // Dynamic threshold: triggers when section reaches upper third of screen (~35%)
+      const threshold = Math.min(window.innerHeight * 0.38, 360)
       const projectsRect = projectsEl.getBoundingClientRect()
 
       // When projects section has not yet reached the threshold, we are in the Hero section
@@ -94,13 +96,23 @@ export default function Navbar() {
       setActiveSection(current)
     }
 
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          updateScrollSpy()
+          ticking = false
+        })
+        ticking = true
+      }
+    }
+
     const handleScrollEnd = () => {
       isManualNavRef.current = false
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
     window.addEventListener('scrollend', handleScrollEnd)
-    handleScroll()
+    updateScrollSpy()
 
     return () => {
       window.removeEventListener('scroll', handleScroll)
@@ -184,32 +196,21 @@ export default function Navbar() {
                 className="relative py-1 text-sm text-[#A1A1AA] hover:text-white transition-colors font-sans font-medium no-underline tracking-wide flex flex-col items-center group"
               >
                 <span>{item.label}</span>
-                <AnimatePresence>
-                  {isActive && (
-                    <motion.div
-                      layoutId="activeSectionIndicator"
-                      layout="position"
-                      className="absolute -bottom-1 left-0 right-0 h-[2.5px] pointer-events-none overflow-hidden"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{
-                        layout: {
-                          type: 'spring',
-                          stiffness: 180,
-                          damping: 24,
-                          mass: 0.9,
-                        },
-                        opacity: {
-                          duration: 0.25,
-                          ease: 'easeInOut',
-                        },
-                      }}
-                    >
-                      <div className="nav-shimmer-dots" />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                {isActive && (
+                  <motion.div
+                    layoutId="activeSectionIndicator"
+                    layout="position"
+                    className="absolute -bottom-1 left-0 right-0 h-[2.5px] pointer-events-none overflow-hidden"
+                    transition={{
+                      type: 'spring',
+                      stiffness: 200,
+                      damping: 24,
+                      mass: 0.8,
+                    }}
+                  >
+                    <div className="nav-shimmer-dots" />
+                  </motion.div>
+                )}
               </a>
             )
           })}
@@ -283,31 +284,21 @@ export default function Navbar() {
               <span className={`w-1 h-1 rounded-full transition-colors duration-300 ${isActive ? 'bg-white' : 'bg-[#E2652B]'}`} />
               <span className="relative">
                 {item.label}
-                <AnimatePresence>
-                  {isActive && (
-                    <motion.div
-                      layoutId="mobileActiveSectionIndicator"
-                      className="absolute -bottom-0.5 left-0 right-0 h-[1.5px] pointer-events-none"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{
-                        layout: {
-                          type: 'spring',
-                          stiffness: 180,
-                          damping: 24,
-                          mass: 0.9,
-                        },
-                        opacity: {
-                          duration: 0.25,
-                          ease: 'easeInOut',
-                        },
-                      }}
-                    >
-                      <div className="nav-shimmer-dots" />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                {isActive && (
+                  <motion.div
+                    layoutId="mobileActiveSectionIndicator"
+                    layout="position"
+                    className="absolute -bottom-0.5 left-0 right-0 h-[2px] pointer-events-none overflow-hidden"
+                    transition={{
+                      type: 'spring',
+                      stiffness: 200,
+                      damping: 24,
+                      mass: 0.8,
+                    }}
+                  >
+                    <div className="nav-shimmer-dots" />
+                  </motion.div>
+                )}
               </span>
             </a>
           )
