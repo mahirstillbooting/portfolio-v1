@@ -635,6 +635,12 @@ export default function Contact() {
           transition: all 0.2s ease;
         }
 
+        .btn-dispatch svg {
+          width: 18px;
+          height: 18px;
+          flex-shrink: 0;
+        }
+
         .btn-dispatch:hover {
           background: #ea7037;
           box-shadow: 0 10px 28px rgba(226, 101, 43, 0.42);
@@ -1084,19 +1090,20 @@ export default function Contact() {
                   <span>Git Commit</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
+                    width="24"
+                    height="24"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    strokeWidth="2.2"
+                    strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    className="lucide lucide-arrow-up-from-line"
+                    className="lucide lucide-git-pull-request preview-icon"
                   >
-                    <path d="m18 9-6-6-6 6" />
-                    <path d="M12 3v14" />
-                    <path d="M5 21h14" />
+                    <circle cx="18" cy="18" r="3" />
+                    <circle cx="6" cy="6" r="3" />
+                    <path d="M13 6h3a2 2 0 0 1 2 2v7" />
+                    <line x1="6" x2="6" y1="9" y2="21" />
                   </svg>
                 </>
               )}
