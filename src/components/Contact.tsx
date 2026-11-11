@@ -20,6 +20,7 @@ export default function Contact() {
   const [returnEmail, setReturnEmail] = useState('')
   const [message, setMessage] = useState('')
   const [isDispatched, setIsDispatched] = useState(false)
+  const [isCommitAnimating, setIsCommitAnimating] = useState(false)
 
   const isAnimatingRef = useRef(false)
   const winAudioRef = useRef<HTMLAudioElement | null>(null)
@@ -111,7 +112,9 @@ export default function Contact() {
 
   const handleDispatch = (e: React.FormEvent) => {
     e.preventDefault()
-    setIsDispatched(true)
+    if (isCommitAnimating || isDispatched) return
+
+    setIsCommitAnimating(true)
 
     const subject = encodeURIComponent(`[${selectedTopic}] Git Commit from ${name || 'Portfolio Visitor'}`)
     const body = encodeURIComponent(
@@ -119,11 +122,17 @@ export default function Contact() {
         message || 'Hi Mahir, I saw your portfolio and wanted to connect!'
       }`
     )
-    window.open(`mailto:${email}?subject=${subject}&body=${body}`, '_blank')
 
+    // Complete corner-to-corner border animation before opening the email client
     setTimeout(() => {
-      setIsDispatched(false)
-    }, 3500)
+      setIsCommitAnimating(false)
+      setIsDispatched(true)
+      window.open(`mailto:${email}?subject=${subject}&body=${body}`, '_blank')
+
+      setTimeout(() => {
+        setIsDispatched(false)
+      }, 3500)
+    }, 750)
   }
 
   return (
@@ -619,10 +628,12 @@ export default function Contact() {
         }
 
         .btn-dispatch {
+          position: relative;
+          overflow: hidden;
           padding: 13px 24px;
           border-radius: 12px;
           background: #E2652B;
-          border: 1px solid rgba(255, 255, 255, 0.2);
+          border: 2px solid rgba(255, 255, 255, 0.2);
           color: #FFFFFF;
           font-family: 'Geist', sans-serif;
           font-size: 13.5px;
@@ -635,19 +646,70 @@ export default function Contact() {
           transition: all 0.2s ease;
         }
 
+        .btn-dispatch > * {
+          position: relative;
+          z-index: 2;
+        }
+
         .btn-dispatch svg {
           width: 18px;
           height: 18px;
           flex-shrink: 0;
+          position: relative;
+          z-index: 2;
         }
 
-        .btn-dispatch:hover {
+        .btn-dispatch:hover:not(:disabled) {
           background: #ea7037;
+          border-color: rgba(255, 255, 255, 0.35);
           box-shadow: 0 10px 28px rgba(226, 101, 43, 0.42);
         }
 
-        .btn-dispatch:active {
+        .btn-dispatch:active:not(:disabled) {
           transform: scale(0.98);
+        }
+
+        .btn-dispatch.commit-animating {
+          border-color: transparent;
+          box-shadow: 0 0 24px rgba(255, 162, 76, 0.55), 0 8px 24px rgba(226, 101, 43, 0.35);
+        }
+
+        .btn-dispatch.commit-animating::before {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 320%;
+          height: 320%;
+          background: conic-gradient(
+            from 0deg,
+            rgba(255, 255, 255, 0.15) 0deg,
+            rgba(255, 255, 255, 0.15) 240deg,
+            #E2652B 270deg,
+            #FF8F3D 305deg,
+            #FFD166 335deg,
+            #FFFFFF 360deg
+          );
+          animation: borderCircle 0.75s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+          z-index: 0;
+        }
+
+        .btn-dispatch.commit-animating::after {
+          content: '';
+          position: absolute;
+          inset: 0px;
+          border-radius: 10px;
+          background: #E2652B;
+          z-index: 1;
+        }
+
+        @keyframes borderCircle {
+          0% {
+            transform: translate(-50%, -50%) rotate(0deg);
+          }
+          100% {
+            transform: translate(-50%, -50%) rotate(360deg);
+          }
         }
 
         @media (max-width: 920px) {
@@ -1080,7 +1142,7 @@ export default function Contact() {
 
           {/* Console Action Bar */}
           <div className="console-footer">
-            <button type="submit" className="btn-dispatch">
+            <button type="submit" className={`btn-dispatch ${isCommitAnimating ? "commit-animating" : ""}`} disabled={isCommitAnimating || isDispatched}>
               {isDispatched ? (
                 <>
                   <span>Committed ✓</span>
