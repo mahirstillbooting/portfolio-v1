@@ -671,7 +671,7 @@ export default function Contact() {
 
         .btn-dispatch.commit-animating {
           border-color: transparent;
-          box-shadow: 0 0 24px rgba(255, 162, 76, 0.55), 0 8px 24px rgba(226, 101, 43, 0.35);
+          box-shadow: 0 8px 24px rgba(226, 101, 43, 0.28);
         }
 
         .btn-dispatch.commit-animating::before {
@@ -683,12 +683,13 @@ export default function Contact() {
           height: 320%;
           background: conic-gradient(
             from 0deg,
-            rgba(255, 255, 255, 0.15) 0deg,
-            rgba(255, 255, 255, 0.15) 240deg,
-            #E2652B 270deg,
-            #FF8F3D 305deg,
-            #FFD166 335deg,
-            #FFFFFF 360deg
+            rgba(255, 255, 255, 0.14) 0deg,
+            rgba(255, 255, 255, 0.14) 250deg,
+            rgba(226, 101, 43, 0.25) 280deg,
+            #E2652B 305deg,
+            #FF9447 330deg,
+            #FFCE9E 350deg,
+            #FFF0E2 360deg
           );
           animation: borderCircle 0.75s cubic-bezier(0.4, 0, 0.2, 1) forwards;
           z-index: 0;
